@@ -1,38 +1,39 @@
 import numpy as np
 import pandas as pd
 
-
+# Can't load matrix with just numpy for some reason, troubleshoot later
+# # TODO: Set default values to take all rows and all columns
 # def loadMatrix(file_name, row, col):
-#     col = range(0, col - 1)
 #     try:
-#         output = np.loadtxt(file_name, dtype=float, usecols=col, max_rows=row)
+#         output = np.loadtxt(file_name, dtype=float, max_rows=row)
 #     except IOError:
 #         raise Exception("Unable to open file")
 #     return output
 
-
-# def loadVector(file_name, row):
-#     try:
-#         output = np.loadtxt(file_name, dtype=float, max_rows=int(row))
-#     except IOError:
-#         raise Exception("Unable to open file")
-#     return output
-
-
-def loadVector(file_name, row=type(None)):
-    # print(file_name)
-    output = pd.read_csv(file_name, nrows=row, header=None)
-    output = output[0].tolist()
-    # print(output)
+# TODO: Set default values to take all rows and all columns
+def loadMatrix(file_name, row, column):
+    output = pd.read_csv(file_name, header=None, sep="   ", nrows=row, usecols=range(0, column), engine="python")
+    output = output.to_numpy()
     return output
 
 
 # TODO: Set default values to take all rows and all columns
-def loadMatrix(file_name, row, column):
-    # print(column)
-    output = pd.read_csv(file_name, header=None, sep="   ", nrows=row, usecols=range(0, column), engine="python")
-    output = output.values
-    # print(output)
+def loadVector(file_name, row):
+    try:
+        output = np.loadtxt(file_name, dtype=float, max_rows=int(row))
+    except IOError:
+        raise Exception("Unable to open file")
+    return output
+
+
+# TODO: Set default values to take all rows and all columns
+def loadMultiVector(file_name, n_years, n_days_one_year):
+    N_samples = n_days_one_year * n_years
+    try:
+        output = np.loadtxt(file_name, dtype=float, max_rows=int(N_samples))
+    except IOError:
+        raise Exception("Unable to open file")
+    output = output.reshape(n_years, 365)
     return output
 
 
@@ -52,14 +53,6 @@ def filterDictionaryPercentile(dictionary, percentile):  # Sahiti
     percentile = np.percentile([v for k, v in dictionary.items()], percentile)
     dictionary = dict(filter(lambda x: x[1] >= percentile, dictionary.items()))
     return dictionary
-
-
-def logVector():  # not used?
-    pass
-
-
-def logVectorApp():  # not used?
-    pass
 
 
 def interpolate_linear(X, Y, x):
@@ -117,7 +110,7 @@ def cubicFeetToAcreFeet(x):
 
 
 def computePercentile(x, percentile):
-    return np.percentile(x, 100 - percentile)
+    return np.percentile(x, percentile)
 
 
 def computeMax(g):
