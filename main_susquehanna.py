@@ -6,43 +6,55 @@
 # ===========================================================================
 import numpy as np
 from susquehanna_model import susquehanna_model
-from platypus import Problem, NSGAII, Real
+from platypus import Problem, NSGAII, Real, ProcessPoolEvaluator
 
-# Initialize model
-policy_sim = 0
-nobjs = 6
-nvars = 32
-vars = np.zeros(nvars).tolist()
-n_years = 1
-susquehanna_river = susquehanna_model(
-    108.5, 505.0, 5, n_years
-)  # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
-susquehanna_river.load_data()
 
-# RBF parameters
-m = 2  # number of input (time, storage of Conowingo)
-K = 4  # number of output, Atomic, Baltimore,Chester, Downstream:- hydropower, environmental
-n = m + 2  # number of RBF
-N = 2 * n * m + K * n  # check
-if not N == nvars:
-    print("N not equal to nvars")
-susquehanna_river.setRBF(n, m, K)
-susquehanna_river.setPolicySim(policy_sim)
+def main():
+    # Initialize model
+    policy_sim = 0
+    nobjs = 6
+    nvars = 32
+    # vars = np.zeros(nvars).tolist()
+    n_years = 1
+    susquehanna_river = susquehanna_model(
+        108.5, 505.0, 5, n_years
+    )  # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
+    susquehanna_river.load_data(0)  # 0 = historic, 1 = stochastic
 
-LB = [-1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0]
-UB = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-# EPS = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
+    # RBF parameters
+    m = 2  # number of input (time, storage of Conowingo)
+    K = 4  # number of output, Atomic, Baltimore,Chester, Downstream:- hydropower, environmental
+    n = m + 2  # number of RBF
+    N = 2 * n * m + K * n  # check
+    if not N == nvars:
+        print("N not equal to nvars")
+    susquehanna_river.setRBF(n, m, K)
+    susquehanna_river.setPolicySim(policy_sim)
 
-# platypus for MOEA, # no contraints
-problem = Problem(nvars, nobjs)
-# problem.types[:] = Real(-1, 1)
-problem.types[:] = [Real(LB[i], UB[i]) for i in range(nvars)]
-# problem.function = susquehanna_river.evaluate # historical (deterministic) optimization
-problem.function = susquehanna_river.evaluateMC  # stochastic optimization
-algorithm = NSGAII(problem)
-algorithm.run(1)
-# results
-print(algorithm.result)
-with open("output.txt", "w") as f:
-    for item in algorithm.result:
-        f.write("%s\n" % item)
+    LB = [-1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0]
+    UB = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    # EPS = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
+
+    # platypus for MOEA, # no contraints
+    problem = Problem(nvars, nobjs)
+    # problem.types[:] = Real(-1, 1)
+    problem.types[:] = [Real(LB[i], UB[i]) for i in range(nvars)]
+    problem.function = susquehanna_river.evaluate  # historical (deterministic) optimization
+    # problem.function = susquehanna_river.evaluateMC  # stochastic optimization
+    problem.directions[:] = Problem.MINIMIZE
+
+    # algorithm = NSGAII(problem)
+    # algorithm.run(1)
+    with ProcessPoolEvaluator(4) as evaluator:
+        algorithm = NSGAII(problem, evaluator=evaluator)
+        algorithm.run(1)
+
+    # results
+    print(algorithm.result)
+    with open("output.txt", "w") as f:
+        for item in algorithm.result:
+            f.write("%s\n" % item)
+
+
+if __name__ == "__main__":
+    main()
