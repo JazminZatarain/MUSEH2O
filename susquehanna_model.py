@@ -8,7 +8,7 @@ class susquehanna_model:
     gammaH20 = 1000.0
     GG = 9.81
 
-    def __init__(self, l0, l0_MR, d0, n_years):  #  level0, level_MR0, d0?, n_years
+    def __init__(self, l0, l0_MR, d0, n_years):  #  level0, level_MR0, startday, n_years
         # initial condition Conowingo
         self.init_level = l0  # feet
         # initial condition in muddy run
@@ -30,7 +30,7 @@ class susquehanna_model:
         self.day_fraction = int(24 / self.dec_step)
         self.n_days_one_year = 1 * 365
 
-    def load_data(self):
+    def load_data(self, histomc):
         # n_days_one_year = 1*365 moved to init
         # Conowingo characteristics
         self.lsv_rel = utils.loadMatrix(
@@ -54,31 +54,44 @@ class susquehanna_model:
             "./data1999/turbines_Muddy.txt", 4
         )  # Turbine-Pumping capacity (cfs) - efficiency of Muddy Run plant (equal for the 8 units)
 
-        # historical
-        # N_samples = self.n_days_one_year * self.n_years
-        # self.evap_CO_MC= utils.loadVector("./data_historical/vectors/evapCO_history.txt",N_samples)         # evaporation losses (inches per day)
-        # self.inflow_MC = utils.loadVector("./data_historical/vectors/MariettaFlows_history.txt",N_samples)   # inflow, i.e. flows at Marietta (cfs)
-        # self.inflowLat_MC = utils.loadVector("./data_historical/vectors/nLat_history.txt",N_samples)         # lateral inflows from Marietta to Conowingo (cfs)
-        # self.evap_Muddy_MC = utils.loadVector("./data_historical/vectors/evapMR_history.txt",N_samples)      # evaporation losses (inches per day)
-        # self.inflow_Muddy_MC = utils.loadVector("./data_historical/vectors/nMR_history.txt",N_samples)
-
-        # stochastic hydrology
-        self.evap_CO_MC = utils.loadMatrix(
-            "./dataMC/evapCO_MC.txt", self.n_years, self.n_days_one_year
-        )  # evaporation losses (inches per day)
-        self.inflow_MC = utils.loadMatrix(
-            "./dataMC/MariettaFlows_MC.txt", self.n_years, self.n_days_one_year
-        )  # inflow, i.e. flows at Marietta (cfs)
-        self.inflowLat_MC = utils.loadMatrix(
-            "./dataMC/nLat_MC.txt", self.n_years, self.n_days_one_year
-        )  # lateral inflows from Marietta to Conowingo (cfs)
-        self.evap_Muddy_MC = utils.loadMatrix(
-            "./dataMC/evapMR_MC.txt", self.n_years, self.n_days_one_year
-        )  # evaporation losses (inches per day)
-        self.inflow_Muddy_MC = utils.loadMatrix(
-            "./dataMC/nMR_MC.txt", self.n_years, self.n_days_one_year
-        )  # inflow to Muddy Run (cfs)
-
+        if histomc == 0:
+            self.data = 0
+            # historical
+            self.evap_CO_MC = utils.loadMultiVector(
+                "./data_historical/vectors/evapCO_history.txt", self.n_years, self.n_days_one_year
+            )  # evaporation losses (inches per day)
+            self.inflow_MC = utils.loadMultiVector(
+                "./data_historical/vectors/MariettaFlows_history.txt", self.n_years, self.n_days_one_year
+            )  # inflow, i.e. flows at Marietta (cfs)
+            self.inflowLat_MC = utils.loadMultiVector(
+                "./data_historical/vectors/nLat_history.txt", self.n_years, self.n_days_one_year
+            )  # lateral inflows from Marietta to Conowingo (cfs)
+            self.evap_Muddy_MC = utils.loadMultiVector(
+                "./data_historical/vectors/evapMR_history.txt", self.n_years, self.n_days_one_year
+            )  # evaporation losses (inches per day)
+            self.inflow_Muddy_MC = utils.loadMultiVector(
+                "./data_historical/vectors/nMR_history.txt", self.n_years, self.n_days_one_year
+            )
+        elif histomc == 1:
+            self.data = 1
+            # stochastic hydrology
+            self.evap_CO_MC = utils.loadMatrix(
+                "./dataMC/evapCO_MC.txt", self.n_years, self.n_days_one_year
+            )  # evaporation losses (inches per day)
+            self.inflow_MC = utils.loadMatrix(
+                "./dataMC/MariettaFlows_MC.txt", self.n_years, self.n_days_one_year
+            )  # inflow, i.e. flows at Marietta (cfs)
+            self.inflowLat_MC = utils.loadMatrix(
+                "./dataMC/nLat_MC.txt", self.n_years, self.n_days_one_year
+            )  # lateral inflows from Marietta to Conowingo (cfs)
+            self.evap_Muddy_MC = utils.loadMatrix(
+                "./dataMC/evapMR_MC.txt", self.n_years, self.n_days_one_year
+            )  # evaporation losses (inches per day)
+            self.inflow_Muddy_MC = utils.loadMatrix(
+                "./dataMC/nMR_MC.txt", self.n_years, self.n_days_one_year
+            )  # inflow to Muddy Run (cfs)
+        else:
+            raise Exception("Choose historical or stochastic data")
         # objectives parameters
         self.energy_prices = utils.loadArrangeMatrix(
             "./data1999/Pavg99.txt", 24, self.n_days_one_year
@@ -132,10 +145,9 @@ class susquehanna_model:
             uu.append(u[i] * self.output_max[i])
         return uu
 
-    # def evaluate(self, var, opt_met): # needed?
-    #     pass
-
-    def evaluateMC(self, var, opt_met=1):
+    def evaluate(self, var, opt_met=1):
+        if not self.data == 0:
+            raise Exception("Select historical data")
         Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation = self.simulate(
             var,
             self.inflow_MC,
@@ -148,6 +160,39 @@ class susquehanna_model:
         outcomes = [Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation]
         print(outcomes)
         return outcomes
+
+    def evaluateMC(self, var, opt_met=1):
+        if not self.data == 1:
+            raise Exception("Select stochastical data")
+        obj, Jhyd, Jatom, Jbal, Jche, Jenv, Jrec = [], [], [], [], [], [], []
+        # MC simulations
+        N_samples = 2
+        for i in range(0, N_samples):
+            Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation = self.simulate(
+                var,
+                self.inflow_MC,
+                self.inflowLat_MC,
+                self.inflow_Muddy_MC,
+                self.evap_CO_MC,
+                self.evap_Muddy_MC,
+                opt_met,
+            )
+            Jhyd.append(Jhydropower)
+            Jatom.append(Jatomicpowerplant)
+            Jbal.append(Jbaltimore)
+            Jche.append(Jchester)
+            Jenv.append(Jenvironment)
+            Jrec.append(Jrecreation)
+            print(Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation)
+        # objectives aggregation (minimax)
+        obj.insert(0, utils.computePercentile(Jhyd, 99))
+        obj.insert(1, utils.computePercentile(Jatom, 99))
+        obj.insert(2, utils.computePercentile(Jbal, 99))
+        obj.insert(3, utils.computePercentile(Jche, 99))
+        obj.insert(4, utils.computePercentile(Jenv, 99))
+        obj.insert(5, utils.computePercentile(Jrec, 99))
+        print(obj)
+        return obj
 
     def storageToLevel(self, s, lake):
         # s : storage
@@ -228,6 +273,7 @@ class susquehanna_model:
         qM_C = self.w_chester[day_of_year]
         qM_D = Tcap
 
+        # implement from flooding model?
         # if level_Co <= self.min_level_app:
         #     qM_A = 0.0
         # else:
@@ -426,14 +472,6 @@ class susquehanna_model:
                 n_sim + n_lat - release_D[i] - WS - evaporation_losses_Co - q_pump[i] + q_rel[i] - leak
             )
 
-        # s_rr.append(storage_Co[HH])
-        # # print(" storage HH " + str(storage_Co[HH]))
-        # s_rr.append(storage_MR[HH])
-        # s_rr.append(utils.computeMean(release_A))
-        # s_rr.append(utils.computeMean(release_B))
-        # s_rr.append(utils.computeMean(release_C))
-        # s_rr.append(utils.computeMean(release_D))
-
         s_rr.extend(
             [
                 storage_Co[HH],
@@ -444,12 +482,6 @@ class susquehanna_model:
                 utils.computeMean(release_D),
             ]
         )
-
-        # 4-hours hydropower production/revenue
-        # rDTurb = []
-        # Tcap = 85412
-        # for i in range(0, len(release_D)):
-        #     rDTurb.append(min(release_D[i], Tcap))
 
         # 4-hours hydropower production/revenue
         hp = self.g_hydRevCo(release_D, level_Co, day_of_year, hour0)
@@ -557,17 +589,13 @@ class susquehanna_model:
         year = 0
 
         # run simulation
-        for t in tqdm(range(0, self.time_horizon_H)):
+        for t in range(0, self.time_horizon_H):  # for t in tqdm(range(0, self.time_horizon_H)):
             # identification of the day
             day_of_week = (self.day0 + t) % 7
             day_of_year = t % self.n_days_in_year
             if day_of_year % self.n_days_in_year == 0 and t != 0:
                 year = year + 1
 
-            # print(f"t: {t}")
-            # print(f"day of year: {day_of_year}")
-            # print(f"level_Co: {level_Co}")
-            # print(f"level2_Co: {level2_Co}")
             # initialization of sub-daily cycle
             level2_Co[0] = level_Co[t]  # level_Co[day_of_year] <<< in flood
             storage2_Co[0] = storage_Co[t]
@@ -581,13 +609,23 @@ class susquehanna_model:
                 if opt_met == 0:  # fixed release
                     uu.append(uu[0])
                 elif opt_met == 1:  # RBF-PSO
-                    input.append(jj)
+                    # input.append(jj) # in vanilla
                     input.append(level2_Co[j])  # reservoir level
+                    # from flooding model
+                    if t > 0:
+                        input.append(self.inflow_MC[year][day_of_year - 1])
+                    else:
+                        input.append(self.inflow_MC[0][0])
+                    input.append(
+                        np.sin(2 * np.pi * jj / total_decision_steps_TT - input_variable_list_var[30])
+                    )  # var[30] = phase shift for sin() function  //second last
+                    input.append(
+                        np.sin(2 * np.pi * jj / total_decision_steps_TT - input_variable_list_var[31])
+                    )  # var[31] = phase shift for cos() function //last variable
                     uu = self.RBFs_policy(control_law, input)
                     input.clear()
+
                 # system transition
-                # try:
-                # print(f"year is: {year}")
                 ss_rr_hp = self.res_transition_h(
                     storage2_Co[j],
                     uu,
@@ -601,6 +639,7 @@ class susquehanna_model:
                     day_of_week,
                     j,
                 )
+                # old
                 # ss_rr_hp = self.res_transition_h(
                 #     storage2_Co[j],
                 #     uu,
@@ -614,8 +653,6 @@ class susquehanna_model:
                 #     day_of_week,
                 #     j,
                 # )
-                # except Exception:
-                #     print(t, " day has an error")
                 storage2_Co[j + 1] = ss_rr_hp[0]
                 storage2_MR[j + 1] = ss_rr_hp[1]
                 level2_Co[j + 1] = self.storageToLevel(storage2_Co[j + 1], 1)
@@ -648,18 +685,14 @@ class susquehanna_model:
             storage_MR[t + 1] = storage2_MR[self.day_fraction]
 
             # clear subdaily values
-            level2_Co = [-999.0] * (self.day_fraction + 1)  # .clear()
-            storage2_Co = [-999.0] * (self.day_fraction + 1)  # .clear()
-            level2_MR = [-999.0] * (self.day_fraction + 1)  # .clear()
-            storage2_MR = [-999.0] * (self.day_fraction + 1)  # .clear()
+            level2_Co = [-999.0] * (self.day_fraction + 1)  # dont use .clear()
+            storage2_Co = [-999.0] * (self.day_fraction + 1)  # dont use .clear()
+            level2_MR = [-999.0] * (self.day_fraction + 1)  # dont use .clear()
+            storage2_MR = [-999.0] * (self.day_fraction + 1)  # dont use .clear()
             release2_A.clear()
             release2_B.clear()
             release2_C.clear()
             release2_D.clear()
-            # level2_Co.clear() Cannot clear!!
-            # storage2_Co.clear()
-            # level2_MR.clear()
-            # storage2_MR.clear()
 
         # compute objectives >> no numpy array yet
         level_Co.pop(0)
@@ -675,50 +708,3 @@ class susquehanna_model:
         # utils.logVector(release_D, "./log/rCO_base99.txt")
         # return JJ
         return Jhyd, Jatom, Jbalt, Jches, Jenv, Jrec
-
-        # print(sum(release_B), " baltimore release")
-        # JJ = []
-        # JJ[year]
-        # JJ.append(Jhydropower)
-        # JJ.append(Jatomicpowerplant)
-        # JJ.append(Jbaltimore)
-        # JJ.append(Jchester)
-        # JJ.append(Jrecreation)
-        # JJ.append(Jenvironment)
-
-        # outcomes = [Jhydropower,  Jatomicpowerplant, Jbaltimore, Jchester, Jrecreation, Jenvironment, Jfloodrisk, JFloodDuration]
-        # outcome_names = ['Jhydropower',  'Jatomicpowerplant', 'Jbaltimore', 'Jchester', 'Jrecreation', 'Jenvironment', 'Jfloodrisk', 'JFloodDuration']
-        # for i in outcome:
-
-        # SS = []
-        # SS.append(sum(hydropowerProduction_Co))
-        # SS.append()
-
-        # outcomes = [Jhydropower,  Jatomicpowerplant, Jbaltimore, Jchester, Jrecreation, Jenvironment, Jfloodrisk, JFloodDuration]
-
-        # Jhydropower = utils.filterDictionaryPercentile(Jhydropower, 99)
-        # Jatomicpowerplant = utils.filterDictionaryPercentile(Jatomicpowerplant, 99)
-        # Jbaltimore = utils.filterDictionaryPercentile(Jbaltimore, 99)
-        # Jchester = utils.filterDictionaryPercentile(Jchester, 99)
-        # Jrecreation = utils.filterDictionaryPercentile(Jrecreation, 99)
-        # Jenvironment = utils.filterDictionaryPercentile(Jenvironment, 99)
-        # Jfloodrisk = utils.filterDictionaryPercentile(Jfloodrisk, 99)
-        # JFloodDuration = utils.filterDictionaryPercentile(JFloodDuration, 99)
-
-        # print("Hydropower Revenue ", Jhydropower)
-        # print(JJ[0])
-
-        # print("Atomic Power Plant")
-        # print(JJ[1])
-
-        # print("Baltimore")
-        # print(JJ[2])
-
-        # print("Chester")
-        # print(JJ[3])
-
-        # print("Recreation")
-        # print(JJ[4])
-
-        # print("Environment")
-        # print(JJ[5])
