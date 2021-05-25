@@ -56,21 +56,14 @@ class RBF:
         return center, radius, weights
 
     def rbf_control_law(self, inputRBF):
-        phi = []   # phi=control parameters
-        center, radius, weights = self.set_parameters() # calling the previous function with default values of input, output and number of RBF
-        for j in range(0, self.numberOfRBF):
-            bf = 0
-            for i in range(self.numberOfInputs):
-                numerator = (inputRBF[i]-center[j][i])*(inputRBF[i]-center[j][i])
-                denominator = (radius[j][i]**2)
-                if denominator < (10**-6):
-                    denominator = 10**-6
-                bf = bf + numerator / denominator
-            phi.append(math.exp(-bf))
-        out = []
-        for k in range(self.numberOfOutputs):
-            o = 0.0
-            for i in range(self.numberOfRBF):
-                o = o + weights[i][k] * phi[i]
-            out.append(o)
+        (
+            center,
+            radius,
+            weights,
+        ) = (
+            self.set_parameters()
+        )  # calling the previous function with default values of input, output and number of RBF
+        # phi=control parameters
+        phi = np.exp(-((np.array(inputRBF) - center) ** 2 / radius ** 2).sum(axis=1))
+        out = (weights * (phi.reshape(self.numberOfRBF, 1))).sum(axis=0)
         return out
