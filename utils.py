@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+from numba import njit
 
 # Can't load matrix with just numpy for some reason, troubleshoot later
 # # TODO: Set default values to take all rows and all columns
@@ -54,12 +55,9 @@ def filterDictionaryPercentile(dictionary, percentile):  # Sahiti
     dictionary = dict(filter(lambda x: x[1] >= percentile, dictionary.items()))
     return dictionary
 
-
+@njit
 def interpolate_linear(X, Y, x):
     dim = len(X) - 1
-    # print(f"X: {X}")
-    # print(f"x: {x}")
-    # print(f"X[0]: {X[0]}")
     # if storage is less than
     if x <= X[0]:
         # if x is smaller than the smallest value on X, interpolate between the first two values
