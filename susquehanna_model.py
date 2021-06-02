@@ -1,5 +1,4 @@
 import numpy as np
-from tqdm import tqdm
 import utils
 from rbf import RBF
 
@@ -22,13 +21,17 @@ class susquehanna_model:
         self.output_max = []
         self.PolicySim = ""
 
-        self.Nobj = 6  # 8 in flood version
         self.n_days_in_year = 365
         self.n_years = n_years  # historical record #1000 simulation horizon (1996,2001)
         self.time_horizon_H = self.n_days_in_year * self.n_years
         self.dec_step = 4  # 4-hours decisional time step
         self.day_fraction = int(24 / self.dec_step)
         self.n_days_one_year = 1 * 365
+        # Constraints for the reservoir
+        self.min_level_chester = 99.8  # ft of water
+        self.min_level_app = 98.5  # ft of water
+        self.min_level_baltimore = 90.8  # ft of water
+        self.min_level_conowingo = 100.5  # ft
 
     def load_data(self, histomc):
         # n_days_one_year = 1*365 moved to init
@@ -114,7 +117,7 @@ class susquehanna_model:
 
         # standardization of the input-outpu of the RBF release curve
         self.input_max.append(self.n_days_in_year * self.day_fraction - 1)
-        # self.input_max.append(6)
+        # self.input_max.append(6) commented out in c model
         self.input_max.append(120)
         self.output_max.append(utils.computeMax(self.w_atomic))
         self.output_max.append(utils.computeMax(self.w_baltimore))
@@ -125,23 +128,21 @@ class susquehanna_model:
         self.PolicySim = newPolicySim
 
     def setRBF(self, pn, pm, pK):
-        self.RBF_setting.append(pn)
-        self.RBF_setting.append(pm)
-        self.RBF_setting.append(pK)
-        return self.RBF_setting
+        self.RBFs = pn
+        self.inputs = pm
+        self.outputs = pK
 
     def RBFs_policy(self, control_law, input):
         input1 = []
-        for i in range(0, self.RBF_setting[1]):
-            # RBF_setting[1] is the number of inputs. Input1 is the normalized value of each
-            # input1.append((input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i]))
+        for i in range(0, self.inputs):
             input1.append(input[i] / self.input_max[i])
+            # input1.append((input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i]))
         # RBF
         u = []
         u = control_law.rbf_control_law(input1)  #  print("first element of u " + str(u[0]))
-        # de-normalization, Q: What is denormalization? Why do we do it?
+        # de-normalization
         uu = []
-        for i in range(0, self.RBF_setting[2]):  # RBF_setting[2] is the total number of outputs
+        for i in range(0, self.outputs):
             uu.append(u[i] * self.output_max[i])
         return uu
 
@@ -273,20 +274,20 @@ class susquehanna_model:
         qM_C = self.w_chester[day_of_year]
         qM_D = Tcap
 
-        # implement from flooding model?
-        # if level_Co <= self.min_level_app:
-        #     qM_A = 0.0
-        # else:
-        #     qM_A = self.w_atomic[day_of_year]
+        # reservoir release constraints
+        if level_Co <= self.min_level_app:
+            qM_A = 0.0
+        else:
+            qM_A = self.w_atomic[day_of_year]
 
-        # if level_Co <= self.min_level_baltimore:
-        #     qM_B = 0.0
-        # else:
-        #     qM_B = self.w_baltimore[day_of_year]
-        # if level_Co <= self.min_level_chester:
-        #     qM_C = 0.0
-        # else:
-        #     qM_C = self.w_chester[day_of_year]
+        if level_Co <= self.min_level_baltimore:
+            qM_B = 0.0
+        else:
+            qM_B = self.w_baltimore[day_of_year]
+        if level_Co <= self.min_level_chester:
+            qM_C = 0.0
+        else:
+            qM_C = self.w_chester[day_of_year]
 
         if level_Co > 110.2:  # spillways activated
             qM_D = (
@@ -570,8 +571,7 @@ class susquehanna_model:
         # release decision variables ( AtomicPP, Baltimore, Chester ) only Downstream in Baseline
         uu = []
         ss_rr_hp = []
-        # RBF.control_law(self.RBF_setting[0], self.RBF_setting[1], self.RBF_setting[2], var)
-        control_law = RBF(self.RBF_setting[0], self.RBF_setting[1], self.RBF_setting[2], input_variable_list_var)
+        control_law = RBF(self.RBFs, self.inputs, self.outputs, input_variable_list_var)
         input = []
 
         # initial condition
@@ -609,19 +609,19 @@ class susquehanna_model:
                 if opt_met == 0:  # fixed release
                     uu.append(uu[0])
                 elif opt_met == 1:  # RBF-PSO
-                    # input.append(jj) # in vanilla
+                    input.append(jj)  # change with phaseshift?
                     input.append(level2_Co[j])  # reservoir level
-                    # from flooding model
-                    if t > 0:
-                        input.append(self.inflow_MC[year][day_of_year - 1])
-                    else:
-                        input.append(self.inflow_MC[0][0])
-                    input.append(
-                        np.sin(2 * np.pi * jj / total_decision_steps_TT - input_variable_list_var[30])
-                    )  # var[30] = phase shift for sin() function  //second last
-                    input.append(
-                        np.sin(2 * np.pi * jj / total_decision_steps_TT - input_variable_list_var[31])
-                    )  # var[31] = phase shift for cos() function //last variable
+                    # phaseshift
+                    # if t > 0:
+                    #     input.append(self.inflow_MC[year][day_of_year - 1])
+                    # else:
+                    #     input.append(self.inflow_MC[0][0])
+                    # input.append(
+                    #     np.sin(2 * np.pi * jj / total_decision_steps_TT - input_variable_list_var[30])
+                    # )  # var[30] = phase shift for sin() function  //second last
+                    # input.append(
+                    #     np.sin(2 * np.pi * jj / total_decision_steps_TT - input_variable_list_var[31])
+                    # )  # var[31] = phase shift for cos() function //last variable
                     uu = self.RBFs_policy(control_law, input)
                     input.clear()
 
@@ -639,20 +639,7 @@ class susquehanna_model:
                     day_of_week,
                     j,
                 )
-                # old
-                # ss_rr_hp = self.res_transition_h(
-                #     storage2_Co[j],
-                #     uu,
-                #     inflow_MC_n_sim[t],
-                #     inflowLateral_MC_n_lat[t],
-                #     evap_CO_MC_e_co[t],
-                #     storage2_MR[j],
-                #     inflow_Muddy_MC_n_mr[t],
-                #     evap_Muddy_MC_e_mr[t],
-                #     day_of_year,
-                #     day_of_week,
-                #     j,
-                # )
+
                 storage2_Co[j + 1] = ss_rr_hp[0]
                 storage2_MR[j + 1] = ss_rr_hp[1]
                 level2_Co[j + 1] = self.storageToLevel(storage2_Co[j + 1], 1)
@@ -679,7 +666,7 @@ class susquehanna_model:
             storage_Co[t + 1] = storage2_Co[self.day_fraction]
             release_A[day_of_year] = utils.computeMean(release2_A)
             release_B[day_of_year] = utils.computeMean(release2_B)
-            release_C[day_of_year] = utils.computeMean(release2_B)
+            release_C[day_of_year] = utils.computeMean(release2_C)  # release2_B
             release_D[day_of_year] = utils.computeMean(release2_D)
             level_MR[t + 1] = level2_MR[self.day_fraction]
             storage_MR[t + 1] = storage2_MR[self.day_fraction]
@@ -700,6 +687,7 @@ class susquehanna_model:
         Jatom = self.g_VolRel(release_A, self.w_atomic)
         Jbalt = self.g_VolRel(release_B, self.w_baltimore)
         Jches = self.g_VolRel(release_C, self.w_chester)
+        print(Jches)
         Jenv = self.g_ShortageIndex(release_D, self.min_flow)
         Jrec = self.g_StorageReliability(storage_Co, self.h_ref_rec)
         # JJ = []
