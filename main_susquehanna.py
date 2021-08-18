@@ -13,29 +13,26 @@ logging.basicConfig(level=logging.INFO)
 
 
 def main():
+    # RBF parameters
+    numberOfInput = 4  # (time, storage of Conowingo) + 2 for phaseshift
+    numberOfOutput = 4  # Atomic, Baltimore,Chester, Downstream:- hydropower, environmental
+    numberOfRBF = 6  # numberOfInput + 2
+    # N = 2 * n * m + K * n  # check 32 with 2 inputs, 72 with 4 inputs
+
     # Initialize model
-    policy_sim = 0
     nobjs = 6
-    nvars = 32  # 48
-    # vars = np.zeros(nvars).tolist()
+    nvars = int(numberOfRBF * 8 + 2)  # +2 for phaseshift
     n_years = 1
-    susquehanna_river = susquehanna_model(
-        108.5, 505.0, 5, n_years
-    )  # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
+    susquehanna_river = susquehanna_model(108.5, 505.0, 5, n_years)  # l0, l0_MR, d0, years
+    # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
     susquehanna_river.load_data(0)  # 0 = historic, 1 = stochastic
 
-    # RBF parameters
-    m = 2  # number of input (time, storage of Conowingo)
-    K = 4  # number of output, Atomic, Baltimore,Chester, Downstream:- hydropower, environmental
-    n = m + 2  # number of RBF
-    N = 2 * n * m + K * n  # check
-    if not N == nvars:
-        print("N not equal to nvars")
-    susquehanna_river.setRBF(n, m, K)
-    susquehanna_river.setPolicySim(policy_sim)
+    susquehanna_river.setRBF(numberOfRBF, numberOfInput, numberOfOutput)
 
-    LB = [-1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0]
-    UB = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    # Lower and Upper Bound for problem.types
+    LB = [-1, 0, -1, 0, 0, 0, 0, 0] * numberOfRBF + [0, 0]
+    UB = [1, 1, 1, 1, 1, 1, 1, 1] * numberOfRBF + [np.pi * 2, np.pi * 2]
+    # np.pi*2 for phaseshift upperbounds (J. Quinn Como model)
     EPS = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
 
     # platypus for MOEA, # no contraints
@@ -46,18 +43,18 @@ def main():
     # problem.function = functools.partial(susquehanna_river.evaluates, opt_met=1) #way to add arguments
     # problem.function = susquehanna_river.evaluateMC  # stochastic optimization
     # problem.directions[:] = Problem.MINIMIZE
-    problem.directions[0] = Problem.MAXIMIZE  # hydropower
-    problem.directions[1] = Problem.MAXIMIZE  # atomicpowerplant
-    problem.directions[2] = Problem.MAXIMIZE  # baltimore
-    problem.directions[3] = Problem.MAXIMIZE  # chester
-    problem.directions[4] = Problem.MINIMIZE  # environment
-    problem.directions[5] = Problem.MAXIMIZE  # recreation
+    problem.directions[0] = Problem.MINIMIZE  # hydropower
+    problem.directions[1] = Problem.MINIMIZE  # atomicpowerplant
+    problem.directions[2] = Problem.MINIMIZE  # baltimore
+    problem.directions[3] = Problem.MINIMIZE  # chester
+    problem.directions[4] = Problem.MAXIMIZE  # environment
+    problem.directions[5] = Problem.MINIMIZE  # recreation
 
     # algorithm = NSGAII(problem)
     # algorithm.run(1)
     with ProcessPoolEvaluator(4) as evaluator:
-        algorithm = EpsNSGAII(problem, epsilons=EPS, population_size=10, evaluator=evaluator)
-        algorithm.run(1000)
+        algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)  # population_size=100
+        algorithm.run(100)
 
     # results
     print("results:")
