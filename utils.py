@@ -15,6 +15,7 @@ from numba import njit
 def loadMatrix(file_name, row, column):
     output = pd.read_csv(file_name, header=None, sep="   ", nrows=row, usecols=range(0, column), engine="python")
     output = output.to_numpy()
+    # output = output.values
     return output
 
 
@@ -22,6 +23,8 @@ def loadMatrix(file_name, row, column):
 def loadVector(file_name, row):
     try:
         output = np.loadtxt(file_name, dtype=float, max_rows=int(row))
+        # output = pd.read_csv(file_name, nrows=row, header=None)
+        # output = output[0].tolist()
     except IOError:
         raise Exception("Unable to open file")
     return output
@@ -55,6 +58,7 @@ def filterDictionaryPercentile(dictionary, percentile):  # Sahiti
     dictionary = dict(filter(lambda x: x[1] >= percentile, dictionary.items()))
     return dictionary
 
+
 @njit
 def interpolate_linear(X, Y, x):
     dim = len(X) - 1
@@ -72,36 +76,43 @@ def interpolate_linear(X, Y, x):
     return y
 
 
+@njit
 def gallonToCubicFeet(x):
     conv = 0.13368  # 1 gallon = 0.13368 cf
     return x * conv
 
 
+@njit
 def inchesToFeet(x):
     conv = 0.08333  # 1 inch = 0.08333 ft
     return x * conv
 
 
+@njit
 def cubicFeetToCubicMeters(x):
     conv = 0.0283  # 1 cf = 0.0283 m3
     return x * conv
 
 
+@njit
 def feetToMeters(x):
     conv = 0.3048  # 1 ft = 0.3048 m
     return x * conv
 
 
+@njit
 def acreToSquaredFeet(x):
     conv = 43560  # 1 acre = 43560 feet2
     return x * conv
 
 
+@njit
 def acreFeetToCubicFeet(x):
     conv = 43560  # 1 acre-feet = 43560 feet3
     return x * conv
 
 
+@njit
 def cubicFeetToAcreFeet(x):
     conv = 43560  # 1 acre = 43560 feet2
     return x / conv
@@ -115,7 +126,7 @@ def computeMax(g):
     if isinstance(g, np.ndarray):
         return g.max()  # has to be np array
     else:
-        # print("No np array check code")
+        # print("No np array check max code")
         return max(g)  # np.max(g)
 
 
@@ -123,18 +134,22 @@ def computeMin(g):
     if isinstance(g, np.ndarray):
         return g.min()  # has to be np array
     else:
-        # print("No np array check code")
+        # print("No np array check min code")
         return min(g)  # np.min(g)
 
 
 def computeMean(g):
-    return sum(g) / len(g)
-    # if isinstance(g, np.ndarray):
-    #     return g.mean()  # has to be np array
-    # else:
-    #     print("No np array check code")
-    #     return np.mean(g)
+    if isinstance(g, np.ndarray):
+        return g.mean()  # has to be np array
+    else:
+        # print("No np array check mean code")
+        return sum(g) / len(g)
+        # return np.mean(g)
 
 
 def computeSum(g):
-    return sum(g)
+    if isinstance(g, np.ndarray):
+        return g.sum()
+    else:
+        # print("No np array check sum code")
+        return sum(g)
