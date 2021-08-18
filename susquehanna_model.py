@@ -26,7 +26,7 @@ class susquehanna_model:
         self.time_horizon_H = self.n_days_in_year * self.n_years
         self.dec_step = 4  # 4-hours decisional time step
         self.day_fraction = int(24 / self.dec_step)
-        self.n_days_one_year = 1 * 365
+        self.n_days_one_year = 365
         # Constraints for the reservoir
         self.min_level_chester = 99.8  # ft of water
         self.min_level_app = 98.5  # ft of water
@@ -138,6 +138,7 @@ class susquehanna_model:
             input1.append(input[i] / self.input_max[i])
             # input1.append((input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i]))
         # RBF
+        # print(input1)
         u = []
         u = control_law.rbf_control_law(input1)  #  print("first element of u " + str(u[0]))
         # de-normalization
@@ -159,7 +160,7 @@ class susquehanna_model:
             opt_met,
         )
         outcomes = [Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation]
-        print(outcomes)
+        # print(outcomes)
         return outcomes
 
     def evaluateMC(self, var, opt_met=1):
@@ -184,7 +185,7 @@ class susquehanna_model:
             Jche.append(Jchester)
             Jenv.append(Jenvironment)
             Jrec.append(Jrecreation)
-            print(Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation)
+            # print(Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation)
         # objectives aggregation (minimax)
         obj.insert(0, utils.computePercentile(Jhyd, 99))
         obj.insert(1, utils.computePercentile(Jatom, 99))
@@ -192,7 +193,7 @@ class susquehanna_model:
         obj.insert(3, utils.computePercentile(Jche, 99))
         obj.insert(4, utils.computePercentile(Jenv, 99))
         obj.insert(5, utils.computePercentile(Jrec, 99))
-        print(obj)
+        # print(obj)
         return obj
 
     def storageToLevel(self, s, lake):
@@ -549,6 +550,10 @@ class susquehanna_model:
         release_B = [-999.0] * self.time_horizon_H
         release_C = [-999.0] * self.time_horizon_H
         release_D = [-999.0] * self.time_horizon_H
+        # release_A = []
+        # release_B = []
+        # release_C = []
+        # release_D = []
 
         # subdaily variables
         storage2_Co = [-999.0] * (self.day_fraction + 1)
@@ -687,7 +692,6 @@ class susquehanna_model:
         Jatom = self.g_VolRel(release_A, self.w_atomic)
         Jbalt = self.g_VolRel(release_B, self.w_baltimore)
         Jches = self.g_VolRel(release_C, self.w_chester)
-        print(Jches)
         Jenv = self.g_ShortageIndex(release_D, self.min_flow)
         Jrec = self.g_StorageReliability(storage_Co, self.h_ref_rec)
         # JJ = []
@@ -695,4 +699,4 @@ class susquehanna_model:
         # utils.logVector(level_Co, "./log/hCO_base99.txt")
         # utils.logVector(release_D, "./log/rCO_base99.txt")
         # return JJ
-        return Jhyd, Jatom, Jbalt, Jches, Jenv, Jrec
+        return -Jhyd, -Jatom, -Jbalt, -Jches, Jenv, -Jrec
