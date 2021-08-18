@@ -1,6 +1,7 @@
 import numpy as np
 import utils
 from rbf import RBF
+from numba import njit
 
 
 class susquehanna_model:
@@ -138,9 +139,8 @@ class susquehanna_model:
             input1.append(input[i] / self.input_max[i])
             # input1.append((input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i]))
         # RBF
-        # print(input1)
         u = []
-        u = control_law.rbf_control_law(input1)  #  print("first element of u " + str(u[0]))
+        u = control_law.rbf_control_law(input1)
         # de-normalization
         uu = []
         for i in range(0, self.outputs):
@@ -185,7 +185,6 @@ class susquehanna_model:
             Jche.append(Jchester)
             Jenv.append(Jenvironment)
             Jrec.append(Jrecreation)
-            # print(Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation)
         # objectives aggregation (minimax)
         obj.insert(0, utils.computePercentile(Jhyd, 99))
         obj.insert(1, utils.computePercentile(Jatom, 99))
@@ -316,43 +315,63 @@ class susquehanna_model:
         rr.append(min(qM_D, max(qm_D, uu[3])))
         return rr
 
-    def g_hydRevCo(self, r, h, day_of_year, hour0):
+    @staticmethod
+    @njit
+    def g_hydRevCo(r, h, day_of_year, hour0, GG, gammaH20, tailwater, turbines, energy_prices):
+        def interpolate_tailwater_level(X, Y, x):
+            dim = len(X) - 1
+            if x <= X[0]:
+                y = (x - X[0]) * (Y[1] - Y[0]) / (X[1] - X[0]) + Y[0]
+                return y
+            elif x >= X[dim]:
+                y = Y[dim] + (Y[dim] - Y[dim - 1]) / (X[dim] - X[dim - 1]) * (x - X[dim])
+                return y
+            else:
+                y = np.interp(x, X, Y)
+            return y
+
+        cubicFeetToCubicMeters = 0.0283  # 1 cf = 0.0283 m3
+        feetToMeters = 0.3048  # 1 ft = 0.3048 m
         Nturb = 13
         g_hyd = []
         g_rev = []
         pp = []
         c_hour = len(r) * hour0
         for i in range(0, len(r)):
-            deltaH = h[i] - self.tailwater_level(r[i])
+            deltaH = h[i] - interpolate_tailwater_level(tailwater[0], tailwater[1], r[i])
             q_split = r[i]
             for j in range(0, Nturb):
-                if q_split < self.turbines[1][j]:
+                if q_split < turbines[1][j]:
                     qturb = 0.0
-                elif q_split > self.turbines[0][j]:
-                    qturb = self.turbines[0][j]
+                elif q_split > turbines[0][j]:
+                    qturb = turbines[0][j]
                 else:
                     qturb = q_split
                 q_split = q_split - qturb
                 p = (
                     0.79
-                    * self.GG
-                    * self.gammaH20
-                    * utils.cubicFeetToCubicMeters(qturb)
-                    * utils.feetToMeters(deltaH)
+                    * GG
+                    * gammaH20
+                    * (cubicFeetToCubicMeters * qturb)
+                    * (feetToMeters * deltaH)
                     * 3600
                     / (3600 * 1000)
                 )  # assuming lower efficiency as in Exelon docs
                 pp.append(p)
-            g_hyd.append(sum(pp))
-            g_rev.append(sum(pp) / 1000 * self.energy_prices[c_hour][day_of_year])
+            g_hyd.append(np.sum(np.asarray(pp)))
+            g_rev.append(np.sum(np.asarray(pp)) / 1000 * energy_prices[c_hour][day_of_year])
             pp.clear()
             c_hour = c_hour + 1
-        Gp = sum(g_hyd)
-        Gr = sum(g_rev)
+        Gp = np.sum(np.asarray(g_hyd))
+        Gr = np.sum(np.asarray(g_rev))
         return Gp, Gr
 
-    def g_hydRevMR(self, qp, qr, hCo, hMR, day_of_year, hour0):
+    @staticmethod
+    @njit
+    def g_hydRevMR(qp, qr, hCo, hMR, day_of_year, hour0, GG, gammaH20, turbines_Muddy, energy_prices):
         Nturb = 8
+        cubicFeetToCubicMeters = 0.0283  # 1 cf = 0.0283 m3
+        feetToMeters = 0.3048  # 1 ft = 0.3048 m
         g_hyd = []
         g_pump = []
         g_rev = []
@@ -366,21 +385,20 @@ class susquehanna_model:
             # 8 turbines
             qp_split = qp[i]
             qr_split = qr[i]
-            # Vectorize this part?
             for j in range(0, Nturb):
                 if qp_split < 0.0:
                     qpump = 0.0
-                elif qp_split > self.turbines_Muddy[2]:
-                    qpump = self.turbines_Muddy[2]
+                elif qp_split > turbines_Muddy[2]:
+                    qpump = turbines_Muddy[2]
                 else:
                     qpump = qp_split
 
                 p_ = (
-                    self.turbines_Muddy[3]
-                    * self.GG
-                    * self.gammaH20
-                    * utils.cubicFeetToCubicMeters(qpump)
-                    * utils.feetToMeters(deltaH)
+                    turbines_Muddy[3]
+                    * GG
+                    * gammaH20
+                    * (cubicFeetToCubicMeters * qpump)
+                    * (feetToMeters * deltaH)
                     * 3600
                     / (3600 * 1000)
                 )  # KWh/h
@@ -389,17 +407,17 @@ class susquehanna_model:
 
                 if qr_split < 0.0:
                     qturb = 0.0
-                elif qr_split > self.turbines_Muddy[0]:
-                    qturb = self.turbines_Muddy[0]
+                elif qr_split > turbines_Muddy[0]:
+                    qturb = turbines_Muddy[0]
                 else:
                     qturb = qr_split
 
                 p = (
-                    self.turbines_Muddy[1]
-                    * self.GG
-                    * self.gammaH20
-                    * utils.cubicFeetToCubicMeters(qturb)
-                    * utils.feetToMeters(deltaH)
+                    turbines_Muddy[1]
+                    * GG
+                    * gammaH20
+                    * (cubicFeetToCubicMeters * qturb)
+                    * (feetToMeters * deltaH)
                     * 3600
                     / (3600 * 1000)
                 )  # kWh/h
@@ -407,13 +425,12 @@ class susquehanna_model:
                 qr_split = qr_split - qturb
 
             g_pump.append(pP)
-            g_revP.append(pP / 1000 * self.energy_prices[c_hour][day_of_year])
+            g_revP.append(pP / 1000 * energy_prices[c_hour][day_of_year])
             pP = 0.0
             g_hyd.append(pT)
-            g_rev.append(pT / 1000 * self.energy_prices[c_hour][day_of_year])
+            g_rev.append(pT / 1000 * energy_prices[c_hour][day_of_year])
             pT = 0.0
             c_hour = c_hour + 1
-
         return g_pump, g_hyd, g_revP, g_rev
 
     def res_transition_h(self, s0, uu, n_sim, n_lat, ev, s0_mr, n_sim_mr, ev_mr, day_of_year, day_of_week, hour0):
@@ -433,7 +450,6 @@ class susquehanna_model:
         release_D = [-999.0] * (HH)
         q_pump = [-999.0] * (HH)
         q_rel = [-999.0] * (HH)
-        s_rr = []
         rr = []
 
         # initial conditions
@@ -474,28 +490,43 @@ class susquehanna_model:
                 n_sim + n_lat - release_D[i] - WS - evaporation_losses_Co - q_pump[i] + q_rel[i] - leak
             )
 
-        s_rr.extend(
-            [
-                storage_Co[HH],
-                storage_MR[HH],
-                utils.computeMean(release_A),
-                utils.computeMean(release_B),
-                utils.computeMean(release_C),
-                utils.computeMean(release_D),
-            ]
-        )
+        sto_co = storage_Co[HH]
+        sto_mr = storage_MR[HH]
+        rel_a = utils.computeMean(release_A)
+        rel_b = utils.computeMean(release_B)
+        rel_c = utils.computeMean(release_C)
+        rel_d = utils.computeMean(release_D)
 
+        level_Co = np.asarray(level_Co)
         # 4-hours hydropower production/revenue
-        hp = self.g_hydRevCo(release_D, level_Co, day_of_year, hour0)
-        # hp = self.g_hydRevCo(rDTurb, level_Co, day_of_year, hour0)
-        hp_mr = self.g_hydRevMR(q_pump, q_rel, level_Co, level_MR, day_of_year, hour0)
-
-        # Revenue
-        s_rr.extend([hp[1], hp_mr[2], hp_mr[3]])
-        # Production
-        s_rr.extend([hp[0], hp_mr[0], hp_mr[1]])
-
-        return s_rr
+        # hp = self.g_hydRevCo(release_D, level_Co, day_of_year, hour0)
+        hp = susquehanna_model.g_hydRevCo(
+            np.asarray(release_D),
+            level_Co,
+            day_of_year,
+            hour0,
+            self.GG,
+            self.gammaH20,
+            self.tailwater,
+            self.turbines,
+            self.energy_prices,
+        )
+        # hp_mr = self.g_hydRevMR(q_pump, q_rel, level_Co, level_MR, day_of_year, hour0)
+        hp_mr = susquehanna_model.g_hydRevMR(
+            np.asarray(q_pump),
+            np.asarray(q_rel),
+            level_Co,
+            np.asarray(level_MR),
+            day_of_year,
+            hour0,
+            self.GG,
+            self.gammaH20,
+            self.turbines_Muddy,
+            self.energy_prices,
+        )
+        # Revenue s_rr.extend([hp[1], hp_mr[2], hp_mr[3]])
+        # Production s_rr.extend([hp[0], hp_mr[0], hp_mr[1]])
+        return sto_co, sto_mr, rel_a, rel_b, rel_c, rel_d, hp[1], hp_mr[2], hp_mr[3], hp[0], hp_mr[0], hp_mr[1]
 
     def g_StorageReliability(self, h, hTarget):
         c = 0
@@ -510,22 +541,20 @@ class susquehanna_model:
         G = 1 - c / Nw
         return G
 
-    def g_ShortageIndex(self, q, qTarget):
+    def g_ShortageIndex(self, q1, qTarget):
         delta = 24 * 3600
-        g = []
-        for i in range(0, len(q)):
-            tt = i % self.n_days_one_year
-            gg = max((qTarget[tt] * delta) - (q[i] * delta), 0.0) / (qTarget[tt] * delta)
-            g.append(gg * gg)
+        qTarget = np.tile(qTarget, int(len(q1) / self.n_days_one_year))
+        maxarr = (qTarget * delta) - (q1 * delta)
+        maxarr[maxarr < 0] = 0
+        gg = maxarr / (qTarget * delta)
+        g = np.square(gg)
         G = utils.computeMean(g)
         return G
 
-    def g_VolRel(self, q, qTarget):
-        g = []
+    def g_VolRel(self, q1, qTarget):
         delta = 24 * 3600
-        for i in range(0, len(q)):
-            tt = i % self.n_days_one_year
-            g.append((q[i] * delta) / (qTarget[tt] * delta))
+        qTarget = np.tile(qTarget, int(len(q1) / self.n_days_one_year))
+        g = (q1 * delta) / (qTarget * delta)
         G = utils.computeMean(g)
         return G
 
@@ -689,10 +718,10 @@ class susquehanna_model:
         # compute objectives >> no numpy array yet
         level_Co.pop(0)
         Jhyd = sum(hydropowerRevenue_Co) / self.n_years / pow(10, 6)  # GWh/year (M$/year)
-        Jatom = self.g_VolRel(release_A, self.w_atomic)
-        Jbalt = self.g_VolRel(release_B, self.w_baltimore)
-        Jches = self.g_VolRel(release_C, self.w_chester)
-        Jenv = self.g_ShortageIndex(release_D, self.min_flow)
+        Jatom = self.g_VolRel(np.asarray(release_A), self.w_atomic)
+        Jbalt = self.g_VolRel(np.asarray(release_B), self.w_baltimore)
+        Jches = self.g_VolRel(np.asarray(release_C), self.w_chester)
+        Jenv = self.g_ShortageIndex(np.asarray(release_D), self.min_flow)
         Jrec = self.g_StorageReliability(storage_Co, self.h_ref_rec)
         # JJ = []
         # JJ.extend([Jhyd, Jatom, Jbalt, Jches, Jenv, Jrec])
