@@ -1,22 +1,24 @@
-import math
 import numpy as np
+from numpy.linalg import norm
 
 
 class RBF:
-    # RBF calculates the values of the radial basis function that determine the release 
+    # RBF calculates the values of the radial basis function that determine the release
 
     # Attributes
-    #-------------------
-    # numberOfRBF       : int 
+    # -------------------
+    # numberOfRBF       : int
     #                     number of radial basis functions, typically 2 more than the number of inputs
     # numberofInputs    : int
     # numberOfOutputs   : int
     # center            : list
-    #                     list of center values from optimization
+    #                     list of center values from MOEA
     # radius            : list
-    #                     list of radius values from optimization
+    #                     list of radius values from MOEA
     # weights           : list
-    #                     list of weights from optimization
+    #                     list of weight values from MOEA
+    # inputRBF          : list
+    #                     list of input values (same length as number of inputs)
     # out               : list
     #                     list of the same size as the number of RBFs that determines the control policy
 
@@ -25,45 +27,45 @@ class RBF:
         self.numberOfInputs = numberOfInputs
         self.numberOfOutputs = numberOfOutputs
         self.Theta = Theta
-        # self.inputRBF = inputRBF
 
     def set_parameters(self):
-        idk = 2 * self.numberOfInputs - 1
-        count = 0
-        ws = np.zeros((self.numberOfOutputs, 1))  # []*self.numberOfOutputs
+        Theta = np.array(self.Theta).reshape(-1, 4)
+        centerradius = Theta[::2]
+        weights = Theta[1::2]
+        center = centerradius[:, ::2]
+        radius = centerradius[:, 1::2]
 
-        center = np.zeros((self.numberOfRBF, self.numberOfInputs))
-        radius = np.zeros((self.numberOfRBF, self.numberOfInputs))
-        weights = np.zeros((self.numberOfRBF, self.numberOfOutputs))
-
-        for i in range(0, self.numberOfRBF):
-            for k in range(0, self.numberOfOutputs):
-                idk = idk + 1
-                ws[k][0] = ws[k][0] + self.Theta[idk]
-            idk = idk + 2 * self.numberOfInputs
-        for l in range(self.numberOfRBF):
-            for j in range(self.numberOfInputs):
-                center[l][j] = self.Theta[count]
-                radius[l][j] = self.Theta[count + 1]
-                count = count + 2
-
-            for k in range(self.numberOfOutputs):
-                if ws[k][0] < 10**-6:
-                    weights[l][k] = self.Theta[count]
-                else:
-                    weights[l][k] = self.Theta[count]/ws[k]
-                count = count + 1
+        ws = np.sum(weights, axis=0)  # weights.sum(axis=0)
+        for i in [np.where(ws == i)[0][0] for i in ws if i > 10 ** -6]:
+            weights[:, i] = weights[:, i] / ws[i]
         return center, radius, weights
 
     def rbf_control_law(self, inputRBF):
-        (
-            center,
-            radius,
-            weights,
-        ) = (
-            self.set_parameters()
-        )  # calling the previous function with default values of input, output and number of RBF
-        # phi=control parameters
-        phi = np.exp(-((np.array(inputRBF) - center) ** 2 / radius ** 2).sum(axis=1))
+        center, radius, weights = self.set_parameters()
+        phi = self.gaussian1(inputRBF, center, radius)
         out = (weights * (phi.reshape(self.numberOfRBF, 1))).sum(axis=0)
         return out
+
+    def gaussian1(self, inputRBF, center, radius):
+        return np.exp(-((np.array(inputRBF) - center) ** 2 / (radius ** 2)).sum(axis=1))
+
+    def gaussian2(self, inputRBF, center, radius):
+        return np.exp((-((radius * (np.array(inputRBF) - center)) ** 2)).sum(axis=1))
+
+    def gaussian3(self, inputRBF, center, radius):
+        return np.exp((-((radius * (norm(np.array(inputRBF) - center))) ** 2)).sum(axis=1))
+
+    def invMultiQuadric(self, inputRBF, center, radius):
+        return pow(1 + (norm(center - np.array(inputRBF)) * radius) ** 2, -0.5).sum(axis=1)
+
+    def invMultiQuadric2(self, inputRBF, center, radius):
+        return 1 / np.sqrt(1 + (radius * (center - np.array(inputRBF)) ** 2) ** 2).sum(axis=1)
+
+    def invQuadratic(self, inputRBF, center, radius):
+        return 1 / (1 + (radius * (center - np.array(inputRBF)) ** 2) ** 2).sum(axis=1)
+
+    def exponential(self, inputRBF, center, radius):
+        return np.exp(-(norm(center - np.array(inputRBF)) ** 2) / radius).sum(axis=1)
+
+    def squaredExponential(self, inputRBF, center, radius):
+        return np.exp(-((norm(center - np.array(inputRBF)) ** 2) ** 2) / (2 * radius ** 2)).sum(axis=1)
