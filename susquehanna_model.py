@@ -16,7 +16,6 @@ class susquehanna_model:
         # initial start day
         self.day0 = d0  # day int
         # variables from the header file
-        self.RBF_setting = []
         self.input_min = []
         self.input_max = []
         self.output_max = []
@@ -31,7 +30,7 @@ class susquehanna_model:
         self.min_level_chester = 99.8  # ft of water
         self.min_level_app = 98.5  # ft of water
         self.min_level_baltimore = 90.8  # ft of water
-        self.min_level_conowingo = 100.5  # ft
+        self.min_level_conowingo = 100.5  # ft of water
 
     def load_data(self, histomc):
         # n_days_one_year = 1*365 moved to init
@@ -115,19 +114,33 @@ class susquehanna_model:
             "./data1999/wAtomic.txt", self.n_days_one_year
         )  # water demand for cooling the atomic power plant (cfs)
 
-    def setRBF(self, pn, pm, pK):
+    def setRBF(self, pn, pm, pK, RBFType="squaredExponential"):
+        RBFlist = [
+            "gaussian",
+            "multiquadric",
+            "invmultiquadric",
+            "invquadratic",
+            "exponential",
+            "squaredExponential",
+            "se",
+            "matern32",
+        ]
         self.RBFs = pn
         self.inputs = pm
         self.outputs = pK
+        if RBFType.lower() in RBFlist:
+            self.RBFType = RBFType.lower()
+        else:
+            raise Exception(f"{RBFType} is not supported, please choose one of these RBFs: {', '.join(RBFlist)}")
 
     def RBFs_policy(self, control_law, input):
-        input1 = []
+        input1 = np.zeros(self.inputs)
         for i in range(0, self.inputs):
-            # input1.append(input[i] / self.input_max[i])
-            input1.append((input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i]))
+            #     input1.append(input[i] / self.input_max[i])
+            #     input1.append((input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i]))
+            input1[i] = (input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i])
         # RBF
-        u = []
-        u = control_law.rbf_control_law(input1)  #  print("first element of u " + str(u[0]))
+        u = control_law.rbf_control_law(input1)
         # de-normalization
         uu = []
         for i in range(0, self.outputs):
@@ -180,7 +193,7 @@ class susquehanna_model:
         obj.insert(3, utils.computePercentile(Jche, 99))
         obj.insert(4, utils.computePercentile(Jenv, 99))
         obj.insert(5, utils.computePercentile(Jrec, 99))
-        # print(obj)
+        print(obj)
         return obj
 
     def storageToLevel(self, s, lake):
@@ -485,16 +498,6 @@ class susquehanna_model:
                 n_sim + n_lat - release_D[i] - WS - evaporation_losses_Co - q_pump[i] + q_rel[i] - leak
             )
 
-        # s_rr.extend(
-        #     [
-        #         storage_Co[HH],
-        #         storage_MR[HH],
-        #         utils.computeMean(release_A),
-        #         utils.computeMean(release_B),
-        #         utils.computeMean(release_C),
-        #         utils.computeMean(release_D),
-        #     ]
-        # )
         sto_co = storage_Co[HH]
         sto_mr = storage_MR[HH]
         rel_a = utils.computeMean(release_A)
@@ -532,12 +535,10 @@ class susquehanna_model:
 
         # Revenue
         # s_rr.extend([hp[1], hp_mr[2], hp_mr[3]])
-        revenue = [hp[1], hp_mr[2], hp_mr[3]]
+        # revenue = [hp[1], hp_mr[2], hp_mr[3]]
         # Production
         # s_rr.extend([hp[0], hp_mr[0], hp_mr[1]])
-        production = [hp[0], hp_mr[0], hp_mr[1]]
-
-        # return s_rr
+        # production = [hp[0], hp_mr[0], hp_mr[1]]
         return sto_co, sto_mr, rel_a, rel_b, rel_c, rel_d, hp[1], hp_mr[2], hp_mr[3], hp[0], hp_mr[0], hp_mr[1]
 
     def g_StorageReliability(self, h, hTarget):
@@ -590,11 +591,6 @@ class susquehanna_model:
         release_B = [-999.0] * self.time_horizon_H
         release_C = [-999.0] * self.time_horizon_H
         release_D = [-999.0] * self.time_horizon_H
-        # release_A = []
-        # release_B = []
-        # release_C = []
-        # release_D = []
-
         # subdaily variables
         storage2_Co = [-999.0] * (self.day_fraction + 1)
         level2_Co = [-999.0] * (self.day_fraction + 1)
@@ -616,7 +612,7 @@ class susquehanna_model:
         # release decision variables ( AtomicPP, Baltimore, Chester ) only Downstream in Baseline
         uu = []
         ss_rr_hp = []
-        control_law = RBF(self.RBFs, self.inputs, self.outputs, input_decision_var)
+        control_law = RBF(self.RBFs, self.inputs, self.outputs, self.RBFType, np.asarray(input_decision_var))
         input = []
 
         # initial condition
@@ -742,18 +738,14 @@ class susquehanna_model:
             release2_C.clear()
             release2_D.clear()
 
-        # compute objectives >> no numpy array yet
+        # compute objectives
         level_Co.pop(0)
         Jhyd = sum(hydropowerRevenue_Co) / self.n_years / pow(10, 6)  # GWh/year (M$/year)
         Jatom = self.g_VolRel(np.asarray(release_A), self.w_atomic)
         Jbalt = self.g_VolRel(np.asarray(release_B), self.w_baltimore)
         Jches = self.g_VolRel(np.asarray(release_C), self.w_chester)
-        # print(Jches)
         Jenv = self.g_ShortageIndex(np.asarray(release_D), self.min_flow)
         Jrec = self.g_StorageReliability(storage_Co, self.h_ref_rec)
-        # JJ = []
-        # JJ.extend([Jhyd, Jatom, Jbalt, Jches, Jenv, Jrec])
         # utils.logVector(level_Co, "./log/hCO_base99.txt")
         # utils.logVector(release_D, "./log/rCO_base99.txt")
-        # return JJ
         return -Jhyd, -Jatom, -Jbalt, -Jches, Jenv, -Jrec
