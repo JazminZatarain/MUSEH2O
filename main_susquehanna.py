@@ -7,13 +7,17 @@
 import numpy as np
 from susquehanna_model import susquehanna_model
 from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
+import random
 import logging
 
 logging.basicConfig(level=logging.INFO)
 
 
 def main():
+    # set seed
+    random.seed(1234)
     # RBF parameters
+    RBFType = "SquaredExponential"
     numberOfInput = 4  # (time, storage of Conowingo) + 2 for phaseshift
     numberOfOutput = 4  # Atomic, Baltimore,Chester, Downstream:- hydropower, environmental
     numberOfRBF = 6  # numberOfInput + 2
@@ -27,7 +31,7 @@ def main():
     # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
     susquehanna_river.load_data(0)  # 0 = historic, 1 = stochastic
 
-    susquehanna_river.setRBF(numberOfRBF, numberOfInput, numberOfOutput)
+    susquehanna_river.setRBF(numberOfRBF, numberOfInput, numberOfOutput, RBFType)
 
     # Lower and Upper Bound for problem.types
     LB = [-1, 0, -1, 0, 0, 0, 0, 0] * numberOfRBF + [0, 0]
@@ -53,8 +57,8 @@ def main():
     # algorithm = NSGAII(problem)
     # algorithm.run(1)
     with ProcessPoolEvaluator(4) as evaluator:
-        algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)  # population_size=100
-        algorithm.run(100)
+        algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
+        algorithm.run(1000)
 
     # results
     print("results:")
