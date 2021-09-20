@@ -57,9 +57,9 @@ def main():
 
         # algorithm = NSGAII(problem)
         # algorithm.run(1)
-        with ProcessPoolEvaluator(4) as evaluator:
+        with ProcessPoolEvaluator(4) as evaluator: #change to number of threads
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-            algorithm.run(1000)
+            algorithm.run(100000)
 
         # results
 #         print("results:")
