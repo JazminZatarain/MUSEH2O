@@ -121,7 +121,7 @@ class susquehanna_model:
             "invmultiquadric",
             "invquadratic",
             "exponential",
-            "squaredExponential",
+            "squaredexponential",
             "se",
             "matern32",
         ]
