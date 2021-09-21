@@ -2,15 +2,6 @@ import numpy as np
 import pandas as pd
 from numba import njit
 
-# Can't load matrix with just numpy for some reason, troubleshoot later
-# # TODO: Set default values to take all rows and all columns
-# def loadMatrix(file_name, row, col):
-#     try:
-#         output = np.loadtxt(file_name, dtype=float, max_rows=row)
-#     except IOError:
-#         raise Exception("Unable to open file")
-#     return output
-
 # TODO: Set default values to take all rows and all columns
 def loadMatrix(file_name, row, column):
     output = pd.read_csv(file_name, header=None, sep="   ", nrows=row, usecols=range(0, column), engine="python")
