@@ -8,13 +8,14 @@ import numpy as np
 from susquehanna_model import susquehanna_model
 from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
 import random
+import csv
 import logging
 
 logging.basicConfig(level=logging.INFO)
 
 
 def main():
-    seeds = [10, 20, 30, 40, 50 , 60, 70, 80, 90, 100]
+    seeds = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for modelseed in seeds:
         # set seed
         random.seed(modelseed)
@@ -40,9 +41,8 @@ def main():
         # np.pi*2 for phaseshift upperbounds (J. Quinn Como model)
         EPS = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
 
-        # platypus for MOEA, # no contraints
+        # platypus for MOEA, no contraints
         problem = Problem(nvars, nobjs)
-        # problem.types[:] = Real(-1, 1)
         problem.types[:] = [Real(LB[i], UB[i]) for i in range(nvars)]
         problem.function = susquehanna_river.evaluate  # historical (deterministic) optimization
         # problem.function = functools.partial(susquehanna_river.evaluates, opt_met=1) #way to add arguments
@@ -55,8 +55,6 @@ def main():
         problem.directions[4] = Problem.MAXIMIZE  # environment
         problem.directions[5] = Problem.MINIMIZE  # recreation
 
-        # algorithm = NSGAII(problem)
-        # algorithm.run(1)
         with ProcessPoolEvaluator(4) as evaluator: #change to number of threads
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
             algorithm.run(100000)
@@ -65,12 +63,17 @@ def main():
 #         print("results:")
 #         for solution in algorithm.result:
 #             print(solution.objectives)
-#         with open(f"./output/{rbftype}_{modelseed}_solution.txt", "w") as f:
-#             for solution in algorithm.result:
-#                 f.write("%s\n" % solution.objectives)
-#         with open(f"./output/{rbftype}_{modelseed}_variables.txt", "w") as f:
-#             for solution in algorithm.result:
-#                 f.write("%s\n" % solution.variables)
+        header = ['hydropower', 'atomicpowerplant', 'baltimore', 'chester', 'environment', 'recreation']
+        with open(f'{rbftype}_{modelseed}_solution.csv', 'w', encoding='UTF8', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(header)
+            for solution in algorithm.result:
+                 writer.writerow(solution.objectives)
+
+        with open(f'{rbftype}_{modelseed}_variables.csv', 'w', encoding='UTF8', newline='') as f:
+            writer = csv.writer(f)
+            for solution in algorithm.result:
+                 writer.writerow(solution.variables)
 
 if __name__ == "__main__":
     main()
