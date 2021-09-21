@@ -64,13 +64,13 @@ def main():
 #         for solution in algorithm.result:
 #             print(solution.objectives)
         header = ['hydropower', 'atomicpowerplant', 'baltimore', 'chester', 'environment', 'recreation']
-        with open(f'{rbftype}_{modelseed}_solution.csv', 'w', encoding='UTF8', newline='') as f:
+        with open(f'{RBFType}_{modelseed}_solution.csv', 'w', encoding='UTF8', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(header)
             for solution in algorithm.result:
                  writer.writerow(solution.objectives)
 
-        with open(f'{rbftype}_{modelseed}_variables.csv', 'w', encoding='UTF8', newline='') as f:
+        with open(f'{RBFType}_{modelseed}_variables.csv', 'w', encoding='UTF8', newline='') as f:
             writer = csv.writer(f)
             for solution in algorithm.result:
                  writer.writerow(solution.variables)
