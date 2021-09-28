@@ -160,7 +160,7 @@ class susquehanna_model:
             opt_met,
         )
         outcomes = [Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation]
-        print(outcomes)
+#         print(outcomes)
         return outcomes
 
     def evaluateMC(self, var, opt_met=1):
@@ -193,7 +193,7 @@ class susquehanna_model:
         obj.insert(3, utils.computePercentile(Jche, 99))
         obj.insert(4, utils.computePercentile(Jenv, 99))
         obj.insert(5, utils.computePercentile(Jrec, 99))
-        print(obj)
+#         print(obj)
         return obj
 
     def storageToLevel(self, s, lake):
