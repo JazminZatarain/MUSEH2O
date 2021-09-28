@@ -55,7 +55,7 @@ def main():
         problem.directions[4] = Problem.MAXIMIZE  # environment
         problem.directions[5] = Problem.MINIMIZE  # recreation
 
-        with ProcessPoolEvaluator(4) as evaluator: #change to number of threads
+        with ProcessPoolEvaluator() as evaluator: #change to number of threads
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
             algorithm.run(100000)
 
