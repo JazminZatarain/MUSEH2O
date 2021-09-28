@@ -68,12 +68,12 @@ def main():
             writer = csv.writer(f)
             writer.writerow(header)
             for solution in algorithm.result:
-                 writer.writerow(solution.objectives)
+                writer.writerow(solution.objectives)
 
         with open(f'{RBFType}_{modelseed}_variables.csv', 'w', encoding='UTF8', newline='') as f:
             writer = csv.writer(f)
             for solution in algorithm.result:
-                 writer.writerow(solution.variables)
+                writer.writerow(solution.variables)
 
 if __name__ == "__main__":
     main()
