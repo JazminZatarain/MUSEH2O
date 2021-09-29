@@ -101,7 +101,9 @@ class RBF:
         return np.exp(-(np.sum((inputRBF - center) / radius, axis=1)))
 
     def matern32(self, inputRBF, center, radius):
-        return np.sum(
-            (1 + np.sqrt(3 * (inputRBF - center)) / radius) * (np.exp(-np.sqrt(3 * (inputRBF - center)) / radius)),
-            axis=1,
+        return (1 + np.sqrt(3) * np.sum((inputRBF - center) / radius, axis=1)) * (
+            np.exp(-np.sqrt(3) * np.sum((inputRBF - center) / radius, axis=1))
         )
+    
+    def matern52(self, inputRBF, center, radius):
+        return
