@@ -15,12 +15,19 @@ class susquehanna_model:
         self.init_level_MR = l0_MR  # feet
         # initial start day
         self.day0 = d0  # day int
+        self.log_level_release = False
         # variables from the header file
-        self.RBF_setting = []
         self.input_min = []
         self.input_max = []
         self.output_max = []
-        self.PolicySim = ""
+
+        # log level / release
+        self.blevel_CO = []
+        self.blevel_MR = []
+        self.ratom = []
+        self.rbalt = []
+        self.rches = []
+        self.renv = []
 
         self.n_days_in_year = 365
         self.n_years = n_years  # historical record #1000 simulation horizon (1996,2001)
@@ -125,18 +132,40 @@ class susquehanna_model:
         self.output_max.append(utils.computeMax(self.w_chester))
         self.output_max.append(85412)  # max release = tot turbine capacity + spillways @ max storage
 
-    def setPolicySim(self, newPolicySim):
-        self.PolicySim = newPolicySim
+    def set_log(self, log_objectives):
+        if log_objectives:
+            self.log_objectives = True
+        else:
+            self.log_objectives = False
+            
+    def obj_log(self):
+        return self.blevel_CO, self.blevel_MR, self.ratom, self.rbalt, self.rches, self.renv
 
-    def setRBF(self, pn, pm, pK):
+    def setRBF(self, pn, pm, pK, RBFType="squaredExponential"):
+        RBFlist = [
+            "gaussian",
+            "multiquadric",
+            "invmultiquadric",
+            "invquadratic",
+            "exponential",
+            "squaredexponential",
+            "se",
+            "matern32",
+        ]
         self.RBFs = pn
         self.inputs = pm
         self.outputs = pK
+        if RBFType.lower() in RBFlist:
+            self.RBFType = RBFType.lower()
+        else:
+            raise Exception(f"{RBFType} is not supported, please choose one of these RBFs: {', '.join(RBFlist)}")
 
     def RBFs_policy(self, control_law, input):
-        input1 = []
+        # input1 = []
+        input1 = np.zeros(self.inputs)
         for i in range(0, self.inputs):
-            input1.append(input[i] / self.input_max[i])
+            input1[i] = input[i] / self.input_max[i]
+            # input1.append(input[i] / self.input_max[i])
             # input1.append((input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i]))
         # RBF
         u = []
@@ -579,10 +608,6 @@ class susquehanna_model:
         release_B = [-999.0] * self.time_horizon_H
         release_C = [-999.0] * self.time_horizon_H
         release_D = [-999.0] * self.time_horizon_H
-        # release_A = []
-        # release_B = []
-        # release_C = []
-        # release_D = []
 
         # subdaily variables
         storage2_Co = [-999.0] * (self.day_fraction + 1)
@@ -605,7 +630,7 @@ class susquehanna_model:
         # release decision variables ( AtomicPP, Baltimore, Chester ) only Downstream in Baseline
         uu = []
         ss_rr_hp = []
-        control_law = RBF(self.RBFs, self.inputs, self.outputs, input_variable_list_var)
+        control_law = RBF(self.RBFs, self.inputs, self.outputs, self.RBFType, np.asarray(input_variable_list_var))
         input = []
 
         # initial condition
@@ -643,7 +668,7 @@ class susquehanna_model:
                 if opt_met == 0:  # fixed release
                     uu.append(uu[0])
                 elif opt_met == 1:  # RBF-PSO
-                    input.append(jj)  # change with phaseshift?
+                    input.append(jj)  # change with phaseshift
                     input.append(level2_Co[j])  # reservoir level
                     # phaseshift
                     # if t > 0:
@@ -715,7 +740,15 @@ class susquehanna_model:
             release2_C.clear()
             release2_D.clear()
 
-        # compute objectives >> no numpy array yet
+        # log level / release
+        if self.log_objectives:
+            self.blevel_CO.append(level_Co)
+            self.blevel_MR.append(level_MR)
+            self.ratom.append(release_A)
+            self.rbalt.append(release_B)
+            self.rches.append(release_C)
+            self.renv.append(release_D)
+        # compute objectives
         level_Co.pop(0)
         Jhyd = sum(hydropowerRevenue_Co) / self.n_years / pow(10, 6)  # GWh/year (M$/year)
         Jatom = self.g_VolRel(np.asarray(release_A), self.w_atomic)
