@@ -72,36 +72,43 @@ def interpolate_linear(X, Y, x):
     return y
 
 
+@njit
 def gallonToCubicFeet(x):
     conv = 0.13368  # 1 gallon = 0.13368 cf
     return x * conv
 
 
+@njit
 def inchesToFeet(x):
     conv = 0.08333  # 1 inch = 0.08333 ft
     return x * conv
 
 
+@njit
 def cubicFeetToCubicMeters(x):
     conv = 0.0283  # 1 cf = 0.0283 m3
     return x * conv
 
 
+@njit
 def feetToMeters(x):
     conv = 0.3048  # 1 ft = 0.3048 m
     return x * conv
 
 
+@njit
 def acreToSquaredFeet(x):
     conv = 43560  # 1 acre = 43560 feet2
     return x * conv
 
 
+@njit
 def acreFeetToCubicFeet(x):
     conv = 43560  # 1 acre-feet = 43560 feet3
     return x * conv
 
 
+@njit
 def cubicFeetToAcreFeet(x):
     conv = 43560  # 1 acre = 43560 feet2
     return x / conv
