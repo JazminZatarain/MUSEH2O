@@ -38,17 +38,12 @@ class RBF:
         self.RBFType = RBFType
 
     def set_parameters(self):
-        Theta = self.Theta[:-2].copy()
+        Theta = self.Theta.copy()
         Theta = Theta.reshape((-1, 4))
         centerradius = Theta[::2]
         weights = Theta[1::2]
         center = centerradius[:, ::2]
         radius = centerradius[:, 1::2]
-        # phaseshift
-        zeros_arr = np.zeros((self.numberOfRBF, 2), center.dtype)
-        ones_arr = np.ones((self.numberOfRBF, 2), radius.dtype)
-        center = np.column_stack((center, zeros_arr))
-        radius = np.column_stack((radius, ones_arr))
 
         ws = weights.sum(axis=0)
         for i in [np.where(ws == i)[0][0] for i in ws if i > 10 ** -6]:
