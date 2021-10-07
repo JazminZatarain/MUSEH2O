@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 
 def main():
-    seeds = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    seeds = [10] #, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for modelseed in seeds:
         # set seed
         random.seed(modelseed)
@@ -57,7 +57,7 @@ def main():
 
         with ProcessPoolEvaluator() as evaluator: #change to number of threads
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-            algorithm.run(100000)
+            algorithm.run(50000)
 
         # results
 #         print("results:")
