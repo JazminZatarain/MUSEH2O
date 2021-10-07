@@ -62,24 +62,24 @@ def main():
     # algorithm.run(1)
     with ProcessPoolEvaluator() as evaluator:
         algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-        algorithm.run(1000)
+        algorithm.run(50000)
 
     # results
     print("results:")
     for solution in algorithm.result:
         print(solution.objectives)
 
-#     header = ["hydropower", "atomicpowerplant", "baltimore", "chester", "environment", "recreation"]
-#     with open(f"output/{RBFType}_{modelseed}_solution.csv", "w", encoding="UTF8", newline="") as f:
-#         writer = csv.writer(f)
-#         writer.writerow(header)
-#         for solution in algorithm.result:
-#             writer.writerow(solution.objectives)
+    header = ["hydropower", "atomicpowerplant", "baltimore", "chester", "environment", "recreation"]
+    with open(f"output/{RBFType}_{modelseed}_solution.csv", "w", encoding="UTF8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        for solution in algorithm.result:
+            writer.writerow(solution.objectives)
 
-#     with open(f"output/{RBFType}_{modelseed}_variables.csv", "w", encoding="UTF8", newline="") as f:
-#         writer = csv.writer(f)
-#         for solution in algorithm.result:
-#             writer.writerow(solution.variables)
+    with open(f"output/{RBFType}_{modelseed}_variables.csv", "w", encoding="UTF8", newline="") as f:
+        writer = csv.writer(f)
+        for solution in algorithm.result:
+            writer.writerow(solution.variables)
 
 
 if __name__ == "__main__":
