@@ -677,7 +677,7 @@ class susquehanna_model:
                         )  # check ghub julianneq
                     )  # var[30] = phase shift for sin() function  //second last
                     input.append(
-                        np.sin(2 * np.pi * jj / total_decision_steps_TT - input_decision_var[-1])
+                        np.cos(2 * np.pi * jj / total_decision_steps_TT - input_decision_var[-1])
                     )  # var[31] = phase shift for cos() function //last variable
                     uu = self.RBFs_policy(control_law, input)
                     input.clear()
