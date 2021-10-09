@@ -32,7 +32,7 @@ def main():
         susquehanna_river = susquehanna_model(108.5, 505.0, 5, n_years)  # l0, l0_MR, d0, years
         # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
         susquehanna_river.load_data(0)  # 0 = historic, 1 = stochastic
-
+        susquehanna_river.set_log(False)
         susquehanna_river.setRBF(numberOfRBF, numberOfInput, numberOfOutput, RBFType)
 
         # Lower and Upper Bound for problem.types
