@@ -20,12 +20,17 @@ class susquehanna_model:
         self.input_max = []
         self.output_max = []
 
+        self.blevel_CO = []
+        self.blevel_MR = []
+        self.ratom = []
+        self.rbalt = []
+        self.rches = []
+        self.renv = []
         self.n_days_in_year = 365
         self.n_years = n_years  # historical record #1000 simulation horizon (1996,2001)
         self.time_horizon_H = self.n_days_in_year * self.n_years
         self.dec_step = 4  # 4-hours decisional time step
         self.day_fraction = int(24 / self.dec_step)
-        self.n_days_one_year = 1 * 365
         # Constraints for the reservoir
         self.min_level_chester = 99.8  # ft of water
         self.min_level_app = 98.5  # ft of water
@@ -33,7 +38,6 @@ class susquehanna_model:
         self.min_level_conowingo = 100.5  # ft of water
 
     def load_data(self, histomc):
-        # n_days_one_year = 1*365 moved to init
         # Conowingo characteristics
         self.lsv_rel = utils.loadMatrix(
             "./data1999/lsv_rel_Conowingo.txt", 3, 10
@@ -60,64 +64,74 @@ class susquehanna_model:
             self.data = 0
             # historical
             self.evap_CO_MC = utils.loadMultiVector(
-                "./data_historical/vectors/evapCO_history.txt", self.n_years, self.n_days_one_year
+                "./data_historical/vectors/evapCO_history.txt", self.n_years, self.n_days_in_year
             )  # evaporation losses (inches per day)
             self.inflow_MC = utils.loadMultiVector(
-                "./data_historical/vectors/MariettaFlows_history.txt", self.n_years, self.n_days_one_year
+                "./data_historical/vectors/MariettaFlows_history.txt", self.n_years, self.n_days_in_year
             )  # inflow, i.e. flows at Marietta (cfs)
             self.inflowLat_MC = utils.loadMultiVector(
-                "./data_historical/vectors/nLat_history.txt", self.n_years, self.n_days_one_year
+                "./data_historical/vectors/nLat_history.txt", self.n_years, self.n_days_in_year
             )  # lateral inflows from Marietta to Conowingo (cfs)
             self.evap_Muddy_MC = utils.loadMultiVector(
-                "./data_historical/vectors/evapMR_history.txt", self.n_years, self.n_days_one_year
+                "./data_historical/vectors/evapMR_history.txt", self.n_years, self.n_days_in_year
             )  # evaporation losses (inches per day)
             self.inflow_Muddy_MC = utils.loadMultiVector(
-                "./data_historical/vectors/nMR_history.txt", self.n_years, self.n_days_one_year
+                "./data_historical/vectors/nMR_history.txt", self.n_years, self.n_days_in_year
             )
         elif histomc == 1:
             self.data = 1
             # stochastic hydrology
             self.evap_CO_MC = utils.loadMatrix(
-                "./dataMC/evapCO_MC.txt", self.n_years, self.n_days_one_year
+                "./dataMC/evapCO_MC.txt", self.n_years, self.n_days_in_year
             )  # evaporation losses (inches per day)
             self.inflow_MC = utils.loadMatrix(
-                "./dataMC/MariettaFlows_MC.txt", self.n_years, self.n_days_one_year
+                "./dataMC/MariettaFlows_MC.txt", self.n_years, self.n_days_in_year
             )  # inflow, i.e. flows at Marietta (cfs)
             self.inflowLat_MC = utils.loadMatrix(
-                "./dataMC/nLat_MC.txt", self.n_years, self.n_days_one_year
+                "./dataMC/nLat_MC.txt", self.n_years, self.n_days_in_year
             )  # lateral inflows from Marietta to Conowingo (cfs)
             self.evap_Muddy_MC = utils.loadMatrix(
-                "./dataMC/evapMR_MC.txt", self.n_years, self.n_days_one_year
+                "./dataMC/evapMR_MC.txt", self.n_years, self.n_days_in_year
             )  # evaporation losses (inches per day)
             self.inflow_Muddy_MC = utils.loadMatrix(
-                "./dataMC/nMR_MC.txt", self.n_years, self.n_days_one_year
+                "./dataMC/nMR_MC.txt", self.n_years, self.n_days_in_year
             )  # inflow to Muddy Run (cfs)
         else:
             raise Exception("Choose historical or stochastic data")
         # objectives parameters
         self.energy_prices = utils.loadArrangeMatrix(
-            "./data1999/Pavg99.txt", 24, self.n_days_one_year
+            "./data1999/Pavg99.txt", 24, self.n_days_in_year
         )  # energy prices ($/MWh)
         self.min_flow = utils.loadVector(
-            "./data1999/min_flow_req.txt", self.n_days_one_year
+            "./data1999/min_flow_req.txt", self.n_days_in_year
         )  # FERC minimum flow requirements for 1 year (cfs)
         self.h_ref_rec = utils.loadVector(
-            "./data1999/h_rec99.txt", self.n_days_one_year
+            "./data1999/h_rec99.txt", self.n_days_in_year
         )  # target level for weekends in touristic season (ft)
         self.w_baltimore = utils.loadVector(
-            "./data1999/wBaltimore.txt", self.n_days_one_year
+            "./data1999/wBaltimore.txt", self.n_days_in_year
         )  # water demand of Baltimore (cfs)
         self.w_chester = utils.loadVector(
-            "./data1999/wChester.txt", self.n_days_one_year
+            "./data1999/wChester.txt", self.n_days_in_year
         )  # water demand of Chester (cfs)
         self.w_atomic = utils.loadVector(
-            "./data1999/wAtomic.txt", self.n_days_one_year
+            "./data1999/wAtomic.txt", self.n_days_in_year
         )  # water demand for cooling the atomic power plant (cfs)
+
+    def set_log(self, log_releases):
+        if log_releases:
+            self.log_releases = True
+        else:
+            self.log_releases = False
+
+    def get_log(self):
+        return self.blevel_CO, self.blevel_MR, self.ratom, self.rbalt, self.rches, self.renv
 
     def setRBF(self, pn, pm, pK, RBFType="squaredExponential"):
         RBFlist = [
             "gaussian",
             "multiquadric",
+            "multiquadric2",
             "invmultiquadric",
             "invquadratic",
             "exponential",
@@ -136,8 +150,6 @@ class susquehanna_model:
     def RBFs_policy(self, control_law, input):
         input1 = np.zeros(self.inputs)
         for i in range(0, self.inputs):
-            #     input1.append(input[i] / self.input_max[i])
-            #     input1.append((input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i]))
             input1[i] = (input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i])
         # RBF
         u = control_law.rbf_control_law(input1)
@@ -160,7 +172,7 @@ class susquehanna_model:
             opt_met,
         )
         outcomes = [Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation]
-#         print(outcomes)
+        # print(outcomes)
         return outcomes
 
     def evaluateMC(self, var, opt_met=1):
@@ -185,7 +197,6 @@ class susquehanna_model:
             Jche.append(Jchester)
             Jenv.append(Jenvironment)
             Jrec.append(Jrecreation)
-            # print(Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation)
         # objectives aggregation (minimax)
         obj.insert(0, utils.computePercentile(Jhyd, 99))
         obj.insert(1, utils.computePercentile(Jatom, 99))
@@ -193,7 +204,7 @@ class susquehanna_model:
         obj.insert(3, utils.computePercentile(Jche, 99))
         obj.insert(4, utils.computePercentile(Jenv, 99))
         obj.insert(5, utils.computePercentile(Jrec, 99))
-#         print(obj)
+        # print(obj)
         return obj
 
     def storageToLevel(self, s, lake):
@@ -250,7 +261,6 @@ class susquehanna_model:
                 qp = QP
         # water pumping stops to Muddy Run beyond this point.
         # However, according to the conowingo authorities 800 cfs will be released as emergency credits in order to keep the facilities from running
-        # Q: The level in Conowingo impacts the pumping in Muddy Run. How?
         if level_Co < 104.7:  # if True cavitation problems in pumping
             qp = 0.0
 
@@ -539,13 +549,14 @@ class susquehanna_model:
         # Production
         # s_rr.extend([hp[0], hp_mr[0], hp_mr[1]])
         # production = [hp[0], hp_mr[0], hp_mr[1]]
+
         return sto_co, sto_mr, rel_a, rel_b, rel_c, rel_d, hp[1], hp_mr[2], hp_mr[3], hp[0], hp_mr[0], hp_mr[1]
 
     def g_StorageReliability(self, h, hTarget):
         c = 0
         Nw = 0
         for i in range(0, len(h)):  # len(h) -1 in flood model
-            tt = i % 365  # n_days_one_year
+            tt = i % 365  # n_days_in_year
             if h[i] < hTarget[tt]:  # h[i] + 1  in flood model
                 c = c + 1
             if hTarget[tt] > 0:
@@ -555,7 +566,7 @@ class susquehanna_model:
 
     def g_ShortageIndex(self, q1, qTarget):
         delta = 24 * 3600
-        qTarget = np.tile(qTarget, int(len(q1) / self.n_days_one_year))
+        qTarget = np.tile(qTarget, int(len(q1) / self.n_days_in_year))
         maxarr = (qTarget * delta) - (q1 * delta)
         maxarr[maxarr < 0] = 0
         gg = maxarr / (qTarget * delta)
@@ -565,7 +576,7 @@ class susquehanna_model:
 
     def g_VolRel(self, q1, qTarget):
         delta = 24 * 3600
-        qTarget = np.tile(qTarget, int(len(q1) / self.n_days_one_year))
+        qTarget = np.tile(qTarget, int(len(q1) / self.n_days_in_year))
         g = (q1 * delta) / (qTarget * delta)
         G = utils.computeMean(g)
         return G
@@ -591,6 +602,7 @@ class susquehanna_model:
         release_B = [-999.0] * self.time_horizon_H
         release_C = [-999.0] * self.time_horizon_H
         release_D = [-999.0] * self.time_horizon_H
+
         # subdaily variables
         storage2_Co = [-999.0] * (self.day_fraction + 1)
         level2_Co = [-999.0] * (self.day_fraction + 1)
@@ -623,7 +635,7 @@ class susquehanna_model:
 
         # identification of the periodicity (365 x fdays)
         count = 0
-        total_decision_steps_TT = self.n_days_in_year * self.day_fraction
+        total_decision_steps = self.n_days_in_year * self.day_fraction
         jj = 0
         day_of_week = 0  # day of the week
         day_of_year = 0  # day of the year
@@ -659,7 +671,7 @@ class susquehanna_model:
 
             # subdaily cycle
             for j in range(0, self.day_fraction):
-                jj = count % total_decision_steps_TT
+                jj = count % total_decision_steps
                 # compute decision
                 if opt_met == 0:  # fixed release
                     uu.append(uu[0])
@@ -672,12 +684,10 @@ class susquehanna_model:
                     else:
                         input.append(self.inflow_MC[0][0])
                     input.append(
-                        np.sin(
-                            2 * np.pi * jj / total_decision_steps_TT - input_decision_var[-2]
-                        )  # check ghub julianneq
+                        np.sin(2 * np.pi * jj / total_decision_steps - input_decision_var[-2])
                     )  # var[30] = phase shift for sin() function  //second last
                     input.append(
-                        np.cos(2 * np.pi * jj / total_decision_steps_TT - input_decision_var[-1])
+                        np.cos(2 * np.pi * jj / total_decision_steps - input_decision_var[-1])
                     )  # var[31] = phase shift for cos() function //last variable
                     uu = self.RBFs_policy(control_law, input)
                     input.clear()
@@ -738,6 +748,14 @@ class susquehanna_model:
             release2_C.clear()
             release2_D.clear()
 
+        # log objectives
+        if self.log_releases:
+            self.blevel_CO.append(level_Co)
+            self.blevel_MR.append(level_MR)
+            self.ratom.append(release_A)
+            self.rbalt.append(release_B)
+            self.rches.append(release_C)
+            self.renv.append(release_D)
         # compute objectives
         level_Co.pop(0)
         Jhyd = sum(hydropowerRevenue_Co) / self.n_years / pow(10, 6)  # GWh/year (M$/year)
