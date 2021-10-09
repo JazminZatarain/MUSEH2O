@@ -3,22 +3,23 @@ from numba.experimental import jitclass
 from numba import types
 
 spec = [
-    ("numberOfRBF", types.int32),
-    ("numberOfInputs", types.int32),
-    ("numberOfOutputs", types.int32),
-    ("RBFType", types.string),  # types.unicode_type
-    ("Theta", types.float64[:]),
+    ("n_rbf", types.int32),
+    ("n_inputs", types.int32),
+    ("n_outputs", types.int32),
+    ("theta", types.float64[:]),
 ]
 
 
-@jitclass(spec)
+# @jitclass(spec)
 class RBF:
-    # RBF calculates the values of the radial basis function that determine the release
+    # RBF calculates the values of the radial basis function that determine
+    # the release
 
     # Attributes
     # -------------------
     # numberOfRBF       : int
-    #                     number of radial basis functions, typically 2 more than the number of inputs
+    #                     number of radial basis functions, typically 2 more
+    #                     than the number of inputs
     # numberofInputs    : int
     # numberOfOutputs   : int
     # center            : list
@@ -28,78 +29,118 @@ class RBF:
     # weights           : list
     #                     list of weights from optimization
     # out               : list
-    #                     list of the same size as the number of RBFs that determines the control policy
+    #                     list of the same size as the number of RBFs that
+    #                     determines the control policy
 
-    def __init__(self, numberOfRBF, numberOfInputs, numberOfOutputs, RBFType, Theta):
-        self.numberOfRBF = numberOfRBF
-        self.numberOfInputs = numberOfInputs
-        self.numberOfOutputs = numberOfOutputs
-        self.Theta = Theta
-        self.RBFType = RBFType
+    def __init__(self, n_rbf, n_inputs, n_outputs):
+        self.n_rbf = n_rbf
+        self.n_inputs = n_inputs
+        self.n_outputs = n_outputs
+        self.theta = None
+        self.weights = None
+        self.center = None
+        self.radius = None
 
-    def set_parameters(self):
-        Theta = self.Theta.copy()
-        Theta = Theta.reshape((-1, 4))
-        centerradius = Theta[::2]
-        weights = Theta[1::2]
-        center = centerradius[:, ::2]
-        radius = centerradius[:, 1::2]
+    def set_parameters(self, theta):
+        self.theta = theta
+        theta = self.theta.copy()
+        theta = theta.reshape((-1, 4))
+        centerradius = theta[::2]
+        self.weights = theta[1::2]
+        self.center = centerradius[:, ::2]
+        self.radius = centerradius[:, 1::2]
 
-        ws = weights.sum(axis=0)
+        ws = self.weights.sum(axis=0)
         for i in [np.where(ws == i)[0][0] for i in ws if i > 10 ** -6]:
-            weights[:, i] = weights[:, i] / ws[i]
-        return center, radius, weights
+            self.weights[:, i] = self.weights[:, i] / ws[i]
 
-    def rbf_control_law(self, inputRBF):
-        center, radius, weights = self.set_parameters()
-        if self.RBFType == "gaussian" or self.RBFType == "gaus":
-            phi = self.gaussian(inputRBF, center, radius)
-        elif self.RBFType == "multiquadric" or self.RBFType == "multiquad":
-            phi = self.multiQuadric(inputRBF, center, radius)
-        elif self.RBFType == "multiquadric2":
-            phi = self.multiQuadric2(inputRBF, center, radius)
-        elif self.RBFType == "invmultiquadric" or self.RBFType == "invmultiquad":
-            phi = self.invMultiQuadric(inputRBF, center, radius)
-        elif self.RBFType == "invquadratic" or self.RBFType == "invquad":
-            phi = self.invQuadratic(inputRBF, center, radius)
-        elif self.RBFType == "exponential" or self.RBFType == "exp":
-            phi = self.exponential(inputRBF, center, radius)
-        elif self.RBFType == "squaredexponential" or self.RBFType == "se":
-            phi = self.squaredExponential(inputRBF, center, radius)
-        elif self.RBFType == "matern32" or self.RBFType == "mat32":
-            phi = self.matern32(inputRBF, center, radius)
-        else:
-            raise Exception("RBF not found")
-        out = (weights * (phi.reshape(self.numberOfRBF, 1))).sum(axis=0)
-        return out
+    def format_output(self, output):
+        return (self.weights * (output.reshape(self.n_rbf, 1))).sum(
+            axis=0)
 
-    def squaredExponential(self, inputRBF, center, radius):
-        return np.exp(-(np.sum((inputRBF - center) ** 2 / (radius ** 2), axis=1)))
+    # def rbf_control_law(self, rbf_input):
+    #     self.set_parameters()
 
-    def gaussian(self, inputRBF, center, radius):
-        return np.exp(-(np.sum((radius * (inputRBF - center)) ** 2, axis=1)))
 
-    def multiQuadric(self, inputRBF, center, radius):
-        return np.sqrt(1 + np.sum((radius * (inputRBF - center)) ** 2, axis=1))
+# @jitclass(spec)
+class GaussianRBF(RBF):
+    def rbf_control_law(self, rbf_input):
+        output = np.exp(-(np.sum((self.radius * (rbf_input - self.center))
+                                 ** 2,
+                                 axis=1)))
+        output = self.format_output(output)
+        return output
 
-    def multiQuadric2(self, inputRBF, center, radius):
-        return np.sqrt(np.sum((radius ** 2) + ((inputRBF - center) ** 2), axis=1))
 
-    def invQuadratic(self, inputRBF, center, radius):
-        return 1 / (1 + np.sum((radius * (inputRBF - center)) ** 2, axis=1))
+# @jitclass(spec)
+class MultiquadricRBF(RBF):
+    def rbf_control_law(self, rbf_input):
+        output = np.sqrt(1 + np.sum((self.radius * (rbf_input - self.center))
+                                    ** 2,
+                                    axis=1))
+        output = self.format_output(output)
+        return output
 
-    def invMultiQuadric(self, inputRBF, center, radius):
-        return 1 / np.sqrt(1 + np.sum((radius * (inputRBF - center)) ** 2, axis=1))
 
-    def exponential(self, inputRBF, center, radius):
-        return np.exp(-(np.sum((inputRBF - center) / radius, axis=1)))
+# @jitclass(spec)
+class Multiquadric2RBF(RBF):
+    def rbf_control_law(self, rbf_input):
+        output = np.sqrt(np.sum((self.radius ** 2) + ((rbf_input -
+                                                       self.center) ** 2),
+                                axis=1))
+        output = self.format_output(output)
+        return output
 
-    def matern32(self, inputRBF, center, radius):
-        return (1 + np.sqrt(3 * np.sum((inputRBF - center) / radius, axis=1))) * (
-            np.exp(-np.sqrt(3 * np.sum((inputRBF - center) / radius, axis=1)))
-        )
 
-    # def matern52(self, inputRBF, center, radius):
-    #     return (1 + np.sqrt(5 * (inputRBF - center)) / radius + 5 * (inputRBF - center) ** 2 / (3 * radius ** 2)) * (
-    #         np.exp(-np.sqrt(5 * (inputRBF - center)) / radius)
-    #     )
+# @jitclass(spec)
+class InvmultiquadricRBF(RBF):
+    def rbf_control_law(self, rbf_input):
+        output = 1 / np.sqrt(1 + np.sum((self.radius * (rbf_input -
+                                                        self.center))
+                                        ** 2,
+                                        axis=1))
+        output = self.format_output(output)
+        return output
+
+
+# @jitclass(spec)
+class InvquadraticRBF(RBF):
+    def rbf_control_law(self, rbf_input):
+        output = 1 / (1 + np.sum((self.radius * (rbf_input - self.center))
+                                 ** 2,
+                                 axis=1))
+        output = self.format_output(output)
+        return output
+
+
+# @jitclass(spec)
+class ExponentialRBF(RBF):
+    def rbf_control_law(self, rbf_input):
+        output = np.exp(-(np.sum((rbf_input - self.center) / self.radius,
+                                 axis=1)))
+        output = self.format_output(output)
+        return output
+
+
+# @jitclass(spec)
+class SquaredexponentialRBF(RBF):
+    def rbf_control_law(self, rbf_input):
+        output = np.exp(-(np.sum((rbf_input - self.center) ** 2 / (
+                self.radius ** 2),
+                                 axis=1)))
+        output = self.format_output(output)
+        return output
+
+
+# @jitclass(spec)
+class Matern32RBF(RBF):
+    def rbf_control_law(self, rbf_input):
+        output = (1 + np.sqrt(3 * np.sum((rbf_input - self.center) /
+                                         self.radius,
+                                         axis=1))) * (
+                np.exp(-np.sqrt(3 * np.sum((rbf_input - self.center) /
+                                           self.radius,
+                                           axis=1))))
+
+        output = self.format_output(output)
+        return output
