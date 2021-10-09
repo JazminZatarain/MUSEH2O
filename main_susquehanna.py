@@ -5,6 +5,8 @@
 # Copyright   : Your copyright notice
 # ===========================================================================
 import numpy as np
+
+import rbf_functions
 from susquehanna_model import SusquehannaModel
 from rbf import SquaredexponentialRBF
 from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
@@ -42,7 +44,8 @@ def main():
         n_inputs = 2  # (time, storage of Conowingo)
         n_outputs = 4
         n_rbf = 4
-        rbf = SquaredexponentialRBF(n_rbf, n_inputs, n_outputs)
+        rbf = rbf_functions.squared_exponentia_rbf
+        rbf_kwargs = dict(n_inputs=n_inputs, n_outputs=n_outputs, n_rbf=n_rbf)
 
         # Initialize model
         n_objectives = 6
@@ -50,8 +53,7 @@ def main():
         n_years = 1
 
         susquehanna_river = SusquehannaModel(108.5, 505.0, 5, n_years,
-                                             rbf)
-        # susquehanna_river.load_data(0)  # 0 = historic, 1 = stochastic
+                                             rbf, rbf_kwargs)
         susquehanna_river.set_log(False)
 
         # Lower and Upper Bound for problem.types
@@ -70,6 +72,9 @@ def main():
         problem.directions[3] = Problem.MINIMIZE  # chester
         problem.directions[4] = Problem.MAXIMIZE  # environment
         problem.directions[5] = Problem.MINIMIZE  # recreation
+
+        # algorithm = EpsNSGAII(problem, epsilons=epsilons)
+        # algorithm.run(1000)
 
         with ProcessPoolEvaluator() as evaluator:
             algorithm = EpsNSGAII(problem, epsilons=epsilons,
