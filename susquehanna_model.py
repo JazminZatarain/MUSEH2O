@@ -132,7 +132,7 @@ class SusquehannaModel:
             create_path("./data1999/wAtomic.txt"), self.n_days_one_year
         )  # water demand for cooling the atomic power plant (cfs)
 
-        # standardization of the input-outpu of the RBF release curve
+        # standardization of the input-output of the RBF release curve
         self.input_max.append(self.n_days_in_year * self.day_fraction - 1)
         # self.input_max.append(6) commented out in c model
         self.input_max.append(120)
