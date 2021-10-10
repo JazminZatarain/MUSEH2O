@@ -221,8 +221,8 @@ class SusquehannaModel:
     def evaluate_mc(self, var, opt_met=1):
         obj, Jhyd, Jatom, Jbal, Jche, Jenv, Jrec = [], [], [], [], [], [], []
         # MC simulations
-        N_samples = 2
-        for i in range(0, N_samples):
+        n_samples = 2
+        for i in range(0, n_samples):
             Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, \
             Jenvironment, Jrecreation = self.simulate(
                 var,
@@ -507,33 +507,36 @@ class SusquehannaModel:
         leak = 800  # cfs
 
         # Storages and levels of Conowingo and Muddy Run
-        storage_Co = [-999.0] * (HH + 1)
-        level_Co = [-999.0] * (HH + 1)
-        storage_MR = [-999.0] * (HH + 1)
-        level_MR = [-999.0] * (HH + 1)
+        shape = (HH+1, )
+
+        storage_Co = np.empty(shape)
+        level_Co = np.empty(shape)
+        storage_mr = np.empty(shape)
+        level_mr = np.empty(shape)
         # Actual releases (Atomic Power plant, Baltimore, Chester, Dowstream)
-        release_A = [-999.0] * (HH)
-        release_B = [-999.0] * (HH)
-        release_C = [-999.0] * (HH)
-        release_D = [-999.0] * (HH)
-        q_pump = [-999.0] * (HH)
-        q_rel = [-999.0] * (HH)
-        rr = []
+
+        shape = (HH,)
+        release_A = np.empty(shape)
+        release_B = np.empty(shape)
+        release_C = np.empty(shape)
+        release_D = np.empty(shape)
+        q_pump = np.empty(shape)
+        q_rel = np.empty(shape)
 
         # initial conditions
         storage_Co[0] = s0
-        storage_MR[0] = s0_mr
+        storage_mr[0] = s0_mr
         c_hour = HH * hour0
 
         for i in range(0, HH):
             # compute level
             level_Co[i] = self.storage_to_level(storage_Co[i], 1)
-            level_MR[i] = self.storage_to_level(storage_MR[i], 0)
+            level_mr[i] = self.storage_to_level(storage_mr[i], 0)
             # Muddy Run operation
             q_pump[i], q_rel[i] = self.muddyrun_pumpturb(day_of_week,
                                                          int(c_hour),
                                                          level_Co[i],
-                                                         level_MR[i])
+                                                         level_mr[i])
 
             # Compute actual release
             rr = self.actual_release(uu, level_Co[i], day_of_year)
@@ -541,19 +544,22 @@ class SusquehannaModel:
             release_B[i] = rr[1]
             release_C[i] = rr[2]
             release_D[i] = rr[3]
-            WS = release_A[i] + release_B[i] + release_C[
-                i]  # Q: Why is this being added?
+
+            # Q: Why is this being added?
+            # FIXME: actual release as numpy array then simple sum over slice
+            # FIXME: into rr
+            WS = release_A[i] + release_B[i] + release_C[i]
 
             # Compute surface level and evaporation losses
             surface_Co = self.level_to_surface(level_Co[i], 1)
-            evaporation_losses_Co = utils.inchesToFeet(
-                ev) * surface_Co / 86400  # cfs
-            surface_MR = self.level_to_surface(level_MR[i], 0)
+            evaporation_losses_Co = utils.inchesToFeet(ev) * surface_Co / \
+                                    86400  # cfs
+            surface_MR = self.level_to_surface(level_mr[i], 0)
             evaporation_losses_MR = utils.inchesToFeet(
                 ev_mr) * surface_MR / 86400  # cfs
 
             # System Transition
-            storage_MR[i + 1] = storage_MR[i] + sim_step * (q_pump[i] - q_rel[
+            storage_mr[i + 1] = storage_mr[i] + sim_step * (q_pump[i] - q_rel[
                 i] + n_sim_mr - evaporation_losses_MR)
             storage_Co[i + 1] = storage_Co[i] + sim_step * (
                     n_sim + n_lat - release_D[i] - WS - evaporation_losses_Co -
@@ -561,15 +567,15 @@ class SusquehannaModel:
             )
             c_hour = c_hour + 1
 
-            storage_MR[i + 1] = storage_MR[i] + sim_step * (q_pump[i] - q_rel[
-                i] + n_sim_mr - evaporation_losses_MR)
-            storage_Co[i + 1] = storage_Co[i] + sim_step * (
-                    n_sim + n_lat - release_D[i] - WS - evaporation_losses_Co -
-                    q_pump[i] + q_rel[i] - leak
-            )
+            # storage_mr[i + 1] = storage_mr[i] + sim_step * (q_pump[i] - q_rel[
+            #     i] + n_sim_mr - evaporation_losses_MR)
+            # storage_Co[i + 1] = storage_Co[i] + sim_step * (
+            #         n_sim + n_lat - release_D[i] - WS - evaporation_losses_Co -
+            #         q_pump[i] + q_rel[i] - leak
+            # )
 
         sto_co = storage_Co[HH]
-        sto_mr = storage_MR[HH]
+        sto_mr = storage_mr[HH]
         rel_a = utils.computeMean(release_A)
         rel_b = utils.computeMean(release_B)
         rel_c = utils.computeMean(release_C)
@@ -589,13 +595,13 @@ class SusquehannaModel:
             self.turbines,
             self.energy_prices,
         )
-        # hp_mr = self.g_hydRevMR(q_pump, q_rel, level_Co, level_MR,
+        # hp_mr = self.g_hydRevMR(q_pump, q_rel, level_Co, level_mr,
         # day_of_year, hour0)
         hp_mr = SusquehannaModel.g_hydRevMR(
             np.asarray(q_pump),
             np.asarray(q_rel),
             level_Co,
-            np.asarray(level_MR),
+            np.asarray(level_mr),
             day_of_year,
             hour0,
             self.GG,
@@ -608,17 +614,21 @@ class SusquehannaModel:
         return sto_co, sto_mr, rel_a, rel_b, rel_c, rel_d, hp[1], hp_mr[2], \
                hp_mr[3], hp[0], hp_mr[0], hp_mr[1]
 
-    def g_StorageReliability(self, h, hTarget):
+    def g_StorageReliability(self, h, h_target):
         c = 0
         Nw = 0
-        for i in range(0, len(h)):  # len(h) -1 in flood model
-            tt = i % self.n_days_one_year
-            if h[i] < hTarget[tt]:  # h[i] + 1  in flood model
-                c = c + 1
-            if hTarget[tt] > 0:
-                Nw = Nw + 1
 
-        G = 1 - c / Nw
+        # FIXME this probably can be fully vectorized
+        # the modulus is not neeede dif h_target is just
+        # expanded to match the length of h
+        for i, h_i in np.ndenumerate(h):
+            tt = i[0] % self.n_days_one_year
+            if h_i < h_target[tt]:  # h[i] + 1  in flood model
+                c = c + 1
+            # if h_target[tt] > 0:
+            #     Nw += 1
+
+        G = 1 - c / np.sum(h_target > 0)
         return G
 
     def g_ShortageIndex(self, q1, qTarget):
@@ -646,22 +656,26 @@ class SusquehannaModel:
 
 
         # FIXME replace -999 with np.empty
-        storage_Co = [-999.0] * (self.time_horizon_H + 1)
-        level_Co = [-999.0] * (
-                self.time_horizon_H + 1)  # (self.n_days_in_year + 1)
-        storage_MR = [-999.0] * (self.time_horizon_H + 1)
-        level_MR = [-999.0] * (self.time_horizon_H + 1)
+        shape = (self.time_horizon_H + 1, )
+        storage_Co = np.empty(shape)
+        level_Co = np.empty(shape) # (self.n_days_in_year + 1)
+        storage_MR = np.empty(shape)
+        level_MR = np.empty(shape)
+
         # Conowingo actual releases
-        release_A = [-999.0] * self.time_horizon_H
-        release_B = [-999.0] * self.time_horizon_H
-        release_C = [-999.0] * self.time_horizon_H
-        release_D = [-999.0] * self.time_horizon_H
+        shape = (self.time_horizon_H,)
+        release_A = np.empty(shape)
+        release_B = np.empty(shape)
+        release_C = np.empty(shape)
+        release_D = np.empty(shape)
 
         # subdaily variables
-        storage2_Co = [-999.0] * (self.day_fraction + 1)
-        level2_Co = [-999.0] * (self.day_fraction + 1)
-        storage2_MR = [-999.0] * (self.day_fraction + 1)
-        level2_MR = [-999.0] * (self.day_fraction + 1)
+        shape = (self.day_fraction+1,)
+        storage2_Co = np.empty(shape)
+        level2_Co = np.empty(shape)
+        storage2_MR = np.empty(shape)
+        level2_MR = np.empty(shape)
+
         release2_A = []
         release2_B = []
         release2_C = []
@@ -791,13 +805,13 @@ class SusquehannaModel:
             self.renv.append(release_D)
 
         # compute objectives
-        level_Co.pop(0)
+        # level_Co.pop(0)
         j_hyd = sum(hydropowerRevenue_Co) / self.n_years / pow(10,
                                                               6)  # GWh/year (M$/year)
-        j_atom = self.g_vol_rel(np.asarray(release_A), self.w_atomic)
-        j_balt = self.g_vol_rel(np.asarray(release_B), self.w_baltimore)
-        j_ches = self.g_vol_rel(np.asarray(release_C), self.w_chester)
-        j_env = self.g_ShortageIndex(np.asarray(release_D), self.min_flow)
+        j_atom = self.g_vol_rel(release_A, self.w_atomic)
+        j_balt = self.g_vol_rel(release_B, self.w_baltimore)
+        j_ches = self.g_vol_rel(release_C, self.w_chester)
+        j_env = self.g_ShortageIndex(release_D, self.min_flow)
         j_rec = self.g_StorageReliability(storage_Co, self.h_ref_rec)
 
         return -j_hyd, -j_atom, -j_balt, -j_ches, j_env, -j_rec
