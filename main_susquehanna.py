@@ -73,20 +73,20 @@ def main():
         problem.directions[4] = Problem.MAXIMIZE  # environment
         problem.directions[5] = Problem.MINIMIZE  # recreation
 
-        # algorithm = EpsNSGAII(problem, epsilons=epsilons)
-        # algorithm.run(1000)
+        algorithm = EpsNSGAII(problem, epsilons=epsilons)
+        algorithm.run(1000)
 
         with ProcessPoolEvaluator() as evaluator:
             algorithm = EpsNSGAII(problem, epsilons=epsilons,
                                   evaluator=evaluator)
-            algorithm.run(1000)
+            algorithm.run(50000)
 
         # results
         print("results:")
         for solution in algorithm.result:
             print(solution.objectives)
 
-        store_results(algorithm, 'output', f"{rbf.__class__.__name__}_{seed}")
+        store_results(algorithm, 'output', f"{rbf.__name__}_{seed}")
 
 
 if __name__ == "__main__":

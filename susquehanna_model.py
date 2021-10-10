@@ -1,9 +1,17 @@
+
+import os
 import numpy as np
 
 import rbf_functions
 import utils
 # from rbf import RBF
 from numba import njit
+
+
+def create_path(rest):
+    # FIXME my dir is now retreived repeatedly
+    my_dir = os.path.dirname(os.path.realpath(__file__))
+    return os.path.abspath(os.path.join(my_dir, rest))
 
 
 class SusquehannaModel:
@@ -72,26 +80,26 @@ class SusquehannaModel:
         # n_days_one_year = 1*365 moved to init
         # Conowingo characteristics
         self.lsv_rel = utils.loadMatrix(
-            "./data1999/lsv_rel_Conowingo.txt", 3, 10
+            create_path("./data1999/lsv_rel_Conowingo.txt"), 3, 10
         )  # level (ft) - Surface (acre) - storage (acre-feet) relationships
         self.turbines = utils.loadMatrix(
-            "./data1999/turbines_Conowingo2.txt", 3, 13
+            create_path("./data1999/turbines_Conowingo2.txt"), 3, 13
         )  # Max-min capacity (cfs) - efficiency of Conowingo plant turbines
         self.tailwater = utils.loadMatrix(
-            "./data1999/tailwater.txt", 2, 18
+            create_path("./data1999/tailwater.txt"), 2, 18
         )  # tailwater head (ft) - release flow (cfs)
         self.spillways = utils.loadMatrix(
-            "./data1999/spillways_Conowingo.txt", 3, 8
+            create_path("./data1999/spillways_Conowingo.txt"), 3, 8
         )
         # substitute with newConowingo1
         # level (ft) - max release (cfs) - min release (cfs) for level > 108 ft
 
         # Muddy Run characteristics
         self.lsv_rel_Muddy = utils.loadMatrix(
-            "./data1999/lsv_rel_Muddy.txt", 3, 38
+            create_path("./data1999/lsv_rel_Muddy.txt"), 3, 38
         )  # level (ft) - Surface (acre) - storage (acre-feet) relationships
         self.turbines_Muddy = utils.loadVector(
-            "./data1999/turbines_Muddy.txt", 4
+            create_path("./data1999/turbines_Muddy.txt"), 4
         )
         # Turbine-Pumping capacity (cfs) - efficiency of Muddy Run plant (
         # equal for the 8 units)
@@ -106,22 +114,22 @@ class SusquehannaModel:
 
         # objectives parameters
         self.energy_prices = utils.loadArrangeMatrix(
-            "./data1999/Pavg99.txt", 24, self.n_days_one_year
+            create_path("./data1999/Pavg99.txt"), 24, self.n_days_one_year
         )  # energy prices ($/MWh)
         self.min_flow = utils.loadVector(
-            "./data1999/min_flow_req.txt", self.n_days_one_year
+            create_path("./data1999/min_flow_req.txt"), self.n_days_one_year
         )  # FERC minimum flow requirements for 1 year (cfs)
         self.h_ref_rec = utils.loadVector(
-            "./data1999/h_rec99.txt", self.n_days_one_year
+            create_path("./data1999/h_rec99.txt"), self.n_days_one_year
         )  # target level for weekends in touristic season (ft)
         self.w_baltimore = utils.loadVector(
-            "./data1999/wBaltimore.txt", self.n_days_one_year
+            create_path("./data1999/wBaltimore.txt"), self.n_days_one_year
         )  # water demand of Baltimore (cfs)
         self.w_chester = utils.loadVector(
-            "./data1999/wChester.txt", self.n_days_one_year
+            create_path("./data1999/wChester.txt"), self.n_days_one_year
         )  # water demand of Chester (cfs)
         self.w_atomic = utils.loadVector(
-            "./data1999/wAtomic.txt", self.n_days_one_year
+            create_path("./data1999/wAtomic.txt"), self.n_days_one_year
         )  # water demand for cooling the atomic power plant (cfs)
 
         # standardization of the input-outpu of the RBF release curve
@@ -136,23 +144,27 @@ class SusquehannaModel:
 
     def load_historic_data(self):
         self.evap_CO_MC = utils.loadMultiVector(
-            "./data_historical/vectors/evapCO_history.txt", self.n_years,
+            create_path("./data_historical/vectors/evapCO_history.txt"),
+                   self.n_years,
             self.n_days_one_year
         )  # evaporation losses (inches per day)
         self.inflow_MC = utils.loadMultiVector(
-            "./data_historical/vectors/MariettaFlows_history.txt",
+            create_path("./data_historical/vectors/MariettaFlows_history.txt"),
             self.n_years, self.n_days_one_year
         )  # inflow, i.e. flows at Marietta (cfs)
         self.inflowLat_MC = utils.loadMultiVector(
-            "./data_historical/vectors/nLat_history.txt", self.n_years,
+            create_path("./data_historical/vectors/nLat_history.txt"),
+            self.n_years,
             self.n_days_one_year
         )  # lateral inflows from Marietta to Conowingo (cfs)
         self.evap_Muddy_MC = utils.loadMultiVector(
-            "./data_historical/vectors/evapMR_history.txt", self.n_years,
+            create_path("./data_historical/vectors/evapMR_history.txt"),
+            self.n_years,
             self.n_days_one_year
         )  # evaporation losses (inches per day)
         self.inflow_Muddy_MC = utils.loadMultiVector(
-            "./data_historical/vectors/nMR_history.txt", self.n_years,
+            create_path("./data_historical/vectors/nMR_history.txt"),
+            self.n_years,
             self.n_days_one_year
         )
 
@@ -180,7 +192,7 @@ class SusquehannaModel:
         else:
             self.log_objectives = False
 
-    def obj_log(self):
+    def get_log(self):
         return self.blevel_CO, self.blevel_MR, self.ratom, self.rbalt, \
                self.rches, self.renv
 
@@ -428,9 +440,9 @@ class SusquehannaModel:
     @njit
     def g_hydRevMR(qp, qr, hCo, hMR, day_of_year, hour0, GG, gammaH20,
                    turbines_Muddy, energy_prices):
-        Nturb = 8
-        cubicFeetToCubicMeters = 0.0283  # 1 cf = 0.0283 m3
-        feetToMeters = 0.3048  # 1 ft = 0.3048 m
+        n_turb = 8
+        cubic_feet_to_cubic_meters = 0.0283  # 1 cf = 0.0283 m3
+        feet_to_meters = 0.3048  # 1 ft = 0.3048 m
         g_hyd = []
         g_pump = []
         g_rev = []
@@ -444,7 +456,7 @@ class SusquehannaModel:
             # 8 turbines
             qp_split = qp[i]
             qr_split = qr[i]
-            for j in range(0, Nturb):
+            for j in range(0, n_turb):
                 if qp_split < 0.0:
                     qpump = 0.0
                 elif qp_split > turbines_Muddy[2]:
@@ -452,15 +464,13 @@ class SusquehannaModel:
                 else:
                     qpump = qp_split
 
-                p_ = (
-                        turbines_Muddy[3]
-                        * GG
-                        * gammaH20
-                        * (cubicFeetToCubicMeters * qpump)
-                        * (feetToMeters * deltaH)
-                        * 3600
-                        / (3600 * 1000)
-                )  # KWh/h
+                p_ = (turbines_Muddy[3]
+                      * GG
+                      * gammaH20
+                      * (cubic_feet_to_cubic_meters * qpump)
+                      * (feet_to_meters * deltaH)
+                      * 3600
+                      / (3600 * 1000))  # KWh/h
                 pP = pP + p_
                 qp_split = qp_split - qpump
 
@@ -471,15 +481,13 @@ class SusquehannaModel:
                 else:
                     qturb = qr_split
 
-                p = (
-                        turbines_Muddy[1]
-                        * GG
-                        * gammaH20
-                        * (cubicFeetToCubicMeters * qturb)
-                        * (feetToMeters * deltaH)
-                        * 3600
-                        / (3600 * 1000)
-                )  # kWh/h
+                p = (turbines_Muddy[1]
+                     * GG
+                     * gammaH20
+                     * (cubic_feet_to_cubic_meters * qturb)
+                     * (feet_to_meters * deltaH)
+                     * 3600
+                     / (3600 * 1000))  # kWh/h
                 pT = pT + p
                 qr_split = qr_split - qturb
 
@@ -635,6 +643,9 @@ class SusquehannaModel:
                  evap_CO_MC_e_co, evap_Muddy_MC_e_mr, opt_met):
         # Initializing daily variables
         # storages and levels
+
+
+        # FIXME replace -999 with np.empty
         storage_Co = [-999.0] * (self.time_horizon_H + 1)
         level_Co = [-999.0] * (
                 self.time_horizon_H + 1)  # (self.n_days_in_year + 1)
