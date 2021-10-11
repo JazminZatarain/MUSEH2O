@@ -614,7 +614,7 @@ class SusquehannaModel:
         return sto_co, sto_mr, rel_a, rel_b, rel_c, rel_d, hp[1], hp_mr[2], \
                hp_mr[3], hp[0], hp_mr[0], hp_mr[1]
 
-    def g_StorageReliability(self, h, h_target):
+    def g_storagereliability(self, h, h_target):
         c = 0
         Nw = 0
 
@@ -631,15 +631,14 @@ class SusquehannaModel:
         G = 1 - c / np.sum(h_target > 0)
         return G
 
-    def g_ShortageIndex(self, q1, qTarget):
+    def g_shortage_index(self, q1, qTarget):
         delta = 24 * 3600
         qTarget = np.tile(qTarget, int(len(q1) / self.n_days_one_year))
         maxarr = (qTarget * delta) - (q1 * delta)
         maxarr[maxarr < 0] = 0
         gg = maxarr / (qTarget * delta)
-        g = np.square(gg)
-        G = utils.computeMean(g)
-        return G
+        g = np.mean(np.square(gg))
+        return g
 
     def g_vol_rel(self, q1, qTarget):
         delta = 24 * 3600
@@ -662,22 +661,10 @@ class SusquehannaModel:
 
         # Conowingo actual releases
         shape = (self.time_horizon_H,)
-        release_A = np.empty(shape)
-        release_B = np.empty(shape)
-        release_C = np.empty(shape)
-        release_D = np.empty(shape)
-
-        # subdaily variables
-        shape = (self.decisions_per_day + 1,)
-        storage2_Co = np.empty(shape)
-        level2_Co = np.empty(shape)
-        storage2_MR = np.empty(shape)
-        level2_MR = np.empty(shape)
-
-        release2_A = []
-        release2_B = []
-        release2_C = []
-        release2_D = []
+        release_a = np.empty(shape)
+        release_b = np.empty(shape)
+        release_c = np.empty(shape)
+        release_d = np.empty(shape)
 
         # hydropower production/revenue
         hydropowerProduction_Co = []  # energy production at Conowingo
@@ -690,7 +677,6 @@ class SusquehannaModel:
         # release decision variables ( AtomicPP, Baltimore, Chester ) only
         # Downstream in Baseline
         uu = []
-        ss_rr_hp = []
 
         theta = np.asarray(input_variable_list_var)
         center, radius, weights = rbf_functions.determine_parameters(theta)
@@ -712,11 +698,24 @@ class SusquehannaModel:
             if day_of_year % self.n_days_in_year == 0 and t != 0:
                 year = year + 1
 
+            # subdaily variables
+            shape = (self.decisions_per_day + 1,)
+            daily_storage_co = np.empty(shape)
+            daily_level_co = np.empty(shape)
+            daily_storage_mr = np.empty(shape)
+            daily_level_mr = np.empty(shape)
+
+            shape = (self.decisions_per_day,)
+            daily_release_a = np.empty(shape)
+            daily_release_b = np.empty(shape)
+            daily_release_c = np.empty(shape)
+            daily_release_d = np.empty(shape)
+
             # initialization of sub-daily cycle
-            level2_Co[0] = level_Co[t]  # level_Co[day_of_year] <<< in flood
-            storage2_Co[0] = storage_Co[t]
-            level2_MR[0] = level_MR[t]
-            storage2_MR[0] = storage_MR[t]
+            daily_level_co[0] = level_Co[t]  # level_Co[day_of_year] <<< in flood
+            daily_storage_co[0] = storage_Co[t]
+            daily_level_mr[0] = level_MR[t]
+            daily_storage_mr[0] = storage_MR[t]
 
             # sub-daily cycle
             for j in range(self.decisions_per_day):
@@ -730,18 +729,18 @@ class SusquehannaModel:
                     # FIXME will crash because uu is empty list
                     uu.append(uu[0])
                 elif opt_met == 1:  # RBF-PSO
-                    rbf_input = [jj, level2_Co[j]]
+                    rbf_input = [jj, daily_level_co[j]]
                     uu = self.apply_rbf_policy(rbf_input, center, radius,
                                                weights)
 
                 # system transition
                 ss_rr_hp = self.res_transition_h(
-                    storage2_Co[j],
+                    daily_storage_co[j],
                     uu,
                     inflow_MC_n_sim[year][day_of_year],
                     inflowLateral_MC_n_lat[year][day_of_year],
                     evap_CO_MC_e_co[year][day_of_year],
-                    storage2_MR[j],
+                    daily_storage_mr[j],
                     inflow_Muddy_MC_n_mr[year][day_of_year],
                     evap_Muddy_MC_e_mr[year][day_of_year],
                     day_of_year,
@@ -749,15 +748,15 @@ class SusquehannaModel:
                     j,
                 )
 
-                storage2_Co[j + 1] = ss_rr_hp[0]
-                storage2_MR[j + 1] = ss_rr_hp[1]
-                level2_Co[j + 1] = self.storage_to_level(storage2_Co[j + 1], 1)
-                level2_MR[j + 1] = self.storage_to_level(storage2_MR[j + 1], 0)
+                daily_storage_co[j + 1] = ss_rr_hp[0]
+                daily_storage_mr[j + 1] = ss_rr_hp[1]
+                daily_level_co[j + 1] = self.storage_to_level(daily_storage_co[j + 1], 1)
+                daily_level_mr[j + 1] = self.storage_to_level(daily_storage_mr[j + 1], 0)
 
-                release2_A.append(ss_rr_hp[2])
-                release2_B.append(ss_rr_hp[3])
-                release2_C.append(ss_rr_hp[4])
-                release2_D.append(ss_rr_hp[5])
+                daily_release_a[j] = ss_rr_hp[2]
+                daily_release_b[j] = ss_rr_hp[3]
+                daily_release_c[j] = ss_rr_hp[4]
+                daily_release_d[j] = ss_rr_hp[5]
 
                 # Hydropower revenue production
                 hydropowerRevenue_Co.append(
@@ -775,45 +774,32 @@ class SusquehannaModel:
 
 
             # daily values
-            level_Co[day_of_year + 1] = level2_Co[self.decisions_per_day]
-            storage_Co[t + 1] = storage2_Co[self.decisions_per_day]
-            release_A[day_of_year] = utils.computeMean(release2_A)
-            release_B[day_of_year] = utils.computeMean(release2_B)
-            release_C[day_of_year] = utils.computeMean(
-                release2_C)  # release2_B
-            release_D[day_of_year] = utils.computeMean(release2_D)
-            level_MR[t + 1] = level2_MR[self.decisions_per_day]
-            storage_MR[t + 1] = storage2_MR[self.decisions_per_day]
-
-            # clear sub-daily values
-            shape = (self.decisions_per_day + 1,)
-            storage2_Co = np.empty(shape)
-            level2_Co = np.empty(shape)
-            storage2_MR = np.empty(shape)
-            level2_MR = np.empty(shape)
-
-            release2_A.clear()
-            release2_B.clear()
-            release2_C.clear()
-            release2_D.clear()
+            level_Co[day_of_year + 1] = daily_level_co[self.decisions_per_day]
+            storage_Co[t + 1] = daily_storage_co[self.decisions_per_day]
+            release_a[day_of_year] = np.mean(daily_release_a)
+            release_b[day_of_year] = np.mean(daily_release_b)
+            release_c[day_of_year] = np.mean(daily_release_c)
+            release_d[day_of_year] = np.mean(daily_release_d)
+            level_MR[t + 1] = daily_level_mr[self.decisions_per_day]
+            storage_MR[t + 1] = daily_storage_mr[self.decisions_per_day]
 
         # log level / release
         if self.log_objectives:
             self.blevel_CO.append(level_Co)
             self.blevel_MR.append(level_MR)
-            self.ratom.append(release_A)
-            self.rbalt.append(release_B)
-            self.rches.append(release_C)
-            self.renv.append(release_D)
+            self.ratom.append(release_a)
+            self.rbalt.append(release_b)
+            self.rches.append(release_c)
+            self.renv.append(release_d)
 
         # compute objectives
         # level_Co.pop(0)
         j_hyd = sum(hydropowerRevenue_Co) / self.n_years / pow(10,
                                                               6)  # GWh/year (M$/year)
-        j_atom = self.g_vol_rel(release_A, self.w_atomic)
-        j_balt = self.g_vol_rel(release_B, self.w_baltimore)
-        j_ches = self.g_vol_rel(release_C, self.w_chester)
-        j_env = self.g_ShortageIndex(release_D, self.min_flow)
-        j_rec = self.g_StorageReliability(storage_Co, self.h_ref_rec)
+        j_atom = self.g_vol_rel(release_a, self.w_atomic)
+        j_balt = self.g_vol_rel(release_b, self.w_baltimore)
+        j_ches = self.g_vol_rel(release_c, self.w_chester)
+        j_env = self.g_shortage_index(release_d, self.min_flow)
+        j_rec = self.g_storagereliability(storage_Co, self.h_ref_rec)
 
         return -j_hyd, -j_atom, -j_balt, -j_ches, j_env, -j_rec
