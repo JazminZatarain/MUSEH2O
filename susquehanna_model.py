@@ -147,16 +147,21 @@ class susquehanna_model:
         else:
             raise Exception(f"{RBFType} is not supported, please choose one of these RBFs: {', '.join(RBFlist)}")
 
-    def RBFs_policy(self, control_law, input):
+    def apply_rbf_policy(self, control_law, input):
         input1 = np.zeros(self.inputs)
-        for i in range(0, self.inputs):
+        for i in range(self.inputs):
             input1[i] = (input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i])
         # RBF
         u = control_law.rbf_control_law(input1)
         # de-normalization
         uu = []
-        for i in range(0, self.outputs):
-            uu.append(u[i] * self.output_max[i])
+        self.output_min = np.zeros(u.shape)
+        for i in range(self.outputs):
+            u_i = u[i]
+            u_i = u_i * (self.output_max[i] - self.output_min[i]) + \
+                  self.output_min[i]
+
+            uu.append(u_i)
         return uu
 
     def evaluate(self, var, opt_met=1):
@@ -624,7 +629,8 @@ class susquehanna_model:
         # release decision variables ( AtomicPP, Baltimore, Chester ) only Downstream in Baseline
         uu = []
         ss_rr_hp = []
-        control_law = RBF(self.RBFs, self.inputs, self.outputs, self.RBFType, np.asarray(input_decision_var))
+        control_law = RBF(self.RBFs, self.inputs, self.outputs, self.RBFType,
+                          np.asarray(input_decision_var))
         input = []
 
         # initial condition
@@ -643,13 +649,16 @@ class susquehanna_model:
 
         # standardization of the input-output of the RBF release curve
         self.input_max.append(120)  # max reservoir level
-        self.input_max.append(self.n_days_in_year * self.day_fraction - 1)  # max inflowMC (1400000 in Flood model)
+        # self.input_max.append(self.n_days_in_year * self.day_fraction - 1)  # max inflowMC (1400000 in Flood model)
+        self.input_max.append(1400000)
         self.input_max.append(1)  # max sin() function
         self.input_max.append(1)  # max cos() function
+
         self.input_min.append(0)  # min reservoir level
         self.input_min.append(0)  # min infloWMC
         self.input_min.append(-1)  # min sin() function
         self.input_min.append(-1)  # min cos() function
+
         self.output_max.append(utils.computeMax(self.w_atomic))
         self.output_max.append(utils.computeMax(self.w_baltimore))
         self.output_max.append(utils.computeMax(self.w_chester))
@@ -679,17 +688,21 @@ class susquehanna_model:
                     # input.append(jj)  # comment out for phaseshift
                     input.append(level2_Co[j])  # reservoir level
                     # phaseshift
+
                     if t > 0:
-                        input.append(self.inflow_MC[year][day_of_year - 1])
+                        input.append(self.inflow_MC[year][day_of_year])
                     else:
                         input.append(self.inflow_MC[0][0])
+
                     input.append(
-                        np.sin(2 * np.pi * jj / total_decision_steps - input_decision_var[-2])
+                        np.sin((2 * np.pi * jj / total_decision_steps) -
+                                input_decision_var[-2])
                     )  # var[30] = phase shift for sin() function  //second last
                     input.append(
-                        np.cos(2 * np.pi * jj / total_decision_steps - input_decision_var[-1])
+                        np.cos((2 * np.pi * jj / total_decision_steps) -
+                                input_decision_var[-1])
                     )  # var[31] = phase shift for cos() function //last variable
-                    uu = self.RBFs_policy(control_law, input)
+                    uu = self.apply_rbf_policy(control_law, input)
                     input.clear()
 
                 # system transition

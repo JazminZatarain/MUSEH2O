@@ -5,6 +5,8 @@
 # Copyright   : Your copyright notice
 # ===========================================================================
 import numpy as np
+import os
+
 from susquehanna_model import susquehanna_model
 from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
 import random
@@ -37,7 +39,7 @@ def main():
 
         # Lower and Upper Bound for problem.types
         LB = [-1, 0, -1, 0, 0, 0, 0, 0] * numberOfRBF + [0, 0]
-        UB = [1, 1, 1, 1, 1, 1, 1, 1] * numberOfRBF + [np.pi * 2, np.pi * 2]
+        UB = [1, 1, 1, 1, 1, 1, 1, 1] * numberOfRBF + [2*np.pi, 2*np.pi]
         # np.pi*2 for phaseshift upperbounds (J. Quinn Como model)
         EPS = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
 
@@ -55,9 +57,14 @@ def main():
         problem.directions[4] = Problem.MAXIMIZE  # environment
         problem.directions[5] = Problem.MINIMIZE  # recreation
 
+
+        # algorithm = EpsNSGAII(problem, epsilons=EPS)
+        # algorithm.run(1000)
+
         with ProcessPoolEvaluator() as evaluator: #change to number of threads
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-            algorithm.run(50000)
+            algorithm.run(25000)
+
 
         # results
 #         print("results:")
