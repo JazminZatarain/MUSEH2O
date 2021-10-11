@@ -67,8 +67,8 @@ class SusquehannaModel:
         # historical record #1000 simulation horizon (1996,2001)
         self.n_years = n_years
         self.time_horizon_H = self.n_days_in_year * self.n_years
-        self.dec_step = 4  # 4-hours decision time step
-        self.day_fraction = int(24 / self.dec_step)
+        self.hours_between_decisions = 4  # 4-hours decision time step
+        self.decisions_per_day = int(24 / self.hours_between_decisions)
         self.n_days_one_year = 365
 
         # Constraints for the reservoir
@@ -133,9 +133,9 @@ class SusquehannaModel:
         )  # water demand for cooling the atomic power plant (cfs)
 
         # standardization of the input-output of the RBF release curve
-        self.input_max.append(self.n_days_in_year * self.day_fraction - 1)
-        # self.input_max.append(6) commented out in c model
+        self.input_max.append(self.n_days_in_year * self.decisions_per_day - 1)
         self.input_max.append(120)
+
         self.output_max.append(utils.computeMax(self.w_atomic))
         self.output_max.append(utils.computeMax(self.w_baltimore))
         self.output_max.append(utils.computeMax(self.w_chester))
@@ -502,7 +502,7 @@ class SusquehannaModel:
 
     def res_transition_h(self, s0, uu, n_sim, n_lat, ev, s0_mr, n_sim_mr,
                          ev_mr, day_of_year, day_of_week, hour0):
-        HH = self.dec_step  # 4 hour horizon
+        HH = self.hours_between_decisions  # 4 hour horizon
         sim_step = 3600  # s/hour
         leak = 800  # cfs
 
@@ -654,11 +654,9 @@ class SusquehannaModel:
         # Initializing daily variables
         # storages and levels
 
-
-        # FIXME replace -999 with np.empty
         shape = (self.time_horizon_H + 1, )
         storage_Co = np.empty(shape)
-        level_Co = np.empty(shape) # (self.n_days_in_year + 1)
+        level_Co = np.empty(shape)
         storage_MR = np.empty(shape)
         level_MR = np.empty(shape)
 
@@ -670,7 +668,7 @@ class SusquehannaModel:
         release_D = np.empty(shape)
 
         # subdaily variables
-        shape = (self.day_fraction+1,)
+        shape = (self.decisions_per_day + 1,)
         storage2_Co = np.empty(shape)
         level2_Co = np.empty(shape)
         storage2_MR = np.empty(shape)
@@ -704,12 +702,11 @@ class SusquehannaModel:
         storage_MR[0] = self.level_to_storage(level_MR[0], 0)
 
         # identification of the periodicity (365 x fdays)
-        count = 0
-        total_decision_steps_TT = self.n_days_in_year * self.day_fraction
+        decision_steps_per_year = self.n_days_in_year * self.decisions_per_day
         year = 0
 
         # run simulation
-        for t in range(0, self.time_horizon_H):
+        for t in range(self.time_horizon_H):
             day_of_week = (self.day0 + t) % 7
             day_of_year = t % self.n_days_in_year
             if day_of_year % self.n_days_in_year == 0 and t != 0:
@@ -721,9 +718,13 @@ class SusquehannaModel:
             level2_MR[0] = level_MR[t]
             storage2_MR[0] = storage_MR[t]
 
-            # subdaily cycle
-            for j in range(0, self.day_fraction):
-                jj = count % total_decision_steps_TT
+            # sub-daily cycle
+            for j in range(self.decisions_per_day):
+                decision_step = t * self.decisions_per_day + j
+
+                # decision step i in a year
+                jj = decision_step % decision_steps_per_year
+
                 # compute decision
                 if opt_met == 0:  # fixed release
                     # FIXME will crash because uu is empty list
@@ -752,6 +753,7 @@ class SusquehannaModel:
                 storage2_MR[j + 1] = ss_rr_hp[1]
                 level2_Co[j + 1] = self.storage_to_level(storage2_Co[j + 1], 1)
                 level2_MR[j + 1] = self.storage_to_level(storage2_MR[j + 1], 0)
+
                 release2_A.append(ss_rr_hp[2])
                 release2_B.append(ss_rr_hp[3])
                 release2_C.append(ss_rr_hp[4])
@@ -770,26 +772,26 @@ class SusquehannaModel:
                     ss_rr_hp[10])  # 6-hours energy production (kWh/6h) at MR
                 hydropowerProduction_MR.append(
                     ss_rr_hp[11])  # 6-hours energy production (kWh/6h) at MR
-                count = count + 1
+
 
             # daily values
-            level_Co[day_of_year + 1] = level2_Co[self.day_fraction]
-            storage_Co[t + 1] = storage2_Co[self.day_fraction]
+            level_Co[day_of_year + 1] = level2_Co[self.decisions_per_day]
+            storage_Co[t + 1] = storage2_Co[self.decisions_per_day]
             release_A[day_of_year] = utils.computeMean(release2_A)
             release_B[day_of_year] = utils.computeMean(release2_B)
             release_C[day_of_year] = utils.computeMean(
                 release2_C)  # release2_B
             release_D[day_of_year] = utils.computeMean(release2_D)
-            level_MR[t + 1] = level2_MR[self.day_fraction]
-            storage_MR[t + 1] = storage2_MR[self.day_fraction]
+            level_MR[t + 1] = level2_MR[self.decisions_per_day]
+            storage_MR[t + 1] = storage2_MR[self.decisions_per_day]
 
-            # clear subdaily values
-            level2_Co = [-999.0] * (self.day_fraction + 1)  # dont use .clear()
-            storage2_Co = [-999.0] * (
-                    self.day_fraction + 1)  # dont use .clear()
-            level2_MR = [-999.0] * (self.day_fraction + 1)  # dont use .clear()
-            storage2_MR = [-999.0] * (
-                    self.day_fraction + 1)  # dont use .clear()
+            # clear sub-daily values
+            shape = (self.decisions_per_day + 1,)
+            storage2_Co = np.empty(shape)
+            level2_Co = np.empty(shape)
+            storage2_MR = np.empty(shape)
+            level2_MR = np.empty(shape)
+
             release2_A.clear()
             release2_B.clear()
             release2_C.clear()
