@@ -8,7 +8,7 @@ import numpy as np
 
 import rbf_functions
 from susquehanna_model import SusquehannaModel
-from rbf import SquaredexponentialRBF
+# from rbf import SquaredexponentialRBF
 from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
 import random
 import os
@@ -36,7 +36,7 @@ def store_results(algorithm, output_dir, base_file_name):
 
 
 def main():
-    seeds = [10]  # , 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    seeds = [10,]  # , 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for seed in seeds:
         random.seed(seed)
 
@@ -49,7 +49,9 @@ def main():
 
         # Initialize model
         n_objectives = 6
-        n_decisionvars = int(n_rbf * 8)  # 8 = 2 centers + 2 radius + 4 weights
+        # center, radius, for each input
+        # weight for each rbf
+        n_decisionvars = n_inputs*(n_rbf * 2) + n_rbf
         n_years = 1
 
         susquehanna_river = SusquehannaModel(108.5, 505.0, 5, n_years,
@@ -62,8 +64,19 @@ def main():
         epsilons = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
 
         problem = Problem(n_decisionvars, n_objectives)
-        problem.types[:] = [Real(lower_bound[i], upper_bound[i]) for i in
-                            range(n_decisionvars)]
+
+        decision_vars =  []
+        for _ in range(n_rbf):
+            for _ in range(n_inputs):
+                decision_vars.append(Real(-1, 1)) # center
+                decision_vars.append(Real(0, 1)) # radius
+
+        for _ in range(n_rbf):
+            decision_vars.append(Real(0, 1)) # weight
+
+        print(len(decision_vars))
+
+        problem.types[:] = decision_vars
         problem.function = susquehanna_river.evaluate
 
         problem.directions[0] = Problem.MINIMIZE  # hydropower
@@ -79,12 +92,12 @@ def main():
         with ProcessPoolEvaluator() as evaluator:
             algorithm = EpsNSGAII(problem, epsilons=epsilons,
                                   evaluator=evaluator)
-            algorithm.run(1000)
+            algorithm.run(10000)
 
         # results
-        print("results:")
-        for solution in algorithm.result:
-            print(solution.objectives)
+        # print("results:")
+        # for solution in algorithm.result:
+        #     print(solution.objectives)
 
         store_results(algorithm, 'output', f"{rbf.__name__}_{seed}")
 

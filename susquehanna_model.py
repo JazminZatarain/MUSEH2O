@@ -109,7 +109,7 @@ class SusquehannaModel:
             self.load_historic_data()
             self.evaluate = self.evaluate_historic
         else:
-            self.load_historic_data()
+            self.load_stochastic_data()
             self.evaluate = self.evaluate_mc
 
         # objectives parameters
@@ -197,14 +197,13 @@ class SusquehannaModel:
                self.rches, self.renv
 
     def apply_rbf_policy(self, rbf_input, center, radius, weights):
+
         # normalize inputs
         n_inputs = self.rbf_kwargs['n_inputs']
-        input1 = np.zeros(n_inputs)
-        for i in range(n_inputs):
-            input1[i] = rbf_input[i] / self.input_max[i]
+        formatted_input = rbf_input / self.input_max
 
         # apply rbf
-        u = self.rbf(input1, center, radius, weights,
+        u = self.rbf(formatted_input, center, radius, weights,
                      self.rbf_kwargs['n_rbf'])
 
         # scale back
@@ -654,10 +653,10 @@ class SusquehannaModel:
         # storages and levels
 
         shape = (self.time_horizon_H + 1, )
-        storage_Co = np.empty(shape)
-        level_Co = np.empty(shape)
-        storage_MR = np.empty(shape)
-        level_MR = np.empty(shape)
+        storage_co = np.empty(shape)
+        level_co = np.empty(shape)
+        storage_mr = np.empty(shape)
+        level_mr = np.empty(shape)
 
         # Conowingo actual releases
         shape = (self.time_horizon_H,)
@@ -679,13 +678,14 @@ class SusquehannaModel:
         uu = []
 
         theta = np.asarray(input_variable_list_var)
-        center, radius, weights = rbf_functions.determine_parameters(theta)
+        center, radius, weights = rbf_functions.determine_parameters(theta,
+            self.rbf_kwargs['n_inputs'], self.rbf_kwargs['n_rbf'])
 
         # initial condition
-        level_Co[0] = self.init_level
-        storage_Co[0] = self.level_to_storage(level_Co[0], 1)
-        level_MR[0] = self.init_level_MR
-        storage_MR[0] = self.level_to_storage(level_MR[0], 0)
+        level_co[0] = self.init_level
+        storage_co[0] = self.level_to_storage(level_co[0], 1)
+        level_mr[0] = self.init_level_MR
+        storage_mr[0] = self.level_to_storage(level_mr[0], 0)
 
         # identification of the periodicity (365 x fdays)
         decision_steps_per_year = self.n_days_in_year * self.decisions_per_day
@@ -712,10 +712,10 @@ class SusquehannaModel:
             daily_release_d = np.empty(shape)
 
             # initialization of sub-daily cycle
-            daily_level_co[0] = level_Co[t]  # level_Co[day_of_year] <<< in flood
-            daily_storage_co[0] = storage_Co[t]
-            daily_level_mr[0] = level_MR[t]
-            daily_storage_mr[0] = storage_MR[t]
+            daily_level_co[0] = level_co[t]  # level_co[day_of_year] <<< in flood
+            daily_storage_co[0] = storage_co[t]
+            daily_level_mr[0] = level_mr[t]
+            daily_storage_mr[0] = storage_mr[t]
 
             # sub-daily cycle
             for j in range(self.decisions_per_day):
@@ -729,7 +729,7 @@ class SusquehannaModel:
                     # FIXME will crash because uu is empty list
                     uu.append(uu[0])
                 elif opt_met == 1:  # RBF-PSO
-                    rbf_input = [jj, daily_level_co[j]]
+                    rbf_input = np.asarray([jj, daily_level_co[j]])
                     uu = self.apply_rbf_policy(rbf_input, center, radius,
                                                weights)
 
@@ -774,32 +774,32 @@ class SusquehannaModel:
 
 
             # daily values
-            level_Co[day_of_year + 1] = daily_level_co[self.decisions_per_day]
-            storage_Co[t + 1] = daily_storage_co[self.decisions_per_day]
+            level_co[day_of_year + 1] = daily_level_co[self.decisions_per_day]
+            storage_co[t + 1] = daily_storage_co[self.decisions_per_day]
             release_a[day_of_year] = np.mean(daily_release_a)
             release_b[day_of_year] = np.mean(daily_release_b)
             release_c[day_of_year] = np.mean(daily_release_c)
             release_d[day_of_year] = np.mean(daily_release_d)
-            level_MR[t + 1] = daily_level_mr[self.decisions_per_day]
-            storage_MR[t + 1] = daily_storage_mr[self.decisions_per_day]
+            level_mr[t + 1] = daily_level_mr[self.decisions_per_day]
+            storage_mr[t + 1] = daily_storage_mr[self.decisions_per_day]
 
         # log level / release
         if self.log_objectives:
-            self.blevel_CO.append(level_Co)
-            self.blevel_MR.append(level_MR)
+            self.blevel_CO.append(level_co)
+            self.blevel_MR.append(level_mr)
             self.ratom.append(release_a)
             self.rbalt.append(release_b)
             self.rches.append(release_c)
             self.renv.append(release_d)
 
         # compute objectives
-        # level_Co.pop(0)
+        # level_co.pop(0)
         j_hyd = sum(hydropowerRevenue_Co) / self.n_years / pow(10,
                                                               6)  # GWh/year (M$/year)
         j_atom = self.g_vol_rel(release_a, self.w_atomic)
         j_balt = self.g_vol_rel(release_b, self.w_baltimore)
         j_ches = self.g_vol_rel(release_c, self.w_chester)
         j_env = self.g_shortage_index(release_d, self.min_flow)
-        j_rec = self.g_storagereliability(storage_Co, self.h_ref_rec)
+        j_rec = self.g_storagereliability(storage_co, self.h_ref_rec)
 
         return -j_hyd, -j_atom, -j_balt, -j_ches, j_env, -j_rec
