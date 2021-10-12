@@ -35,7 +35,8 @@ def main():
         # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
         susquehanna_river.load_data(0)  # 0 = historic, 1 = stochastic
         susquehanna_river.set_log(False)
-        susquehanna_river.setRBF(numberOfRBF, numberOfInput, numberOfOutput, RBFType)
+        susquehanna_river.setRBF(numberOfRBF, numberOfInput, numberOfOutput,
+                                 RBFType)
 
         # Lower and Upper Bound for problem.types
         LB = [-1, 0, -1, 0, 0, 0, 0, 0] * numberOfRBF + [0, 0]
@@ -58,8 +59,8 @@ def main():
         problem.directions[5] = Problem.MINIMIZE  # recreation
 
 
-        # algorithm = EpsNSGAII(problem, epsilons=EPS)
-        # algorithm.run(1000)
+        algorithm = EpsNSGAII(problem, epsilons=EPS)
+        algorithm.run(1000)
 
         with ProcessPoolEvaluator() as evaluator: #change to number of threads
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)

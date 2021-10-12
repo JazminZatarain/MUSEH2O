@@ -626,7 +626,8 @@ class susquehanna_model:
         hydropowerRevenue_MR = []  # energy revenue at Muddy Run
         hydropowerPumpRevenue_MR = []  # energy revenue consumed for pumping at Muddy Run
 
-        # release decision variables ( AtomicPP, Baltimore, Chester ) only Downstream in Baseline
+        # release decision variables ( AtomicPP, Baltimore, Chester ) only
+        # Downstream in Baseline
         uu = []
         ss_rr_hp = []
         control_law = RBF(self.RBFs, self.inputs, self.outputs, self.RBFType,
