@@ -29,7 +29,11 @@ def main():
 
         # Initialize model
         nobjs = 6
-        nvars = int(numberOfRBF * 8 + 2)  # +2 for phaseshift
+
+        # center + radius + weight
+        # but center and radius are fixed for sin and cos input
+        # so
+        nvars = numberOfRBF * 3 - 2 # +2 for phaseshift
         n_years = 1
         susquehanna_river = susquehanna_model(108.5, 505.0, 5, n_years)  # l0, l0_MR, d0, years
         # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
