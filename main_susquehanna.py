@@ -51,7 +51,7 @@ def main():
         n_objectives = 6
         # center, radius, for each input
         # weight for each rbf
-        n_decisionvars = n_inputs*(n_rbf * 2) + n_rbf
+        n_decisionvars = n_inputs*(n_rbf * 2) + (n_rbf * n_outputs)
         n_years = 1
 
         susquehanna_river = SusquehannaModel(108.5, 505.0, 5, n_years,
@@ -65,14 +65,15 @@ def main():
 
         problem = Problem(n_decisionvars, n_objectives)
 
-        decision_vars =  []
+        decision_vars = []
         for _ in range(n_rbf):
             for _ in range(n_inputs):
                 decision_vars.append(Real(-1, 1)) # center
                 decision_vars.append(Real(0, 1)) # radius
 
         for _ in range(n_rbf):
-            decision_vars.append(Real(0, 1)) # weight
+            for _ in range(n_outputs):
+                decision_vars.append(Real(0, 1)) # weight
 
         print(len(decision_vars))
 
@@ -93,6 +94,7 @@ def main():
             algorithm = EpsNSGAII(problem, epsilons=epsilons,
                                   evaluator=evaluator)
             algorithm.run(10000)
+
 
         # results
         # print("results:")

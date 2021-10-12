@@ -679,7 +679,7 @@ class SusquehannaModel:
 
         theta = np.asarray(input_variable_list_var)
         center, radius, weights = rbf_functions.determine_parameters(theta,
-            self.rbf_kwargs['n_inputs'], self.rbf_kwargs['n_rbf'])
+            **self.rbf_kwargs)
 
         # initial condition
         level_co[0] = self.init_level
