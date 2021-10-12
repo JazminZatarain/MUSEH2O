@@ -58,8 +58,9 @@ def main():
         problem.directions[4] = Problem.MAXIMIZE  # environment
         problem.directions[5] = Problem.MINIMIZE  # recreation
 
-        # algorithm = NSGAII(problem)
-        # algorithm.run(1)
+        algorithm = EpsNSGAII(problem, epsilons=EPS)
+        algorithm.run(1000)
+
         with ProcessPoolEvaluator() as evaluator:
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
             algorithm.run(100000)
