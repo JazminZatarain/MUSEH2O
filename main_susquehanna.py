@@ -5,6 +5,8 @@
 # Copyright   : Your copyright notice
 # ===========================================================================
 import numpy as np
+import pandas as pd
+
 from susquehanna_model import susquehanna_model
 from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
 import random
@@ -15,8 +17,24 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 
+class TrackProgress:
+
+    def __init__(self):
+        self.nfe = []
+        self.improvements = []
+
+    def __call__(self, algorithm):
+        self.nfe.append(algorithm.nfe)
+        self.improvements.append(algorithm.archive.improvements)
+
+    def to_dataframe(self):
+        return pd.DataFrame.from_dict(dict(nfe=self.nfe,
+                                     improvements=self.improvements))
+
+track_progress = TrackProgress()
+
 def main():
-    seeds = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    seeds = [10] #, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for modelseed in seeds:
         # set seed
         random.seed(modelseed)
@@ -58,12 +76,16 @@ def main():
         problem.directions[4] = Problem.MAXIMIZE  # environment
         problem.directions[5] = Problem.MINIMIZE  # recreation
 
-        algorithm = EpsNSGAII(problem, epsilons=EPS)
-        algorithm.run(1000)
+        # algorithm = EpsNSGAII(problem, epsilons=EPS)
+        # algorithm.run(1000)
 
         with ProcessPoolEvaluator() as evaluator:
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-            algorithm.run(100000)
+            algorithm.run(1000, callback=track_progress)
+
+        convergence = track_progress.to_dataframe()
+        # TODO:: still to be stored somewhere
+
 
         # results
         print("results:")
