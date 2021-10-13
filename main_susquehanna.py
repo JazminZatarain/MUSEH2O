@@ -23,34 +23,55 @@ def main():
         random.seed(modelseed)
         # RBF parameters
         RBFType = "SquaredExponential"
-        numberOfInput = 4  # (time, storage of Conowingo) + 2 for phaseshift
-        numberOfOutput = 4  # Atomic, Baltimore, Chester, Downstream: (hydropower, environmental)
-        numberOfRBF = 6  # numberOfInput + 2
+        n_inputs = 3  # (storage of Conowingo) + 2 for phaseshift
+        n_outputs = 4  # Atomic, Baltimore, Chester, Downstream: (hydropower,
+        # environmental)
+        n_rbfs = 5  # numberOfInput + 2
 
         # Initialize model
-        nobjs = 6
+        n_objs = 6
 
         # center + radius + weight
         # but center and radius are fixed for sin and cos input
         # so
-        nvars = numberOfRBF * 3 - 2 # +2 for phaseshift
+        # center and radius for phase shift inputs are fixed
+        # so n_rbf - 2
+        n_decisionvars = n_inputs * (n_rbfs-2) * 2 + 2 + (n_rbfs * n_outputs)
         n_years = 1
         susquehanna_river = susquehanna_model(108.5, 505.0, 5, n_years)  # l0, l0_MR, d0, years
         # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
         susquehanna_river.load_data(0)  # 0 = historic, 1 = stochastic
         susquehanna_river.set_log(False)
-        susquehanna_river.setRBF(numberOfRBF, numberOfInput, numberOfOutput,
+        susquehanna_river.setRBF(n_rbfs, n_inputs, n_outputs,
                                  RBFType)
 
         # Lower and Upper Bound for problem.types
-        LB = [-1, 0, -1, 0, 0, 0, 0, 0] * numberOfRBF + [0, 0]
-        UB = [1, 1, 1, 1, 1, 1, 1, 1] * numberOfRBF + [2*np.pi, 2*np.pi]
+        # LB = [-1, 0, -1, 0, 0, 0, 0, 0] * numberOfRBF + [0, 0]
+        # UB = [1, 1, 1, 1, 1, 1, 1, 1] * numberOfRBF + [2*np.pi, 2*np.pi]
+
+
+        decision_vars = []
+        for _ in range(n_rbfs-2):
+            # phase shift center and radius are fixed
+            for _ in range(n_inputs):
+                decision_vars.append(Real(-1, 1)) # center
+                decision_vars.append(Real(0, 1)) # radius
+
+        for _ in range(2):
+            decision_vars.append(Real(0, 2*np.pi))
+
+        for _ in range(n_rbfs):
+            for _ in range(n_outputs):
+                decision_vars.append(Real(0, 1)) # weight
+
         # np.pi*2 for phaseshift upperbounds (J. Quinn Como model)
         EPS = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
 
         # platypus for MOEA, no contraints
-        problem = Problem(nvars, nobjs)
-        problem.types[:] = [Real(LB[i], UB[i]) for i in range(nvars)]
+
+
+        problem = Problem(len(decision_vars), n_objs)
+        problem.types[:] = decision_vars
         problem.function = susquehanna_river.evaluate  # historical (deterministic) optimization
         # problem.function = functools.partial(susquehanna_river.evaluates, opt_met=1) #way to add arguments
         # problem.function = susquehanna_river.evaluateMC  # stochastic optimization
