@@ -1,6 +1,12 @@
+
+import itertools
 import numpy as np
+
+
 from numba.experimental import jitclass
 from numba import types
+
+
 
 spec = [
     ("numberOfRBF", types.int32),
@@ -11,7 +17,9 @@ spec = [
 ]
 
 
-# @jitclass(spec)
+
+
+@jitclass(spec)
 class RBF:
     # RBF calculates the values of the radial basis function that determine the release
 
@@ -31,30 +39,57 @@ class RBF:
     # out               : list
     #                     list of the same size as the number of RBFs that determines the control policy
 
-    def __init__(self, numberOfRBF, numberOfInputs, numberOfOutputs, RBFType, Theta):
-        self.numberOfRBF = numberOfRBF
-        self.numberOfInputs = numberOfInputs
-        self.numberOfOutputs = numberOfOutputs
-        self.Theta = Theta
+    def __init__(self, numberOfRBF, numberOfInputs, numberOfOutputs, RBFType,
+                 decision_vars):
+        self.n_rbfs = numberOfRBF
+        self.n_inputs = numberOfInputs
+        self.n_outputs = numberOfOutputs
+        self.decision_vars = decision_vars
         self.RBFType = RBFType
 
     def set_parameters(self):
-        Theta = self.Theta[:-2].copy()
-        Theta = Theta.reshape((-1, 4))
-        centerradius = Theta[::2]
-        weights = Theta[1::2]
-        center = centerradius[:, ::2]
-        radius = centerradius[:, 1::2]
-        # phaseshift
-        zeros_arr = np.zeros((self.numberOfRBF, 2), center.dtype)
-        ones_arr = np.ones((self.numberOfRBF, 2), radius.dtype)
-        center = np.column_stack((center, zeros_arr))
-        radius = np.column_stack((radius, ones_arr))
+        # for _ in range(n_rbfs-2):
+        #     # phase shift center and radius are fixed
+        #     for _ in range(n_inputs):
+        #         decision_vars.append(Real(-1, 1)) # center
+        #         decision_vars.append(Real(0, 1)) # radius
+        #
+        # for _ in range(2):
+        #     decision_vars.append(Real(0, 2*np.pi))
+        #
+        # for _ in range(n_rbfs):
+        #     for _ in range(n_outputs):
+        #         decision_vars.append(Real(0, 1)) # weight
 
-        ws = weights.sum(axis=0)
-        for i in [np.where(ws == i)[0][0] for i in ws if i > 10 ** -6]:
-            weights[:, i] = weights[:, i] / ws[i]
-        return center, radius, weights
+        decision_vars = self.decision_vars.copy()
+
+        # center indices
+        c_i = []
+        r_i = []
+        w_i = []
+
+        count = itertools.count()
+        for i in range(self.n_rbfs-2):
+            for j in range(self.n_inputs):
+                c_i.append(next(count))
+                r_i.append(next(count))
+
+        for _ in range(self.n_rbfs):
+            for _ in range(self.n_outputs):
+                w_i.append(next(count)) # weight
+
+        centers = decision_vars[c_i]
+        centers = np.concatenate((centers, np.zeros((2*self.n_inputs,))))
+        centers = centers.reshape((self.n_rbfs, self.n_inputs))
+
+        radii = decision_vars[c_i]
+        radii = np.concatenate((radii, np.ones((2 * self.n_inputs,))))
+        radii = radii.reshape((self.n_rbfs, self.n_inputs))
+
+        weights = decision_vars[w_i]
+        weights = weights.reshape((self.n_rbfs, self.n_outputs))
+
+        return centers, radii, weights
 
     def rbf_control_law(self, inputRBF):
         center, radius, weights = self.set_parameters()
@@ -76,10 +111,15 @@ class RBF:
             phi = self.matern32(inputRBF, center, radius)
         else:
             raise Exception("RBF not found")
-        out = (weights * (phi.reshape(self.numberOfRBF, 1))).sum(axis=0)
+        out = (weights * phi[:, np.newaxis]).sum(axis=0)
         return out
 
     def squaredExponential(self, inputRBF, center, radius):
+
+        a = (inputRBF - center) ** 2 / (radius ** 2)
+        b = np.sum(a, axis=1)
+        c = np.exp(-(b))
+
         return np.exp(-(np.sum((inputRBF - center) ** 2 / (radius ** 2), axis=1)))
 
     def gaussian(self, inputRBF, center, radius):
@@ -104,6 +144,6 @@ class RBF:
         return (1 + np.sqrt(3) * np.sum((inputRBF - center) / radius, axis=1)) * (
             np.exp(-np.sqrt(3) * np.sum((inputRBF - center) / radius, axis=1))
         )
-    
+
     def matern52(self, inputRBF, center, radius):
         return

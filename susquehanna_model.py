@@ -147,10 +147,11 @@ class susquehanna_model:
         else:
             raise Exception(f"{RBFType} is not supported, please choose one of these RBFs: {', '.join(RBFlist)}")
 
-    def apply_rbf_policy(self, control_law, input):
+    def apply_rbf_policy(self, control_law, inputs):
         input1 = np.zeros(self.inputs)
         for i in range(self.inputs):
-            input1[i] = (input[i] - self.input_min[i]) / (self.input_max[i] - self.input_min[i])
+            input1[i] = (inputs[i] - self.input_min[i]) /\
+                        (self.input_max[i] - self.input_min[i])
         # RBF
         u = control_law.rbf_control_law(input1)
         # de-normalization
@@ -586,16 +587,9 @@ class susquehanna_model:
         G = utils.computeMean(g)
         return G
 
-    def simulate(
-        self,
-        input_decision_var,
-        inflow_MC_n_sim,
-        inflowLateral_MC_n_lat,
-        inflow_Muddy_MC_n_mr,
-        evap_CO_MC_e_co,
-        evap_Muddy_MC_e_mr,
-        opt_met,
-    ):
+    def simulate(self, input_decision_var, inflow_MC_n_sim, 
+                 inflowLateral_MC_n_lat, inflow_Muddy_MC_n_mr, 
+                 evap_CO_MC_e_co, evap_Muddy_MC_e_mr, opt_met,):
         # Initializing daily variables
         # storages and levels
         storage_Co = [-999.0] * (self.time_horizon_H + 1)
@@ -632,7 +626,7 @@ class susquehanna_model:
         ss_rr_hp = []
         control_law = RBF(self.RBFs, self.inputs, self.outputs, self.RBFType,
                           np.asarray(input_decision_var))
-        input = []
+        inputs = []
 
         # initial condition
         level_Co[0] = self.init_level
@@ -651,12 +645,11 @@ class susquehanna_model:
         # standardization of the input-output of the RBF release curve
         self.input_max.append(120)  # max reservoir level
         # self.input_max.append(self.n_days_in_year * self.day_fraction - 1)  # max inflowMC (1400000 in Flood model)
-        self.input_max.append(1400000)
+        # self.input_max.append(1400000)
         self.input_max.append(1)  # max sin() function
         self.input_max.append(1)  # max cos() function
 
         self.input_min.append(0)  # min reservoir level
-        self.input_min.append(0)  # min infloWMC
         self.input_min.append(-1)  # min sin() function
         self.input_min.append(-1)  # min cos() function
 
@@ -666,7 +659,8 @@ class susquehanna_model:
         self.output_max.append(85412)
 
         # run simulation
-        for t in range(0, self.time_horizon_H):  # for t in tqdm(range(0, self.time_horizon_H)):
+        for t in range(0, self.time_horizon_H):
+            inputs = []
             # identification of the day
             day_of_week = (self.day0 + t) % 7
             day_of_year = t % self.n_days_in_year
@@ -687,24 +681,18 @@ class susquehanna_model:
                     uu.append(uu[0])
                 elif opt_met == 1:  # RBF-PSO
                     # input.append(jj)  # comment out for phaseshift
-                    input.append(level2_Co[j])  # reservoir level
+                    inputs.append(level2_Co[j])  # reservoir level
                     # phaseshift
 
-                    if t > 0:
-                        input.append(self.inflow_MC[year][day_of_year])
-                    else:
-                        input.append(self.inflow_MC[0][0])
-
-                    input.append(
+                    inputs.append(
                         np.sin((2 * np.pi * jj / total_decision_steps) -
                                 input_decision_var[-2])
                     )  # var[30] = phase shift for sin() function  //second last
-                    input.append(
+                    inputs.append(
                         np.cos((2 * np.pi * jj / total_decision_steps) -
                                 input_decision_var[-1])
                     )  # var[31] = phase shift for cos() function //last variable
-                    uu = self.apply_rbf_policy(control_law, input)
-                    input.clear()
+                    uu = self.apply_rbf_policy(control_law, inputs)
 
                 # system transition
                 ss_rr_hp = self.res_transition_h(
@@ -737,7 +725,7 @@ class susquehanna_model:
                 hydropowerProduction_Co.append(ss_rr_hp[9])  # 6-hours energy production (kWh/6h)
                 hydroPump_MR.append(ss_rr_hp[10])  # 6-hours energy production (kWh/6h) at MR
                 hydropowerProduction_MR.append(ss_rr_hp[11])  # 6-hours energy production (kWh/6h) at MR
-                input = []
+                inputs = []
                 uu = []
                 ss_rr_hp = []
                 count = count + 1

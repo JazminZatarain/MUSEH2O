@@ -49,7 +49,6 @@ def main():
         # LB = [-1, 0, -1, 0, 0, 0, 0, 0] * numberOfRBF + [0, 0]
         # UB = [1, 1, 1, 1, 1, 1, 1, 1] * numberOfRBF + [2*np.pi, 2*np.pi]
 
-
         decision_vars = []
         for _ in range(n_rbfs-2):
             # phase shift center and radius are fixed
@@ -69,7 +68,6 @@ def main():
 
         # platypus for MOEA, no contraints
 
-
         problem = Problem(len(decision_vars), n_objs)
         problem.types[:] = decision_vars
         problem.function = susquehanna_river.evaluate  # historical (deterministic) optimization
@@ -83,27 +81,24 @@ def main():
         problem.directions[4] = Problem.MAXIMIZE  # environment
         problem.directions[5] = Problem.MINIMIZE  # recreation
 
-
-        algorithm = EpsNSGAII(problem, epsilons=EPS)
-        algorithm.run(1000)
+        # algorithm = EpsNSGAII(problem, epsilons=EPS)
+        # algorithm.run(1000)
 
         with ProcessPoolEvaluator() as evaluator: #change to number of threads
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-            algorithm.run(100000)
+            algorithm.run(10000)
 
-
-        # results
-#         print("results:")
-#         for solution in algorithm.result:
-#             print(solution.objectives)
-        header = ['hydropower', 'atomicpowerplant', 'baltimore', 'chester', 'environment', 'recreation']
-        with open(f'output/{RBFType}_{modelseed}_solution.csv', 'w', encoding='UTF8', newline='') as f:
+        header = ['hydropower', 'atomicpowerplant', 'baltimore', 'chester',
+                  'environment', 'recreation']
+        with open(f'output/{RBFType}_{modelseed}_solution.csv', 'w',
+                  encoding='UTF8', newline='') as f:
             writer = csv.writer(f)
             writer.writerow(header)
             for solution in algorithm.result:
                 writer.writerow(solution.objectives)
 
-        with open(f'output/{RBFType}_{modelseed}_variables.csv', 'w', encoding='UTF8', newline='') as f:
+        with open(f'output/{RBFType}_{modelseed}_variables.csv', 'w',
+                  encoding='UTF8', newline='') as f:
             writer = csv.writer(f)
             for solution in algorithm.result:
                 writer.writerow(solution.variables)
