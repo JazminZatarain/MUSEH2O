@@ -1,6 +1,53 @@
 
+import itertools
+from platypus import Real
+
 import numpy as np
 import numba
+
+
+
+class RBF:
+
+    def __init__(self, n_rbfs, n_inputs, n_outputs):
+        self.n_rbfs = n_rbfs
+        self.n_inputs = n_inputs
+        self.n_outputs = n_outputs
+
+        types = []
+        count = itertools.count()
+        for i in range(self.n_rbfs-2):
+            for j in range(self.n_inputs):
+                types.append(Real(-1, 1))   # center
+                c_i.append(next(count))
+                types.append(Real(0, 1))    # radius
+                r_i.append(next(count))
+
+        for _ in range(self.n_rbfs):
+            for _ in range(self.n_outputs):
+                types.append(Real(0, 1))    # weight
+                w_i.append(next(count)) # weight
+
+        self.platypus_types = types
+        self.c_i = c_i
+        self.r_i = r_i
+        self.w_i = w_i
+
+
+    def set_decision_vars(self, decision_vars):
+        decision_vars = decision_vars.copy()
+
+        centers = decision_vars[self.c_i].reshape((n_rbf, n_inputs))
+        radii = decision_Vars[self.r_i].reshape((n_rbf, n_inputs))
+        weights = decision_vars[self.w_i].reshape((n_rbf, n_outputs))
+
+        ws = weights.sum(axis=0)
+        #divide each row
+        weights /= ws[:, np.newaxis] # removes 10**-6 threshold for now
+
+        # for i in [np.where(ws == i)[0][0] for i in ws if i > 10 ** -6]:
+        #     weights[i] = weights[i] / ws
+        return center, radius, weights
 
 # @numba.jit
 def format_output(output, weights, n_rbf):
@@ -8,29 +55,7 @@ def format_output(output, weights, n_rbf):
         axis=0)
 
 
-# @numba.jit
-def determine_parameters(decision_vars, n_inputs=2,
-                         n_outputs=2, n_rbf=4):
-    decision_vars = decision_vars.copy()
 
-    cr = decision_vars[:n_inputs*n_rbf*2]
-    center = cr[::2].reshape((n_inputs, n_rbf))
-    radius = cr[1::2].reshape((n_inputs, n_rbf))
-    weights = decision_vars[n_inputs*n_rbf*2::].reshape((n_outputs, n_rbf))
-
-    # theta = theta.reshape((-1, 4))
-    # centerradius = theta[::2]
-    # weights = theta[1::2]
-    # center = centerradius[:, ::2]
-    # radius = centerradius[:, 1::2]
-
-    ws = weights.sum(axis=1)
-    #divide each row
-    weights /= ws[:, np.newaxis] # removes 10**-6 threshold for now
-
-    # for i in [np.where(ws == i)[0][0] for i in ws if i > 10 ** -6]:
-    #     weights[i] = weights[i] / ws
-    return center, radius, weights
 
 
 # @numba.jit
