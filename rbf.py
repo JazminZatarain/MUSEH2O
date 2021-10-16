@@ -87,6 +87,9 @@ class RBF:
         weights = decision_vars[w_i]
         weights = weights.reshape((self.n_rbfs, self.n_outputs))
 
+        # sum of weights per input is 1
+        weights /= weights.sum(axis=0)[np.newaxis, :]
+
         return centers, radii, weights
 
     def rbf_control_law(self, inputRBF):

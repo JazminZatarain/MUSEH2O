@@ -64,7 +64,7 @@ def main():
                 decision_vars.append(Real(0, 1)) # weight
 
         # np.pi*2 for phaseshift upperbounds (J. Quinn Como model)
-        EPS = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
+        eps = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
 
         # platypus for MOEA, no contraints
 
@@ -85,8 +85,8 @@ def main():
         # algorithm.run(1000)
 
         with ProcessPoolEvaluator() as evaluator: #change to number of threads
-            algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-            algorithm.run(100000)
+            algorithm = EpsNSGAII(problem, epsilons=eps, evaluator=evaluator)
+            algorithm.run(1000)
 
         header = ['hydropower', 'atomicpowerplant', 'baltimore', 'chester',
                   'environment', 'recreation']
