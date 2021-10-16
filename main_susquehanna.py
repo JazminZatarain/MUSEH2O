@@ -22,6 +22,7 @@ class TrackProgress:
     def __init__(self):
         self.nfe = []
         self.improvements = []
+        self.objectives = {}
 
     def __call__(self, algorithm):
         self.nfe.append(algorithm.nfe)
@@ -94,7 +95,8 @@ def main():
         print("results:")
         for solution in algorithm.result:
             print(solution.objectives)
-
+        
+        # save results
         df_conv.to_csv(f"output/{RBFType}_{modelseed}_convergence.csv")
         df_hv.to_csv(f"output/{RBFType}_{modelseed}_hypervolume.csv")
 
