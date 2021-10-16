@@ -17,9 +17,7 @@ spec = [
 ]
 
 
-
-
-@jitclass(spec)
+# s@jitclass(spec)
 class RBF:
     # RBF calculates the values of the radial basis function that determine the release
 
