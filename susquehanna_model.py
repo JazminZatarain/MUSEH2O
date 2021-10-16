@@ -19,7 +19,7 @@ class SusquehannaModel:
     GG = 9.81
     n_days_in_year = 365
 
-    def __init__(self, l0, l0_muddy_run, d0, n_years, rbf, rbf_kwargs,
+    def __init__(self, l0, l0_muddy_run, d0, n_years, rbf,
                  historic_data=True):
         """
 
@@ -33,7 +33,6 @@ class SusquehannaModel:
              intial start date
         n_years : int
         rbf : callable
-        rbf_kwargs : dict
         historic_data : bool, optional
                         if true use historic data, if false use stochastic
                         data
@@ -54,7 +53,6 @@ class SusquehannaModel:
         self.input_max = []
         self.output_max = []
         self.rbf = rbf
-        self.rbf_kwargs = rbf_kwargs
 
         # log level / release
         self.blevel_CO = []
@@ -196,21 +194,21 @@ class SusquehannaModel:
         return self.blevel_CO, self.blevel_MR, self.ratom, self.rbalt, \
                self.rches, self.renv
 
-    def apply_rbf_policy(self, rbf_input, center, radius, weights):
+    def apply_rbf_policy(self, rbf_input):
 
         # normalize inputs
-        n_inputs = self.rbf_kwargs['n_inputs']
         formatted_input = rbf_input / self.input_max
 
         # apply rbf
-        u = self.rbf(formatted_input, center, radius, weights,
-                     self.rbf_kwargs['n_rbf'])
+        normalized_output = self.rbf.apply_rbfs(formatted_input)
 
         # scale back
-        uu = []
-        for i in range(0, self.rbf_kwargs['n_outputs']):
-            uu.append(u[i] * self.output_max[i])
-        return uu
+        scaled_output = normalized_output * self.output_max
+
+        # uu = []
+        # for i in range(0, self.):
+        #     uu.append(u[i] * self.output_max[i])
+        return scaled_output
 
     def evaluate_historic(self, var, opt_met=1):
         return self.simulate(var, self.inflow_MC, self.inflowLat_MC,
@@ -677,9 +675,7 @@ class SusquehannaModel:
         # Downstream in Baseline
         uu = []
 
-        theta = np.asarray(input_variable_list_var)
-        center, radius, weights = rbf_functions.determine_parameters(theta,
-            **self.rbf_kwargs)
+        self.rbf.set_decision_vars(np.asarray(input_variable_list_var))
 
         # initial condition
         level_co[0] = self.init_level
@@ -730,8 +726,7 @@ class SusquehannaModel:
                     uu.append(uu[0])
                 elif opt_met == 1:  # RBF-PSO
                     rbf_input = np.asarray([jj, daily_level_co[j]])
-                    uu = self.apply_rbf_policy(rbf_input, center, radius,
-                                               weights)
+                    uu = self.apply_rbf_policy(rbf_input)
 
                 # system transition
                 ss_rr_hp = self.res_transition_h(

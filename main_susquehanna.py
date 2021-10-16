@@ -43,41 +43,24 @@ def main():
         # RBF parameters
         n_inputs = 2  # (time, storage of Conowingo)
         n_outputs = 4
-        n_rbf = 4
-        rbf = rbf_functions.squared_exponentia_rbf
-        rbf_kwargs = dict(n_inputs=n_inputs, n_outputs=n_outputs, n_rbf=n_rbf)
+        n_rbfs = 4
+        rbf = rbf_functions.RBF(n_rbfs, n_inputs, n_outputs)
 
         # Initialize model
         n_objectives = 6
-        # center, radius, for each input
-        # weight for each rbf
-        n_decisionvars = n_inputs*(n_rbf * 2) + (n_rbf * n_outputs)
         n_years = 1
 
         susquehanna_river = SusquehannaModel(108.5, 505.0, 5, n_years,
-                                             rbf, rbf_kwargs)
+                                             rbf)
         susquehanna_river.set_log(False)
 
         # Lower and Upper Bound for problem.types
-        lower_bound = [-1, 0, -1, 0, 0, 0, 0, 0] * n_rbf
-        upper_bound = [1, 1, 1, 1, 1, 1, 1, 1] * n_rbf
+
         epsilons = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
+        n_decision_vars = len(rbf.platypus_types)
 
-        problem = Problem(n_decisionvars, n_objectives)
-
-        decision_vars = []
-        for _ in range(n_rbf):
-            for _ in range(n_inputs):
-                decision_vars.append(Real(-1, 1)) # center
-                decision_vars.append(Real(0, 1)) # radius
-
-        for _ in range(n_rbf):
-            for _ in range(n_outputs):
-                decision_vars.append(Real(0, 1)) # weight
-
-        print(len(decision_vars))
-
-        problem.types[:] = decision_vars
+        problem = Problem(n_decision_vars, n_objectives)
+        problem.types[:] = rbf.platypus_types
         problem.function = susquehanna_river.evaluate
 
         problem.directions[0] = Problem.MINIMIZE  # hydropower
@@ -95,13 +78,8 @@ def main():
                                   evaluator=evaluator)
             algorithm.run(10000)
 
-
-        # results
-        # print("results:")
-        # for solution in algorithm.result:
-        #     print(solution.objectives)
-
-        store_results(algorithm, 'output', f"{rbf.__name__}_{seed}")
+        store_results(algorithm, 'output', f"{rbf_functions.squared_exponentia_rbf.__name__}"
+                                           f"_{seed}")
 
 
 if __name__ == "__main__":
