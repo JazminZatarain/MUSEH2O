@@ -26,10 +26,15 @@ class TrackProgress:
     def __call__(self, algorithm):
         self.nfe.append(algorithm.nfe)
         self.improvements.append(algorithm.archive.improvements)
+        for solution in algorithm.archive:
+            temp.append(list(solution.objectives))
+        self.objectives[algorithm.nfe] = temp
 
     def to_dataframe(self):
-        return pd.DataFrame.from_dict(dict(nfe=self.nfe,
+        df_imp = pd.DataFrame.from_dict(dict(nfe=self.nfe,
                                      improvements=self.improvements))
+        df_obj = pd.DataFrame.from_dict(self.objectives, orient="index")
+        return df_imp, df_obj
 
 track_progress = TrackProgress()
 
