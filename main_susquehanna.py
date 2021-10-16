@@ -88,14 +88,15 @@ def main():
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
             algorithm.run(1000, callback=track_progress)
 
-        convergence = track_progress.to_dataframe()
-        # TODO:: still to be stored somewhere
-
+        df_conv, df_hv = track_progress.to_dataframe()
 
         # results
         print("results:")
         for solution in algorithm.result:
             print(solution.objectives)
+
+        df_conv.to_csv(f"output/{RBFType}_{modelseed}_convergence.csv")
+        df_hv.to_csv(f"output/{RBFType}_{modelseed}_hypervolume.csv")
 
         header = ["hydropower", "atomicpowerplant", "baltimore", "chester", "environment", "recreation"]
         with open(f"output/{RBFType}_{modelseed}_solution.csv", "w", encoding="UTF8", newline="") as f:
@@ -108,7 +109,6 @@ def main():
             writer = csv.writer(f)
             for solution in algorithm.result:
                 writer.writerow(solution.variables)
-
 
 if __name__ == "__main__":
     if not os.path.exists("output"):
