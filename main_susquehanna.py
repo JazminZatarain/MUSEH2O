@@ -87,7 +87,7 @@ def main():
 
         with ProcessPoolEvaluator() as evaluator: #change to number of threads
             algorithm = EpsNSGAII(problem, epsilons=eps, evaluator=evaluator)
-            algorithm.run(1000)
+            algorithm.run(100000)
 
         header = ['hydropower', 'atomicpowerplant', 'baltimore', 'chester',
                   'environment', 'recreation']
