@@ -56,12 +56,13 @@ def main():
                 decision_vars.append(Real(-1, 1)) # center
                 decision_vars.append(Real(0, 1)) # radius
 
-        for _ in range(2):
-            decision_vars.append(Real(0, 2*np.pi))
-
         for _ in range(n_rbfs):
             for _ in range(n_outputs):
                 decision_vars.append(Real(0, 1)) # weight
+
+        # phase shifts
+        for _ in range(2):
+            decision_vars.append(Real(0, 2*np.pi))
 
         # np.pi*2 for phaseshift upperbounds (J. Quinn Como model)
         eps = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
@@ -81,12 +82,12 @@ def main():
         problem.directions[4] = Problem.MAXIMIZE  # environment
         problem.directions[5] = Problem.MINIMIZE  # recreation
 
-        # algorithm = EpsNSGAII(problem, epsilons=EPS)
+        # algorithm = EpsNSGAII(problem, epsilons=eps)
         # algorithm.run(1000)
 
         with ProcessPoolEvaluator() as evaluator: #change to number of threads
             algorithm = EpsNSGAII(problem, epsilons=eps, evaluator=evaluator)
-            algorithm.run(100000)
+            algorithm.run(1000)
 
         header = ['hydropower', 'atomicpowerplant', 'baltimore', 'chester',
                   'environment', 'recreation']

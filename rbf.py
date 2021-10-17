@@ -65,6 +65,7 @@ class RBF:
         c_i = []
         r_i = []
         w_i = []
+        ps_i = []
 
         count = itertools.count()
         for i in range(self.n_rbfs-2):
