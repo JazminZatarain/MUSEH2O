@@ -76,7 +76,7 @@ def main():
         with ProcessPoolEvaluator() as evaluator:
             algorithm = EpsNSGAII(problem, epsilons=epsilons,
                                   evaluator=evaluator)
-            algorithm.run(10000)
+            algorithm.run(100000)
 
         store_results(algorithm, 'output', f"{rbf_functions.squared_exponentia_rbf.__name__}"
                                            f"_{seed}")
