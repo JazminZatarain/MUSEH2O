@@ -673,8 +673,6 @@ class SusquehannaModel:
 
         # release decision variables ( AtomicPP, Baltimore, Chester ) only
         # Downstream in Baseline
-        uu = []
-
         self.rbf.set_decision_vars(np.asarray(input_variable_list_var))
 
         # initial condition
@@ -766,7 +764,6 @@ class SusquehannaModel:
                     ss_rr_hp[10])  # 6-hours energy production (kWh/6h) at MR
                 hydropowerProduction_MR.append(
                     ss_rr_hp[11])  # 6-hours energy production (kWh/6h) at MR
-
 
             # daily values
             level_co[day_of_year + 1] = daily_level_co[self.decisions_per_day]

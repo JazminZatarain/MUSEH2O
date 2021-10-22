@@ -6,7 +6,6 @@ import numpy as np
 import numba
 
 
-
 class RBF:
 
     def __init__(self, n_rbfs, n_inputs, n_outputs):
@@ -29,7 +28,7 @@ class RBF:
         for _ in range(self.n_rbfs):
             for _ in range(self.n_outputs):
                 types.append(Real(0, 1))    # weight
-                w_i.append(next(count)) # weight
+                w_i.append(next(count))     # weight
 
         self.platypus_types = types
         self.c_i = np.asarray(c_i, dtype=np.int)
@@ -53,22 +52,23 @@ class RBF:
         # sum of weights per input is 1
         self.weights /= self.weights.sum(axis=0)[np.newaxis, :]
 
-
     def apply_rbfs(self, inputs):
-        outputs = squared_exponentia_rbf(inputs, self.centers, self.radii,
-                                         self.weights)
+        outputs = squared_exponential_rbf(inputs, self.centers, self.radii,
+                                          self.weights)
 
         return outputs
 
+
 # @numba.jit
 def format_output(output, weights):
-    a = weights * output[:, np.newaxis] # n_rbf x n_output, n_rbf
+    a = weights * output[:, np.newaxis]     # n_rbf x n_output, n_rbf
     b = a.sum(axis=1)
 
     return b
 
+
 # @numba.jit
-def squared_exponentia_rbf(rbf_input, centers, radii, weights):
+def squared_exponential_rbf(rbf_input, centers, radii, weights):
 
     # sum over inputs
     a = rbf_input[np.newaxis, :] - centers
@@ -81,7 +81,8 @@ def squared_exponentia_rbf(rbf_input, centers, radii, weights):
     # weights (output, rbf)
     # so row wise
 
-    weighted_rbfs = weights * rbf_scores[:, np.newaxis] # n_rbf x n_output, n_rbf
+    # n_rbf x n_output, n_rbf
+    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
     output = weighted_rbfs.sum(axis=0)
 
     return output
