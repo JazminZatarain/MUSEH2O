@@ -18,7 +18,6 @@ logging.basicConfig(level=logging.INFO)
 
 
 class TrackProgress:
-
     def __init__(self):
         self.nfe = []
         self.improvements = []
@@ -27,23 +26,42 @@ class TrackProgress:
     def __call__(self, algorithm):
         self.nfe.append(algorithm.nfe)
         self.improvements.append(algorithm.archive.improvements)
-        for solution in algorithm.archive:
-            temp.append(list(solution.objectives))
-        self.objectives[algorithm.nfe] = temp
+        temp = {}
+        for i, solution in enumerate(algorithm.archive):
+            temp[i] = list(solution.objectives)
+        self.objectives[algorithm.nfe] = pd.DataFrame.from_dict(temp,
+                                                                orient='index')
 
     def to_dataframe(self):
         df_imp = pd.DataFrame.from_dict(dict(nfe=self.nfe,
-                                     improvements=self.improvements))
-        df_obj = pd.DataFrame.from_dict(self.objectives, orient="index")
-        return df_imp, df_obj
+                                             improvements=self.improvements))
+        df_hv = pd.concat(self.objectives, axis=0)
+        return df_imp, df_hv
 
 track_progress = TrackProgress()
 
+
+def store_results(algorithm, output_dir, base_file_name):
+    header = ["hydropower", "atomicpowerplant", "baltimore", "chester",
+              "environment", "recreation"]
+    with open(f"{output_dir}/{base_file_name}_solution.csv", "w",
+              encoding="UTF8", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(header)
+        for solution in algorithm.result:
+            writer.writerow(solution.objectives)
+
+    with open(f"{output_dir}/{base_file_name}_variables.csv", "w",
+              encoding="UTF8", newline="") as f:
+        writer = csv.writer(f)
+        for solution in algorithm.result:
+            writer.writerow(solution.variables)
+
 def main():
     seeds = [10] #, 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    for modelseed in seeds:
+    for seed in seeds:
         # set seed
-        random.seed(modelseed)
+        random.seed(seed)
         # RBF parameters
         RBFType = "SE"
         numberOfInput = 2  # (time, storage of Conowingo)
@@ -72,9 +90,7 @@ def main():
         # problem.types[:] = Real(-1, 1)
         problem.types[:] = [Real(LB[i], UB[i]) for i in range(nvars)]
         problem.function = susquehanna_river.evaluate  # historical (deterministic) optimization
-        # problem.function = functools.partial(susquehanna_river.evaluates, opt_met=1) #way to add arguments
-        # problem.function = susquehanna_river.evaluateMC  # stochastic optimization
-        # problem.directions[:] = Problem.MINIMIZE
+
         problem.directions[0] = Problem.MINIMIZE  # hydropower
         problem.directions[1] = Problem.MINIMIZE  # atomicpowerplant
         problem.directions[2] = Problem.MINIMIZE  # baltimore
@@ -87,7 +103,7 @@ def main():
 
         with ProcessPoolEvaluator() as evaluator:
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-            algorithm.run(1000, callback=track_progress)
+            algorithm.run(10000, callback=track_progress)
 
         df_conv, df_hv = track_progress.to_dataframe()
 
@@ -97,20 +113,10 @@ def main():
             print(solution.objectives)
         
         # save results
-        df_conv.to_csv(f"output/{RBFType}_{modelseed}_convergence.csv")
-        df_hv.to_csv(f"output/{RBFType}_{modelseed}_hypervolume.csv")
+        df_conv.to_csv(f"output/{RBFType}_{seed}_convergence.csv")
+        df_hv.to_csv(f"output/{RBFType}_{seed}_hypervolume.csv")
 
-        header = ["hydropower", "atomicpowerplant", "baltimore", "chester", "environment", "recreation"]
-        with open(f"output/{RBFType}_{modelseed}_solution.csv", "w", encoding="UTF8", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow(header)
-            for solution in algorithm.result:
-                writer.writerow(solution.objectives)
-
-        with open(f"output/{RBFType}_{modelseed}_variables.csv", "w", encoding="UTF8", newline="") as f:
-            writer = csv.writer(f)
-            for solution in algorithm.result:
-                writer.writerow(solution.variables)
+        store_results(algorithm, 'output', f"{RBFType}_{seed}")
 
 if __name__ == "__main__":
     if not os.path.exists("output"):
