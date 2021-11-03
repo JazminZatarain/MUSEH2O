@@ -4,12 +4,11 @@ import numpy as np
 
 import rbf_functions
 import utils
-# from rbf import RBF
 from numba import njit
 
 
 def create_path(rest):
-    # FIXME my dir is now retreived repeatedly
+    # FIXME my dir is now retrieved repeatedly
     my_dir = os.path.dirname(os.path.realpath(__file__))
     return os.path.abspath(os.path.join(my_dir, rest))
 
@@ -30,7 +29,7 @@ class SusquehannaModel:
         l0_muddy_run : float
                        initial condition Muddy Run
         d0 : int
-             intial start date
+             initial start date
         n_years : int
         rbf : callable
         historic_data : bool, optional
@@ -238,12 +237,12 @@ class SusquehannaModel:
             Jrec.append(Jrecreation)
 
         # objectives aggregation (minimax)
-        obj.insert(0, utils.computePercentile(Jhyd, 99))
-        obj.insert(1, utils.computePercentile(Jatom, 99))
-        obj.insert(2, utils.computePercentile(Jbal, 99))
-        obj.insert(3, utils.computePercentile(Jche, 99))
-        obj.insert(4, utils.computePercentile(Jenv, 99))
-        obj.insert(5, utils.computePercentile(Jrec, 99))
+        obj.insert(0, np.percentile(Jhyd, 99))
+        obj.insert(1, np.percentile(Jatom, 99))
+        obj.insert(2, np.percentile(Jbal, 99))
+        obj.insert(3, np.percentile(Jche, 99))
+        obj.insert(4, np.percentile(Jenv, 99))
+        obj.insert(5, np.percentile(Jrec, 99))
         return obj
 
     def storage_to_level(self, s, lake):
@@ -741,10 +740,10 @@ class SusquehannaModel:
                     j,
                 )
 
-                daily_storage_co[j + 1] = ss_rr_hp[0]
-                daily_storage_mr[j + 1] = ss_rr_hp[1]
-                daily_level_co[j + 1] = self.storage_to_level(daily_storage_co[j + 1], 1)
-                daily_level_mr[j + 1] = self.storage_to_level(daily_storage_mr[j + 1], 0)
+                daily_storage_co[j+1] = ss_rr_hp[0]
+                daily_storage_mr[j+1] = ss_rr_hp[1]
+                daily_level_co[j+1] = self.storage_to_level(daily_storage_co[j+1], 1)
+                daily_level_mr[j+1] = self.storage_to_level(daily_storage_mr[j+1], 0)
 
                 daily_release_a[j] = ss_rr_hp[2]
                 daily_release_b[j] = ss_rr_hp[3]
