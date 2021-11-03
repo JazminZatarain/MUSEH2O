@@ -1,7 +1,7 @@
 # ===========================================================================
 # Name        : main_susquehanna.py
 # Author      : MarkW, adapted from JazminZ & MatteoG
-# Version     : 0.05
+# Version     : 0.06
 # Copyright   : Your copyright notice
 # ===========================================================================
 import numpy as np
@@ -29,45 +29,41 @@ class TrackProgress:
         temp = {}
         for i, solution in enumerate(algorithm.archive):
             temp[i] = list(solution.objectives)
-        self.objectives[algorithm.nfe] = pd.DataFrame.from_dict(temp,
-                                                                orient='index')
+        self.objectives[algorithm.nfe] = pd.DataFrame.from_dict(temp, orient="index")
 
     def to_dataframe(self):
-        df_imp = pd.DataFrame.from_dict(dict(nfe=self.nfe,
-                                             improvements=self.improvements))
+        df_imp = pd.DataFrame.from_dict(dict(nfe=self.nfe, improvements=self.improvements))
         df_hv = pd.concat(self.objectives, axis=0)
         return df_imp, df_hv
+
 
 track_progress = TrackProgress()
 
 
 def store_results(algorithm, output_dir, base_file_name):
-    header = ["hydropower", "atomicpowerplant", "baltimore", "chester",
-              "environment", "recreation"]
-    with open(f"{output_dir}/{base_file_name}_solution.csv", "w",
-              encoding="UTF8", newline="") as f:
+    header = ["hydropower", "atomicpowerplant", "baltimore", "chester", "environment", "recreation"]
+    with open(f"{output_dir}/{base_file_name}_solution.csv", "w", encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(header)
         for solution in algorithm.result:
             writer.writerow(solution.objectives)
 
-    with open(f"{output_dir}/{base_file_name}_variables.csv", "w",
-              encoding="UTF8", newline="") as f:
+    with open(f"{output_dir}/{base_file_name}_variables.csv", "w", encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
         for solution in algorithm.result:
             writer.writerow(solution.variables)
 
+
 def main():
-    seeds = [10] #, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    seeds = [10]  # , 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for seed in seeds:
         # set seed
         random.seed(seed)
         # RBF parameters
-        RBFType = "SE"
+        RBFType = "invmultiquadric"
         numberOfInput = 2  # (time, storage of Conowingo)
         numberOfOutput = 4  # Atomic, Baltimore,Chester, Downstream:- hydropower, environmental
         numberOfRBF = 4  # numberOfInput + 2
-        # N = 2 * n * m + K * n  # check 32 with 2 inputs, 72 with 4 inputs
 
         # Initialize model
         nobjs = 6
@@ -82,7 +78,6 @@ def main():
         # Lower and Upper Bound for problem.types
         LB = [-1, 0, -1, 0, 0, 0, 0, 0] * numberOfRBF
         UB = [1, 1, 1, 1, 1, 1, 1, 1] * numberOfRBF
-        # np.pi*2 for phaseshift upperbounds (J. Quinn Como model) check borg optimization_serial flood C model
         EPS = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
 
         # platypus MOEA, no contraints
@@ -103,7 +98,7 @@ def main():
 
         with ProcessPoolEvaluator() as evaluator:
             algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-            algorithm.run(10000, callback=track_progress)
+            algorithm.run(1000, callback=track_progress)
 
         df_conv, df_hv = track_progress.to_dataframe()
 
@@ -111,12 +106,13 @@ def main():
         print("results:")
         for solution in algorithm.result:
             print(solution.objectives)
-        
+
         # save results
         df_conv.to_csv(f"output/{RBFType}_{seed}_convergence.csv")
         df_hv.to_csv(f"output/{RBFType}_{seed}_hypervolume.csv")
 
-        store_results(algorithm, 'output', f"{RBFType}_{seed}")
+        store_results(algorithm, "output", f"{RBFType}_{seed}")
+
 
 if __name__ == "__main__":
     if not os.path.exists("output"):
