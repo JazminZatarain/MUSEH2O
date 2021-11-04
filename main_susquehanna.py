@@ -74,9 +74,9 @@ def main():
     seeds = [10, ]  # , 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for entry in [
                   rbf_functions.squared_exponential_rbf,
-                  # rbf_functions.gaussian_rbf,
+                  rbf_functions.gaussian_rbf,
                   # rbf_functions.multiquadric_rbf,
-                  # rbf_functions.inverse_quadric_rbf
+                  rbf_functions.inverse_quadric_rbf
         ]:
         for seed in seeds:
             random.seed(seed)
@@ -118,7 +118,7 @@ def main():
             with ProcessPoolEvaluator() as evaluator:
                 algorithm = EpsNSGAII(problem, epsilons=epsilons,
                                       evaluator=evaluator)
-                algorithm.run(10000, track_progress)
+                algorithm.run(50000, track_progress)
 
             store_results(algorithm, track_progress, 'output',
                           f"{entry.__name__}",
