@@ -74,9 +74,10 @@ def main():
     seeds = [10, ]  # , 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for entry in [
                   rbf_functions.squared_exponential_rbf,
-                  rbf_functions.gaussian_rbf,
-                #   rbf_functions.multiquadric_rbf,
-                  rbf_functions.inverse_quadric_rbf]:
+                  # rbf_functions.gaussian_rbf,
+                  # rbf_functions.multiquadric_rbf,
+                  # rbf_functions.inverse_quadric_rbf
+        ]:
         for seed in seeds:
             random.seed(seed)
 
@@ -96,8 +97,7 @@ def main():
             susquehanna_river.set_log(False)
 
             # Lower and Upper Bound for problem.types
-
-            epsilons = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
+            epsilons = [0.5, 0.05, 0.05, 0.05, 0.001, 0.05]
             n_decision_vars = len(rbf.platypus_types)
 
             problem = Problem(n_decision_vars, n_objectives)
@@ -108,7 +108,7 @@ def main():
             problem.directions[1] = Problem.MAXIMIZE  # atomic power plant
             problem.directions[2] = Problem.MAXIMIZE  # baltimore
             problem.directions[3] = Problem.MAXIMIZE  # chester
-            problem.directions[4] = Problem.MAXIMIZE  # environment
+            problem.directions[4] = Problem.MINIMIZE  # environment
             problem.directions[5] = Problem.MAXIMIZE  # recreation
 
             # algorithm = EpsNSGAII(problem, epsilons=epsilons)
@@ -118,7 +118,7 @@ def main():
             with ProcessPoolEvaluator() as evaluator:
                 algorithm = EpsNSGAII(problem, epsilons=epsilons,
                                       evaluator=evaluator)
-                algorithm.run(50000, track_progress)
+                algorithm.run(10000, track_progress)
 
             store_results(algorithm, track_progress, 'output',
                           f"{entry.__name__}",
