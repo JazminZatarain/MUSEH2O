@@ -6,7 +6,7 @@ import numba
 
 
 def squared_exponential_rbf(rbf_input, centers, radii, weights):
-    '''
+    """
 
 
     Parameters
@@ -23,7 +23,7 @@ def squared_exponential_rbf(rbf_input, centers, radii, weights):
     numpy array
 
 
-    '''
+    """
 
     # sum over inputs
     a = rbf_input[np.newaxis, :] - centers
@@ -137,9 +137,9 @@ class RBF:
         return outputs
 
 
-# @numba.jit
-def format_output(output, weights):
-    a = weights * output[:, np.newaxis]  # n_rbf x n_output, n_rbf
-    b = a.sum(axis=1)
-
-    return b
+# # @numba.jit
+# def format_output(output, weights):
+#     a = weights * output[:, np.newaxis]  # n_rbf x n_output, n_rbf
+#     b = a.sum(axis=1)
+#
+#     return b
