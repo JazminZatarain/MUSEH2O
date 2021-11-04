@@ -108,7 +108,7 @@ def main():
             problem.directions[1] = Problem.MAXIMIZE  # atomic power plant
             problem.directions[2] = Problem.MAXIMIZE  # baltimore
             problem.directions[3] = Problem.MAXIMIZE  # chester
-            problem.directions[4] = Problem.MINIMIZE  # environment
+            problem.directions[4] = Problem.MAXIMIZE  # environment
             problem.directions[5] = Problem.MAXIMIZE  # recreation
 
             # algorithm = EpsNSGAII(problem, epsilons=epsilons)
@@ -118,7 +118,7 @@ def main():
             with ProcessPoolEvaluator() as evaluator:
                 algorithm = EpsNSGAII(problem, epsilons=epsilons,
                                       evaluator=evaluator)
-                algorithm.run(100000, track_progress)
+                algorithm.run(50000, track_progress)
 
             store_results(algorithm, track_progress, 'output',
                           f"{entry.__name__}",
