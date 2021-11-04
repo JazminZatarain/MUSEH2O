@@ -40,7 +40,7 @@ def squared_exponential_rbf(rbf_input, centers, radii, weights):
 
 def gaussian_rbf(rbf_input, centers, radii, weights):
     a = rbf_input[np.newaxis, :] - centers
-    n = radii * a
+    n = a / radii
     p = n ** 2
     q = np.sum(p, axis=1)
     rbf_scores = np.exp(-1*q)
@@ -54,7 +54,7 @@ def gaussian_rbf(rbf_input, centers, radii, weights):
 
 def multiquadric_rbf(rbf_input, centers, radii, weights):
     a = rbf_input[np.newaxis, :] - centers
-    b = radii * a
+    b = a / radii
     c = b ** 2
     d = np.sum(c, axis=1)
     rbf_scores = np.sqrt(1 + d)
@@ -72,7 +72,7 @@ def inverse_quadric_rbf(rbf_input, centers, radii, weights):
 
     # a = rbf_input[np.newaxis, :] - centers
     a = rbf_input[np.newaxis, :] - centers
-    b = radii * a
+    b = a / radii
     c = b ** 2
     d = np.sum(c, axis=1)
     rbf_scores = 1 / (1 + d)
