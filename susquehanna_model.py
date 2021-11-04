@@ -793,4 +793,4 @@ class SusquehannaModel:
         j_env = self.g_shortage_index(release_d, self.min_flow)
         j_rec = self.g_storagereliability(storage_co, self.h_ref_rec)
 
-        return -j_hyd, -j_atom, -j_balt, -j_ches, j_env, -j_rec
+        return j_hyd, j_atom, j_balt, j_ches, j_env, j_rec

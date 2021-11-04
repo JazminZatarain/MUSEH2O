@@ -1,4 +1,3 @@
-
 import itertools
 from platypus import Real
 
@@ -6,12 +5,92 @@ import numpy as np
 import numba
 
 
+def squared_exponential_rbf(rbf_input, centers, radii, weights):
+    '''
+
+
+    Parameters
+    ----------
+    rbf_input : numpy array
+                1-D, shape is (n_inputs,)
+    centers :   numpy array
+                2-D, shape is (n_rbfs X n_inputs)
+    radii :     2-D, shape is (n_rbfs X n_inputs)
+    weights :   2-D, shape is (n_rbfs X n_outputs)
+
+    Returns
+    -------
+    numpy array
+
+
+    '''
+
+    # sum over inputs
+    a = rbf_input[np.newaxis, :] - centers
+    b = a ** 2
+    c = radii ** 2
+    rbf_scores = np.exp(-(np.sum(b / c, axis=1)))
+
+    # n_rbf x n_output, n_rbf
+    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
+    output = weighted_rbfs.sum(axis=0)
+
+    return output
+
+
+def gaussian_rbf(rbf_input, centers, radii, weights):
+    a = rbf_input[np.newaxis, :] - centers
+    n = radii * a
+    p = n ** 2
+    q = np.sum(p, axis=1)
+    rbf_scores = np.exp(-1*q)
+
+    # n_rbf x n_output, n_rbf
+    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
+    output = weighted_rbfs.sum(axis=0)
+
+    return output
+
+
+def multiquadric_rbf(rbf_input, centers, radii, weights):
+    a = rbf_input[np.newaxis, :] - centers
+    b = radii * a
+    c = b ** 2
+    d = np.sum(c, axis=1)
+    rbf_scores = np.sqrt(1 + d)
+
+    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
+    output = weighted_rbfs.sum(axis=0)
+
+    return output
+
+
+def inverse_quadric_rbf(rbf_input, centers, radii, weights):
+    # output = np.sqrt(1 + np.sum((self.radius * (rbf_input - self.center))
+    #                             ** 2,
+    #                             axis=1))
+
+    # a = rbf_input[np.newaxis, :] - centers
+    a = rbf_input[np.newaxis, :] - centers
+    b = radii * a
+    c = b ** 2
+    d = np.sum(c, axis=1)
+    rbf_scores = 1 / (1 + d)
+
+    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
+    output = weighted_rbfs.sum(axis=0)
+
+    return output
+
+
 class RBF:
 
-    def __init__(self, n_rbfs, n_inputs, n_outputs):
+    def __init__(self, n_rbfs, n_inputs, n_outputs,
+                 rbf_function=squared_exponential_rbf):
         self.n_rbfs = n_rbfs
         self.n_inputs = n_inputs
         self.n_outputs = n_outputs
+        self.rbf = rbf_function
 
         types = []
         c_i = []
@@ -20,15 +99,15 @@ class RBF:
         count = itertools.count()
         for i in range(self.n_rbfs):
             for j in range(self.n_inputs):
-                types.append(Real(-1, 1))   # center
+                types.append(Real(-1, 1))  # center
                 c_i.append(next(count))
-                types.append(Real(0, 1))    # radius
+                types.append(Real(0, 1))  # radius
                 r_i.append(next(count))
 
         for _ in range(self.n_rbfs):
             for _ in range(self.n_outputs):
-                types.append(Real(0, 1))    # weight
-                w_i.append(next(count))     # weight
+                types.append(Real(0, 1))  # weight
+                w_i.append(next(count))  # weight
 
         self.platypus_types = types
         self.c_i = np.asarray(c_i, dtype=np.int)
@@ -53,36 +132,14 @@ class RBF:
         self.weights /= self.weights.sum(axis=0)[np.newaxis, :]
 
     def apply_rbfs(self, inputs):
-        outputs = squared_exponential_rbf(inputs, self.centers, self.radii,
-                                          self.weights)
+        outputs = self.rbf(inputs, self.centers, self.radii, self.weights)
 
         return outputs
 
 
 # @numba.jit
 def format_output(output, weights):
-    a = weights * output[:, np.newaxis]     # n_rbf x n_output, n_rbf
+    a = weights * output[:, np.newaxis]  # n_rbf x n_output, n_rbf
     b = a.sum(axis=1)
 
     return b
-
-
-# @numba.jit
-def squared_exponential_rbf(rbf_input, centers, radii, weights):
-
-    # sum over inputs
-    a = rbf_input[np.newaxis, :] - centers
-    b = a ** 2
-    c = radii ** 2
-
-    rbf_scores = np.exp(-(np.sum(b/c, axis=1)))
-
-    # output (1, rbf)
-    # weights (output, rbf)
-    # so row wise
-
-    # n_rbf x n_output, n_rbf
-    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
-    output = weighted_rbfs.sum(axis=0)
-
-    return output
