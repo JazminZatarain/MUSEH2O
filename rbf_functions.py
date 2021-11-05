@@ -8,7 +8,6 @@ import numba
 def squared_exponential_rbf(rbf_input, centers, radii, weights):
     """
 
-
     Parameters
     ----------
     rbf_input : numpy array
@@ -39,6 +38,23 @@ def squared_exponential_rbf(rbf_input, centers, radii, weights):
 
 
 def gaussian_rbf(rbf_input, centers, radii, weights):
+    """
+
+    Parameters
+    ----------
+    rbf_input : numpy array
+                1-D, shape is (n_inputs,)
+    centers :   numpy array
+                2-D, shape is (n_rbfs X n_inputs)
+    radii :     2-D, shape is (n_rbfs X n_inputs)
+    weights :   2-D, shape is (n_rbfs X n_outputs)
+
+    Returns
+    -------
+    numpy array
+
+
+    """
     a = rbf_input[np.newaxis, :] - centers
     n = a / radii
     p = n ** 2
@@ -53,6 +69,23 @@ def gaussian_rbf(rbf_input, centers, radii, weights):
 
 
 def multiquadric_rbf(rbf_input, centers, radii, weights):
+    """
+
+    Parameters
+    ----------
+    rbf_input : numpy array
+                1-D, shape is (n_inputs,)
+    centers :   numpy array
+                2-D, shape is (n_rbfs X n_inputs)
+    radii :     2-D, shape is (n_rbfs X n_inputs)
+    weights :   2-D, shape is (n_rbfs X n_outputs)
+
+    Returns
+    -------
+    numpy array
+
+
+    """
     a = rbf_input[np.newaxis, :] - centers
     b = a / radii
     c = b ** 2
@@ -66,11 +99,23 @@ def multiquadric_rbf(rbf_input, centers, radii, weights):
 
 
 def inverse_quadric_rbf(rbf_input, centers, radii, weights):
-    # output = np.sqrt(1 + np.sum((self.radius * (rbf_input - self.center))
-    #                             ** 2,
-    #                             axis=1))
+    """
 
-    # a = rbf_input[np.newaxis, :] - centers
+    Parameters
+    ----------
+    rbf_input : numpy array
+                1-D, shape is (n_inputs,)
+    centers :   numpy array
+                2-D, shape is (n_rbfs X n_inputs)
+    radii :     2-D, shape is (n_rbfs X n_inputs)
+    weights :   2-D, shape is (n_rbfs X n_outputs)
+
+    Returns
+    -------
+    numpy array
+
+
+    """
     a = rbf_input[np.newaxis, :] - centers
     b = a / radii
     c = b ** 2
@@ -81,6 +126,125 @@ def inverse_quadric_rbf(rbf_input, centers, radii, weights):
     output = weighted_rbfs.sum(axis=0)
 
     return output
+
+
+def inverse_multiquadric_rbf(rbf_input, centers, radii, weights):
+    """
+
+    Parameters
+    ----------
+    rbf_input : numpy array
+                1-D, shape is (n_inputs,)
+    centers :   numpy array
+                2-D, shape is (n_rbfs X n_inputs)
+    radii :     2-D, shape is (n_rbfs X n_inputs)
+    weights :   2-D, shape is (n_rbfs X n_outputs)
+
+    Returns
+    -------
+    numpy array
+
+
+    """
+    a = rbf_input[np.newaxis, :] - centers
+    b = (a / radii) ** 2
+    rbf_scores = 1 / np.sqrt(1 + np.sum(b, axis=1))
+
+    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
+    output = weighted_rbfs.sum(axis=0)
+
+    return output
+
+
+def exponential_rbf(rbf_input, centers, radii, weights):
+    """
+
+    Parameters
+    ----------
+    rbf_input : numpy array
+                1-D, shape is (n_inputs,)
+    centers :   numpy array
+                2-D, shape is (n_rbfs X n_inputs)
+    radii :     2-D, shape is (n_rbfs X n_inputs)
+    weights :   2-D, shape is (n_rbfs X n_outputs)
+
+    Returns
+    -------
+    numpy array
+
+
+    """
+    a = rbf_input[np.newaxis, :] - centers
+    b = a / radii
+    rbf_scores = np.exp(-1 * np.sum(b, axis=1))
+
+    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
+    output = weighted_rbfs.sum(axis=0)
+    return output
+
+
+def multi_quadric2_rbf(rbf_input, centers, radii, weights):
+    """
+
+    Parameters
+    ----------
+    rbf_input : numpy array
+                1-D, shape is (n_inputs,)
+    centers :   numpy array
+                2-D, shape is (n_rbfs X n_inputs)
+    radii :     2-D, shape is (n_rbfs X n_inputs)
+    weights :   2-D, shape is (n_rbfs X n_outputs)
+
+    Returns
+    -------
+    numpy array
+
+
+    """
+
+
+    rbf_scores = np.sqrt(np.sum((radii ** 2) + ((rbf_input - centers) ** 2),
+                            axis=1))
+    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
+    output = weighted_rbfs.sum(axis=0)
+    return output
+
+
+def matern32_rbf(rbf_input, centers, radii, weights):
+    """
+
+    Parameters
+    ----------
+    rbf_input : numpy array
+                1-D, shape is (n_inputs,)
+    centers :   numpy array
+                2-D, shape is (n_rbfs X n_inputs)
+    radii :     2-D, shape is (n_rbfs X n_inputs)
+    weights :   2-D, shape is (n_rbfs X n_outputs)
+
+    Returns
+    -------
+    numpy array
+
+
+    """
+    diff = rbf_input - centers
+    squared = (diff /radii)**2 # TODO:: hacked to make it work
+    sqrt = np.sqrt(3 * np.sum(squared, axis=1))
+    rbf_scores = (1 + sqrt) * (np.exp(-sqrt))
+
+    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
+    output = weighted_rbfs.sum(axis=0)
+    return output
+
+rbfs = [squared_exponential_rbf,
+        gaussian_rbf,
+        multiquadric_rbf,
+        inverse_multiquadric_rbf,
+        inverse_quadric_rbf,
+        exponential_rbf,
+        multi_quadric2_rbf,
+        matern32_rbf]
 
 
 class RBF:
