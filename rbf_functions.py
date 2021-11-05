@@ -59,7 +59,7 @@ def gaussian_rbf(rbf_input, centers, radii, weights):
     n = a / radii
     p = n ** 2
     q = np.sum(p, axis=1)
-    rbf_scores = np.exp(-1*q)
+    rbf_scores = np.exp(-1 * q)
 
     # n_rbf x n_output, n_rbf
     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
@@ -175,7 +175,7 @@ def exponential_rbf(rbf_input, centers, radii, weights):
 
     """
     a = rbf_input[np.newaxis, :] - centers
-    b = (a / radii)**2 # TODO 
+    b = (a / radii) ** 2  # TODO
     rbf_scores = np.exp(-1 * np.sum(b, axis=1))
 
     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
@@ -199,12 +199,10 @@ def multi_quadric2_rbf(rbf_input, centers, radii, weights):
     -------
     numpy array
 
-
     """
 
-
     rbf_scores = np.sqrt(np.sum((radii ** 2) + ((rbf_input - centers) ** 2),
-                            axis=1))
+                                axis=1))
     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
     output = weighted_rbfs.sum(axis=0)
     return output
@@ -229,13 +227,14 @@ def matern32_rbf(rbf_input, centers, radii, weights):
 
     """
     diff = rbf_input - centers
-    squared = (diff /radii)**2 # TODO:: hacked to make it work
+    squared = (diff / radii) ** 2  # TODO:: hacked to make it work
     sqrt = np.sqrt(3 * np.sum(squared, axis=1))
     rbf_scores = (1 + sqrt) * (np.exp(-sqrt))
 
     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
     output = weighted_rbfs.sum(axis=0)
     return output
+
 
 rbfs = [squared_exponential_rbf,
         gaussian_rbf,
@@ -299,7 +298,6 @@ class RBF:
         outputs = self.rbf(inputs, self.centers, self.radii, self.weights)
 
         return outputs
-
 
 # # @numba.jit
 # def format_output(output, weights):
