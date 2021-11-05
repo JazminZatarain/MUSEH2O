@@ -1,20 +1,20 @@
 # ===========================================================================
 # Name        : main_susquehanna.py
 # Author      : MarkW, adapted from JazminZ & MatteoG
-# Version     : 0.06
+# Version     : 0.05
 # Copyright   : Your copyright notice
 # ===========================================================================
-import numpy as np
-import pandas as pd
-
-from susquehanna_model import susquehanna_model
-from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
-import random
-import os
 import csv
 import logging
+import numpy as np
+import os
+import pandas as pd
+import random
 
-logging.basicConfig(level=logging.INFO)
+from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
+
+import rbf_functions
+from susquehanna_model import SusquehannaModel
 
 
 class TrackProgress:
@@ -29,95 +29,102 @@ class TrackProgress:
         temp = {}
         for i, solution in enumerate(algorithm.archive):
             temp[i] = list(solution.objectives)
-        self.objectives[algorithm.nfe] = pd.DataFrame.from_dict(temp, orient="index")
+        self.objectives[algorithm.nfe] = pd.DataFrame.from_dict(temp,
+                                                                orient='index')
 
     def to_dataframe(self):
-        df_imp = pd.DataFrame.from_dict(dict(nfe=self.nfe, improvements=self.improvements))
+        df_imp = pd.DataFrame.from_dict(dict(nfe=self.nfe,
+                                             improvements=self.improvements))
         df_hv = pd.concat(self.objectives, axis=0)
         return df_imp, df_hv
 
 
-track_progress = TrackProgress()
+def store_results(algorithm, track_progress, output_dir, rbf_name,
+                  seed_id):
+    path_name = f"{output_dir}/{rbf_name}"
+    if not os.path.exists(path_name):
+        try:
+            os.mkdir(path_name)
+        except OSError:
+            print("Creation of the directory failed")
 
 
-def store_results(algorithm, output_dir, base_file_name):
-    header = ["hydropower", "atomicpowerplant", "baltimore", "chester", "environment", "recreation"]
-    with open(f"{output_dir}/{base_file_name}_solution.csv", "w", encoding="UTF8", newline="") as f:
+    header = ["hydropower", "atomicpowerplant", "baltimore", "chester",
+              "environment", "recreation"]
+    with open(f"{output_dir}/{rbf_name}/{seed_id}_solution.csv", "w",
+              encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(header)
         for solution in algorithm.result:
             writer.writerow(solution.objectives)
 
-    with open(f"{output_dir}/{base_file_name}_variables.csv", "w", encoding="UTF8", newline="") as f:
+    with open(f"{output_dir}/{rbf_name}/{seed_id}_variables.csv", "w",
+              encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
         for solution in algorithm.result:
             writer.writerow(solution.variables)
 
+    # save progress info
+    df_conv, df_hv = track_progress.to_dataframe()
+    df_conv.to_csv(f"{output_dir}/{rbf_name}/{seed_id}_convergence.csv")
+    df_hv.to_csv(f"{output_dir}/{rbf_name}/{seed_id}_hypervolume.csv")
+
 
 def main():
-    seeds = [10]  # , 20, 30, 40, 50, 60, 70, 80, 90, 100]
-    for seed in seeds:
-        # set seed
-        random.seed(seed)
-        # RBF parameters
-        RBFType = "invmultiquadric"
-        numberOfInput = 2  # (time, storage of Conowingo)
-        numberOfOutput = 4  # Atomic, Baltimore,Chester, Downstream:- hydropower, environmental
-        numberOfRBF = 4  # numberOfInput + 2
+    seeds = [10, ]  # , 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    for entry in [
+                  rbf_functions.squared_exponential_rbf,
+                  rbf_functions.gaussian_rbf,
+                  # rbf_functions.multiquadric_rbf,
+                  rbf_functions.inverse_quadric_rbf
+        ]:
+        for seed in seeds:
+            random.seed(seed)
 
-        # Initialize model
-        nobjs = 6
-        nvars = int(numberOfRBF * 8)  # 8 = 2 centers + 2 radius + 4 weights
-        n_years = 1
-        susquehanna_river = susquehanna_model(108.5, 505.0, 5, n_years)  # l0, l0_MR, d0, years
-        # l0 = start level cono, l0_MR = start level muddy run, d0 = startday > friday = 5
-        susquehanna_river.load_data(0)  # 0 = historic, 1 = stochastic
-        susquehanna_river.set_log(False)
-        susquehanna_river.setRBF(numberOfRBF, numberOfInput, numberOfOutput, RBFType)
+            # RBF parameters
+            n_inputs = 2  # (time, storage of Conowingo)
+            n_outputs = 4
+            n_rbfs = 4
+            rbf = rbf_functions.RBF(n_rbfs, n_inputs, n_outputs,
+                                    rbf_function=entry)
 
-        # Lower and Upper Bound for problem.types
-        LB = [-1, 0, -1, 0, 0, 0, 0, 0] * numberOfRBF
-        UB = [1, 1, 1, 1, 1, 1, 1, 1] * numberOfRBF
-        EPS = [0.5, 0.05, 0.05, 0.05, 0.05, 0.001]
+            # Initialize model
+            n_objectives = 6
+            n_years = 1
 
-        # platypus MOEA, no contraints
-        problem = Problem(nvars, nobjs)
-        # problem.types[:] = Real(-1, 1)
-        problem.types[:] = [Real(LB[i], UB[i]) for i in range(nvars)]
-        problem.function = susquehanna_river.evaluate  # historical (deterministic) optimization
+            susquehanna_river = SusquehannaModel(108.5, 505.0, 5, n_years,
+                                                 rbf)
+            susquehanna_river.set_log(False)
 
-        problem.directions[0] = Problem.MINIMIZE  # hydropower
-        problem.directions[1] = Problem.MINIMIZE  # atomicpowerplant
-        problem.directions[2] = Problem.MINIMIZE  # baltimore
-        problem.directions[3] = Problem.MINIMIZE  # chester
-        problem.directions[4] = Problem.MAXIMIZE  # environment
-        problem.directions[5] = Problem.MINIMIZE  # recreation
+            # Lower and Upper Bound for problem.types
+            epsilons = [0.5, 0.05, 0.05, 0.05, 0.001, 0.05]
+            n_decision_vars = len(rbf.platypus_types)
 
-        # algorithm = EpsNSGAII(problem, epsilons=EPS)
-        # algorithm.run(1000)
+            problem = Problem(n_decision_vars, n_objectives)
+            problem.types[:] = rbf.platypus_types
+            problem.function = susquehanna_river.evaluate
 
-        with ProcessPoolEvaluator() as evaluator:
-            algorithm = EpsNSGAII(problem, epsilons=EPS, evaluator=evaluator)
-            algorithm.run(1000, callback=track_progress)
+            problem.directions[0] = Problem.MAXIMIZE  # hydropower
+            problem.directions[1] = Problem.MAXIMIZE  # atomic power plant
+            problem.directions[2] = Problem.MAXIMIZE  # baltimore
+            problem.directions[3] = Problem.MAXIMIZE  # chester
+            problem.directions[4] = Problem.MINIMIZE  # environment
+            problem.directions[5] = Problem.MAXIMIZE  # recreation
 
-        df_conv, df_hv = track_progress.to_dataframe()
+            # algorithm = EpsNSGAII(problem, epsilons=epsilons)
+            # algorithm.run(1000)
 
-        # results
-        print("results:")
-        for solution in algorithm.result:
-            print(solution.objectives)
+            track_progress = TrackProgress()
+            with ProcessPoolEvaluator() as evaluator:
+                algorithm = EpsNSGAII(problem, epsilons=epsilons,
+                                      evaluator=evaluator)
+                algorithm.run(50000, track_progress)
 
-        # save results
-        df_conv.to_csv(f"output/{RBFType}_{seed}_convergence.csv")
-        df_hv.to_csv(f"output/{RBFType}_{seed}_hypervolume.csv")
-
-        store_results(algorithm, "output", f"{RBFType}_{seed}")
+            store_results(algorithm, track_progress, 'output',
+                          f"{entry.__name__}",
+                          seed)
 
 
 if __name__ == "__main__":
-    if not os.path.exists("output"):
-        try:
-            os.mkdir("output")
-        except OSError:
-            print("Creation of the directory failed")
+    logging.basicConfig(level=logging.INFO)
     main()
