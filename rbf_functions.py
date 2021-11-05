@@ -175,7 +175,7 @@ def exponential_rbf(rbf_input, centers, radii, weights):
 
     """
     a = rbf_input[np.newaxis, :] - centers
-    b = a / radii
+    b = (a / radii)**2 # TODO 
     rbf_scores = np.exp(-1 * np.sum(b, axis=1))
 
     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
