@@ -360,10 +360,12 @@ class PhaseShiftRBF(RBF):
         #  model
         # np.asarray([jj, daily_level_co[j]])
         t = inputs[0]
-        modified_inputs = np.asarray([math.sin(
-            math.tau*t/(365*6))-self.n_phaseshift_inputs[0],
-                                      math.cos(
-            math.tau*t/(365*6))-self.n_phaseshift_inputs[1],
+        modified_inputs = np.asarray([(math.sin(
+            math.tau*t-self.n_phaseshift_inputs[0])+1)/2,
+                                      (math.cos(
+            math.tau*t-self.n_phaseshift_inputs[1])+1)/2,
                                       inputs[1]])
+
+        # how to normalize the phase shifted stuff?
 
         return super().apply_rbfs(modified_inputs)
