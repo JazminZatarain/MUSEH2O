@@ -5,6 +5,7 @@ import math
 
 from platypus import Real
 
+
 def squared_exponential_rbf(rbf_input, centers, radii, weights):
     """
 
@@ -310,7 +311,8 @@ class PhaseShiftRBF(RBF):
 
     def __init__(self, n_rbfs, n_inputs, n_outputs,
                  rbf_function=squared_exponential_rbf):
-        super().__init__(n_rbfs, n_inputs-self.n_phaseshift_inputs, n_outputs,
+        super().__init__(n_rbfs, n_inputs - self.n_phaseshift_inputs,
+                         n_outputs,
                          rbf_function=rbf_function)
 
         self.n_inputs = n_inputs
@@ -335,15 +337,12 @@ class PhaseShiftRBF(RBF):
             self.platypus_types.append(Real(0, math.tau))
             self.platypus_types.append(Real(0, math.tau))
 
-
         self.ps_ci = np.asarray(c_i, dtype=np.int)
         self.ps_ri = np.asarray(r_i, dtype=np.int)
         self.c_i = np.concatenate((self.c_i, self.ps_ci))
         self.r_i = np.concatenate((self.r_i, self.ps_ri))
 
     def set_decision_vars(self, decision_vars):
-
-        #TODO: add centers and raddi for phase shift inputs to decision vars
         self.n_phaseshift_inputs = decision_vars[-2::]
         decision_vars = decision_vars[0:-2]
 
@@ -353,18 +352,24 @@ class PhaseShiftRBF(RBF):
         extended_decision_vars[self.ps_ri] = 1
         super().set_decision_vars(extended_decision_vars)
 
-
     def apply_rbfs(self, inputs):
         # go from two to three inputs
         # TODO:: everything is now tied to how it is coded in the susquena
-        #  model
-        # np.asarray([jj, daily_level_co[j]])
-        t = inputs[0]
-        modified_inputs = np.asarray([(math.sin(
-            math.tau*t-self.n_phaseshift_inputs[0])+1)/2,
+        # model
+        # order of inputs matters!!!
+        # we now have level, phase_shift1, phase_shift2
+        # this is consistent with what happens in set_decision_vars
+        t = inputs[0]  # is already normalized on n_days  * n_decisions per day
+        modified_inputs = np.asarray([inputs[1],
+                                      (math.sin(
+                                          math.tau * t -
+                                          self.n_phaseshift_inputs[
+                                              0]) + 1) / 2,
                                       (math.cos(
-            math.tau*t-self.n_phaseshift_inputs[1])+1)/2,
-                                      inputs[1]])
+                                          math.tau * t -
+                                          self.n_phaseshift_inputs[
+                                              1]) + 1) / 2,
+                                      ])
 
         # how to normalize the phase shifted stuff?
 
