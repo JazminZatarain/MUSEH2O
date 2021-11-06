@@ -74,19 +74,20 @@ def main():
     seeds = [10, ]  # , 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for entry in [
                   rbf_functions.squared_exponential_rbf,
-                  rbf_functions.gaussian_rbf,
+                  # rbf_functions.gaussian_rbf,
                   # rbf_functions.multiquadric_rbf,
-                  rbf_functions.inverse_quadric_rbf
+                  # rbf_functions.inverse_quadric_rbf
         ]:
         for seed in seeds:
             random.seed(seed)
 
             # RBF parameters
-            n_inputs = 2  # (time, storage of Conowingo)
+            n_inputs = 3  # (phase shifted time, phase shifted time, storage
+            # of Conowingo)
             n_outputs = 4
-            n_rbfs = 4
-            rbf = rbf_functions.RBF(n_rbfs, n_inputs, n_outputs,
-                                    rbf_function=entry)
+            n_rbfs = n_inputs + 2
+            rbf = rbf_functions.PhaseShiftRBF(n_rbfs, n_inputs, n_outputs,
+                                              rbf_function=entry)
 
             # Initialize model
             n_objectives = 6

@@ -1,9 +1,9 @@
 import itertools
-from platypus import Real
-
 import numpy as np
 import numba
+import math
 
+from platypus import Real
 
 def squared_exponential_rbf(rbf_input, centers, radii, weights):
     """
@@ -259,18 +259,20 @@ class RBF:
         c_i = []
         r_i = []
         w_i = []
-        count = itertools.count()
-        for i in range(self.n_rbfs):
-            for j in range(self.n_inputs):
-                types.append(Real(-1, 1))  # center
-                c_i.append(next(count))
-                types.append(Real(0, 1))  # radius
-                r_i.append(next(count))
 
-        for _ in range(self.n_rbfs):
-            for _ in range(self.n_outputs):
+        # as private attribute, subclasses can add stuff in the right places
+        self._count = itertools.count()
+        for _ in range(self.n_inputs):
+            for _ in range(self.n_rbfs):
+                types.append(Real(-1, 1))  # center
+                c_i.append(next(self._count))
+                types.append(Real(0, 1))  # radius
+                r_i.append(next(self._count))
+
+        for _ in range(self.n_outputs):
+            for _ in range(self.n_rbfs):
                 types.append(Real(0, 1))  # weight
-                w_i.append(next(count))  # weight
+                w_i.append(next(self._count))  # weight
 
         self.platypus_types = types
         self.c_i = np.asarray(c_i, dtype=np.int)
@@ -284,12 +286,15 @@ class RBF:
     def set_decision_vars(self, decision_vars):
         decision_vars = decision_vars.copy()
 
-        self.centers = decision_vars[self.c_i].reshape((self.n_rbfs,
-                                                        self.n_inputs))
-        self.radii = decision_vars[self.r_i].reshape((self.n_rbfs,
-                                                      self.n_inputs))
-        self.weights = decision_vars[self.w_i].reshape((self.n_rbfs,
-                                                        self.n_outputs))
+        # order is set to Fortran, so column-first reshaping
+        # this is linked to the nested loop in __init__
+        # we have the centers, raddi, and weights for all RBFs per input/output
+        shape = (self.n_rbfs, self.n_inputs)
+        self.centers = decision_vars[self.c_i].reshape(shape, order='F')
+        self.radii = decision_vars[self.r_i].reshape(shape, order='F')
+
+        shape = (self.n_rbfs, self.n_outputs)
+        self.weights = decision_vars[self.w_i].reshape(shape, order='F')
 
         # sum of weights per input is 1
         self.weights /= self.weights.sum(axis=0)[np.newaxis, :]
@@ -299,9 +304,66 @@ class RBF:
 
         return outputs
 
-# # @numba.jit
-# def format_output(output, weights):
-#     a = weights * output[:, np.newaxis]  # n_rbf x n_output, n_rbf
-#     b = a.sum(axis=1)
-#
-#     return b
+
+class PhaseShiftRBF(RBF):
+    n_phaseshift_inputs = 2
+
+    def __init__(self, n_rbfs, n_inputs, n_outputs,
+                 rbf_function=squared_exponential_rbf):
+        super().__init__(n_rbfs, n_inputs-self.n_phaseshift_inputs, n_outputs,
+                         rbf_function=rbf_function)
+
+        self.n_inputs = n_inputs
+
+        # 2 options
+        # either remove the centers and radii decision vars after super
+        # or add indices etc. for them here
+        # solution below does not work with the reshaping
+        # so use super for set_decision_vars first and then add rows for
+        # phase shift?
+
+        c_i = []
+        r_i = []
+        for _ in range(self.n_phaseshift_inputs):
+            for _ in range(self.n_rbfs):
+                c_i.append(next(self._count))
+                r_i.append(next(self._count))
+        self.shape = (next(self._count),)
+
+        # phase shift decision vars
+        for _ in range(self.n_phaseshift_inputs):
+            self.platypus_types.append(Real(0, math.tau))
+            self.platypus_types.append(Real(0, math.tau))
+
+
+        self.ps_ci = np.asarray(c_i, dtype=np.int)
+        self.ps_ri = np.asarray(r_i, dtype=np.int)
+        self.c_i = np.concatenate((self.c_i, self.ps_ci))
+        self.r_i = np.concatenate((self.r_i, self.ps_ri))
+
+    def set_decision_vars(self, decision_vars):
+
+        #TODO: add centers and raddi for phase shift inputs to decision vars
+        self.n_phaseshift_inputs = decision_vars[-2::]
+        decision_vars = decision_vars[0:-2]
+
+        extended_decision_vars = np.empty(self.shape)
+        extended_decision_vars[0:decision_vars.shape[0]] = decision_vars
+        extended_decision_vars[self.ps_ci] = 0
+        extended_decision_vars[self.ps_ri] = 1
+        super().set_decision_vars(extended_decision_vars)
+
+
+    def apply_rbfs(self, inputs):
+        # go from two to three inputs
+        # TODO:: everything is now tied to how it is coded in the susquena
+        #  model
+        # np.asarray([jj, daily_level_co[j]])
+        t = inputs[0]
+        modified_inputs = np.asarray([math.sin(
+            math.tau*t/(365*6))-self.n_phaseshift_inputs[0],
+                                      math.cos(
+            math.tau*t/(365*6))-self.n_phaseshift_inputs[1],
+                                      inputs[1]])
+
+        return super().apply_rbfs(modified_inputs)
