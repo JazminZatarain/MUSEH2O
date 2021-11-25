@@ -226,13 +226,19 @@ def matern32_rbf(rbf_input, centers, radii, weights):
 
 
     """
-    diff = rbf_input - centers
-    squared = (diff / radii) ** 2  # TODO:: hacked to make it work
-    sqrt = np.sqrt(3 * np.sum(squared, axis=1))
+    distances = cdist(rbf_input[np.newaxis, :], centers)
+    sqrt = np.sqrt(3 * np.sum(distances.T/radii, axis=1))
     rbf_scores = (1 + sqrt) * (np.exp(-sqrt))
 
     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
     output = weighted_rbfs.sum(axis=0)
+    # diff = rbf_input - centers
+    # squared = (diff / radii) ** 2  # TODO:: hacked to make it work
+    # sqrt = np.sqrt(3 * np.sum(squared, axis=1))
+    # rbf_scores = (1 + sqrt) * (np.exp(-sqrt))
+    #
+    # weighted_rbfs = weights * rbf_scores[:, np.newaxis]
+    # output = weighted_rbfs.sum(axis=0)
     return output
 
 
