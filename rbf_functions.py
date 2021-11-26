@@ -3,6 +3,7 @@ from platypus import Real
 
 import numpy as np
 import numba
+from scipy.spatial.distance import cdist
 
 
 def squared_exponential_rbf(rbf_input, centers, radii, weights):
