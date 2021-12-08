@@ -29,18 +29,15 @@ class TrackProgress:
         temp = {}
         for i, solution in enumerate(algorithm.archive):
             temp[i] = list(solution.objectives)
-        self.objectives[algorithm.nfe] = pd.DataFrame.from_dict(temp,
-                                                                orient='index')
+        self.objectives[algorithm.nfe] = pd.DataFrame.from_dict(temp, orient="index")
 
     def to_dataframe(self):
-        df_imp = pd.DataFrame.from_dict(dict(nfe=self.nfe,
-                                             improvements=self.improvements))
+        df_imp = pd.DataFrame.from_dict(dict(nfe=self.nfe, improvements=self.improvements))
         df_hv = pd.concat(self.objectives, axis=0)
         return df_imp, df_hv
 
 
-def store_results(algorithm, track_progress, output_dir, rbf_name,
-                  seed_id):
+def store_results(algorithm, track_progress, output_dir, rbf_name, seed_id):
     path_name = f"{output_dir}/{rbf_name}"
     if not os.path.exists(path_name):
         try:
@@ -48,18 +45,14 @@ def store_results(algorithm, track_progress, output_dir, rbf_name,
         except OSError:
             print("Creation of the directory failed")
 
-
-    header = ["hydropower", "atomicpowerplant", "baltimore", "chester",
-              "environment", "recreation"]
-    with open(f"{output_dir}/{rbf_name}/{seed_id}_solution.csv", "w",
-              encoding="UTF8", newline="") as f:
+    header = ["hydropower", "atomicpowerplant", "baltimore", "chester", "environment", "recreation"]
+    with open(f"{output_dir}/{rbf_name}/{seed_id}_solution.csv", "w", encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(header)
         for solution in algorithm.result:
             writer.writerow(solution.objectives)
 
-    with open(f"{output_dir}/{rbf_name}/{seed_id}_variables.csv", "w",
-              encoding="UTF8", newline="") as f:
+    with open(f"{output_dir}/{rbf_name}/{seed_id}_variables.csv", "w", encoding="UTF8", newline="") as f:
         writer = csv.writer(f)
         for solution in algorithm.result:
             writer.writerow(solution.variables)
@@ -71,13 +64,16 @@ def store_results(algorithm, track_progress, output_dir, rbf_name,
 
 
 def main():
-    seeds = [10, ]  # , 20, 30, 40, 50, 60, 70, 80, 90, 100]
+    seeds = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for entry in [
-                  rbf_functions.squared_exponential_rbf,
-                  rbf_functions.gaussian_rbf,
-                  # rbf_functions.multiquadric_rbf,
-                  rbf_functions.inverse_quadric_rbf
-        ]:
+        rbf_functions.squared_exponential_rbf_lit_euc,
+        rbf_functions.gaussian_rbf,
+        rbf_functions.inverse_multiquadric_rbf,
+        rbf_functions.inverse_quadric_rbf,
+        rbf_functions.exponential_rbf,
+        rbf_functions.matern32_rbf,
+        rbf_functions.matern52_rbf,
+    ]:
         for seed in seeds:
             random.seed(seed)
 
@@ -85,15 +81,13 @@ def main():
             n_inputs = 2  # (time, storage of Conowingo)
             n_outputs = 4
             n_rbfs = 4
-            rbf = rbf_functions.RBF(n_rbfs, n_inputs, n_outputs,
-                                    rbf_function=entry)
+            rbf = rbf_functions.RBF(n_rbfs, n_inputs, n_outputs, rbf_function=entry)
 
             # Initialize model
             n_objectives = 6
             n_years = 1
 
-            susquehanna_river = SusquehannaModel(108.5, 505.0, 5, n_years,
-                                                 rbf)
+            susquehanna_river = SusquehannaModel(108.5, 505.0, 5, n_years, rbf)
             susquehanna_river.set_log(False)
 
             # Lower and Upper Bound for problem.types
@@ -116,13 +110,10 @@ def main():
 
             track_progress = TrackProgress()
             with ProcessPoolEvaluator() as evaluator:
-                algorithm = EpsNSGAII(problem, epsilons=epsilons,
-                                      evaluator=evaluator)
-                algorithm.run(50000, track_progress)
+                algorithm = EpsNSGAII(problem, epsilons=epsilons, evaluator=evaluator)
+                algorithm.run(100000, track_progress)
 
-            store_results(algorithm, track_progress, 'output',
-                          f"{entry.__name__}",
-                          seed)
+            store_results(algorithm, track_progress, "output", f"{entry.__name__}", seed)
 
 
 if __name__ == "__main__":
