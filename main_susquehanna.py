@@ -69,7 +69,7 @@ def main():
         rbf_functions.original_rbf,
         rbf_functions.squared_exponential_rbf,
         rbf_functions.inverse_multiquadric_rbf,
-        rbf_functions.inverse_quadric_rbf,
+        rbf_functions.inverse_quadratic_rbf,
         rbf_functions.exponential_rbf,
         rbf_functions.matern32_rbf,
         rbf_functions.matern52_rbf,
@@ -111,7 +111,7 @@ def main():
             track_progress = TrackProgress()
             with ProcessPoolEvaluator() as evaluator:
                 algorithm = EpsNSGAII(problem, epsilons=epsilons, evaluator=evaluator)
-                algorithm.run(100000, track_progress)
+                algorithm.run(100, track_progress)
 
             store_results(algorithm, track_progress, "output", f"{entry.__name__}", seed)
 
