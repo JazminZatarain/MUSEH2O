@@ -151,8 +151,9 @@ def inverse_quadratic_rbf(rbf_input, centers, radii, weights):
 
 
     """
-    a = rbf_input[np.newaxis, :] - centers
-    b = a / radii
+    # a = rbf_input[np.newaxis, :] - centers
+    a = cdist(rbf_input[np.newaxis, :], centers)
+    b = a.T / radii
     c = b ** 2
     d = np.sum(c, axis=1)
     rbf_scores = 1 / (1 + d)
@@ -211,8 +212,9 @@ def inverse_multiquadric_rbf(rbf_input, centers, radii, weights):
 
 
     """
-    a = rbf_input[np.newaxis, :] - centers
-    b = (a / radii) ** 2
+    # a = rbf_input[np.newaxis, :] - centers
+    a = cdist(rbf_input[np.newaxis, :], centers)
+    b = (a.T / radii) ** 2
     rbf_scores = 1 / np.sqrt(1 + np.sum(b, axis=1))
 
     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
