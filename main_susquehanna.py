@@ -66,8 +66,8 @@ def store_results(algorithm, track_progress, output_dir, rbf_name, seed_id):
 def main():
     seeds = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
     for entry in [
-        rbf_functions.squared_exponential_rbf_lit_euc,
-        rbf_functions.gaussian_rbf,
+        rbf_functions.original_rbf,
+        rbf_functions.squared_exponential_rbf,
         rbf_functions.inverse_multiquadric_rbf,
         rbf_functions.inverse_quadric_rbf,
         rbf_functions.exponential_rbf,

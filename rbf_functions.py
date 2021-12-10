@@ -6,7 +6,7 @@ import numba
 from scipy.spatial.distance import cdist
 
 
-def squared_exponential_rbf(rbf_input, centers, radii, weights):
+def original_rbf(rbf_input, centers, radii, weights):
     """
 
     Parameters
@@ -38,40 +38,7 @@ def squared_exponential_rbf(rbf_input, centers, radii, weights):
     return output
 
 
-def squared_exponential_rbf_lit(rbf_input, centers, radii, weights):
-    """
-
-    Parameters
-    ----------
-    rbf_input : numpy array
-                1-D, shape is (n_inputs,)
-    centers :   numpy array
-                2-D, shape is (n_rbfs X n_inputs)
-    radii :     2-D, shape is (n_rbfs X n_inputs)
-    weights :   2-D, shape is (n_rbfs X n_outputs)
-
-    Returns
-    -------
-    numpy array
-
-
-    """
-
-    # sum over inputs
-    a = rbf_input[np.newaxis, :] - centers
-    # a = cdist(rbf_input[np.newaxis, :], centers)
-    b = a ** 2
-    c = 2 * radii ** 2
-    rbf_scores = np.exp(-(np.sum(b / c, axis=1)))
-
-    # n_rbf x n_output, n_rbf
-    weighted_rbfs = weights * rbf_scores[:, np.newaxis]
-    output = weighted_rbfs.sum(axis=0)
-
-    return output
-
-
-def squared_exponential_rbf_lit_euc(rbf_input, centers, radii, weights):
+def squared_exponential_rbf(rbf_input, centers, radii, weights):
     """
 
     Parameters
@@ -309,33 +276,6 @@ def exponential_rbf(rbf_input, centers, radii, weights):
     return output
 
 
-# def exponential_rbf(rbf_input, centers, radii, weights):
-#     """
-
-#     Parameters
-#     ----------
-#     rbf_input : numpy array
-#                 1-D, shape is (n_inputs,)
-#     centers :   numpy array
-#                 2-D, shape is (n_rbfs X n_inputs)
-#     radii :     2-D, shape is (n_rbfs X n_inputs)
-#     weights :   2-D, shape is (n_rbfs X n_outputs)
-
-#     Returns
-#     -------
-#     numpy array
-
-
-#     """
-#     a = rbf_input[np.newaxis, :] - centers
-#     b = (a / radii) ** 2  # TODO
-#     rbf_scores = np.exp(-1 * np.sum(b, axis=1))
-
-#     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
-#     output = weighted_rbfs.sum(axis=0)
-#     return output
-
-
 def matern32_rbf(rbf_input, centers, radii, weights):
     """
 
@@ -399,9 +339,8 @@ def matern52_rbf(rbf_input, centers, radii, weights):
 
 
 rbfs = [
+    original_rbf,
     squared_exponential_rbf,
-    squared_exponential_rbf_lit,
-    squared_exponential_rbf_lit_euc,
     gaussian_rbf,
     gaussian_rbf_lit,
     inverse_quadratic_rbf,
