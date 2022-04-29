@@ -83,7 +83,9 @@ class SusquehannaModel:
         self.tailwater = utils.loadMatrix(
             create_path("./data1999/tailwater.txt"), 2, 18
         )  # tailwater head (ft) - release flow (cfs)
-        self.spillways = utils.loadMatrix(create_path("./data1999/spillways_Conowingo.txt"), 3, 8)
+        self.spillways = utils.loadMatrix(
+            create_path("./data1999/spillways_Conowingo.txt"), 3, 8
+        )
         # substitute with newConowingo1
         # level (ft) - max release (cfs) - min release (cfs) for level > 108 ft
 
@@ -91,7 +93,9 @@ class SusquehannaModel:
         self.lsv_rel_Muddy = utils.loadMatrix(
             create_path("./data1999/lsv_rel_Muddy.txt"), 3, 38
         )  # level (ft) - Surface (acre) - storage (acre-feet) relationships
-        self.turbines_Muddy = utils.loadVector(create_path("./data1999/turbines_Muddy.txt"), 4)
+        self.turbines_Muddy = utils.loadVector(
+            create_path("./data1999/turbines_Muddy.txt"), 4
+        )
         # Turbine-Pumping capacity (cfs) - efficiency of Muddy Run plant (
         # equal for the 8 units)
 
@@ -135,19 +139,29 @@ class SusquehannaModel:
 
     def load_historic_data(self):
         self.evap_CO_MC = utils.loadMultiVector(
-            create_path("./data_historical/vectors/evapCO_history.txt"), self.n_years, self.n_days_one_year
+            create_path("./data_historical/vectors/evapCO_history.txt"),
+            self.n_years,
+            self.n_days_one_year,
         )  # evaporation losses (inches per day)
         self.inflow_MC = utils.loadMultiVector(
-            create_path("./data_historical/vectors/MariettaFlows_history.txt"), self.n_years, self.n_days_one_year
+            create_path("./data_historical/vectors/MariettaFlows_history.txt"),
+            self.n_years,
+            self.n_days_one_year,
         )  # inflow, i.e. flows at Marietta (cfs)
         self.inflowLat_MC = utils.loadMultiVector(
-            create_path("./data_historical/vectors/nLat_history.txt"), self.n_years, self.n_days_one_year
+            create_path("./data_historical/vectors/nLat_history.txt"),
+            self.n_years,
+            self.n_days_one_year,
         )  # lateral inflows from Marietta to Conowingo (cfs)
         self.evap_Muddy_MC = utils.loadMultiVector(
-            create_path("./data_historical/vectors/evapMR_history.txt"), self.n_years, self.n_days_one_year
+            create_path("./data_historical/vectors/evapMR_history.txt"),
+            self.n_years,
+            self.n_days_one_year,
         )  # evaporation losses (inches per day)
         self.inflow_Muddy_MC = utils.loadMultiVector(
-            create_path("./data_historical/vectors/nMR_history.txt"), self.n_years, self.n_days_one_year
+            create_path("./data_historical/vectors/nMR_history.txt"),
+            self.n_years,
+            self.n_days_one_year,
         )
 
     def load_stochastic_data(self):
@@ -175,7 +189,14 @@ class SusquehannaModel:
             self.log_objectives = False
 
     def get_log(self):
-        return self.blevel_CO, self.blevel_MR, self.ratom, self.rbalt, self.rches, self.renv
+        return (
+            self.blevel_CO,
+            self.blevel_MR,
+            self.ratom,
+            self.rbalt,
+            self.rches,
+            self.renv,
+        )
 
     def apply_rbf_policy(self, rbf_input):
 
@@ -195,7 +216,13 @@ class SusquehannaModel:
 
     def evaluate_historic(self, var, opt_met=1):
         return self.simulate(
-            var, self.inflow_MC, self.inflowLat_MC, self.inflow_Muddy_MC, self.evap_CO_MC, self.evap_Muddy_MC, opt_met
+            var,
+            self.inflow_MC,
+            self.inflowLat_MC,
+            self.inflow_Muddy_MC,
+            self.evap_CO_MC,
+            self.evap_Muddy_MC,
+            opt_met,
         )
 
     def evaluate_mc(self, var, opt_met=1):
@@ -203,7 +230,14 @@ class SusquehannaModel:
         # MC simulations
         n_samples = 2
         for i in range(0, n_samples):
-            Jhydropower, Jatomicpowerplant, Jbaltimore, Jchester, Jenvironment, Jrecreation = self.simulate(
+            (
+                Jhydropower,
+                Jatomicpowerplant,
+                Jbaltimore,
+                Jchester,
+                Jenvironment,
+                Jrecreation,
+            ) = self.simulate(
                 var,
                 self.inflow_MC,
                 self.inflowLat_MC,
@@ -234,21 +268,27 @@ class SusquehannaModel:
         # gets triggered decision step * time horizon
         s_ = utils.cubicFeetToAcreFeet(s)
         if lake == 0:
-            h = utils.interpolate_linear(self.lsv_rel_Muddy[2], self.lsv_rel_Muddy[0], s_)
+            h = utils.interpolate_linear(
+                self.lsv_rel_Muddy[2], self.lsv_rel_Muddy[0], s_
+            )
         else:
             h = utils.interpolate_linear(self.lsv_rel[2], self.lsv_rel[0], s_)
         return h
 
     def level_to_storage(self, h, lake):
         if lake == 0:
-            s = utils.interpolate_linear(self.lsv_rel_Muddy[0], self.lsv_rel_Muddy[2], h)
+            s = utils.interpolate_linear(
+                self.lsv_rel_Muddy[0], self.lsv_rel_Muddy[2], h
+            )
         else:
             s = utils.interpolate_linear(self.lsv_rel[0], self.lsv_rel[2], h)
         return utils.acreFeetToCubicFeet(s)
 
     def level_to_surface(self, h, lake):
         if lake == 0:
-            s = utils.interpolate_linear(self.lsv_rel_Muddy[0], self.lsv_rel_Muddy[1], h)
+            s = utils.interpolate_linear(
+                self.lsv_rel_Muddy[0], self.lsv_rel_Muddy[1], h
+            )
         else:
             s = utils.interpolate_linear(self.lsv_rel[0], self.lsv_rel[1], h)
         return utils.acreToSquaredFeet(s)
@@ -263,7 +303,9 @@ class SusquehannaModel:
         QT = 32000  # cfs
 
         # active storage = sMR - deadStorage
-        qM = (self.level_to_storage(level_MR, 0) - self.level_to_storage(470.0, 0)) / 3600
+        qM = (
+            self.level_to_storage(level_MR, 0) - self.level_to_storage(470.0, 0)
+        ) / 3600
         qp = 0.0
         qt = 0.0
         if day == 0:  # sunday
@@ -327,10 +369,12 @@ class SusquehannaModel:
 
         if level_Co > 110.2:  # spillways activated
             qM_D = (
-                utils.interpolate_linear(self.spillways[0], self.spillways[1], level_Co) + Tcap
+                utils.interpolate_linear(self.spillways[0], self.spillways[1], level_Co)
+                + Tcap
             )  # Turbine capacity + spillways
             qm_D = (
-                utils.interpolate_linear(self.spillways[0], self.spillways[1], level_Co) + Tcap
+                utils.interpolate_linear(self.spillways[0], self.spillways[1], level_Co)
+                + Tcap
             )  # change to spillways[2]
 
         # different from flood model
@@ -353,14 +397,18 @@ class SusquehannaModel:
 
     @staticmethod
     @njit
-    def g_hydRevCo(r, h, day_of_year, hour0, GG, gammaH20, tailwater, turbines, energy_prices):
+    def g_hydRevCo(
+        r, h, day_of_year, hour0, GG, gammaH20, tailwater, turbines, energy_prices
+    ):
         def interpolate_tailwater_level(X, Y, x):
             dim = len(X) - 1
             if x <= X[0]:
                 y = (x - X[0]) * (Y[1] - Y[0]) / (X[1] - X[0]) + Y[0]
                 return y
             elif x >= X[dim]:
-                y = Y[dim] + (Y[dim] - Y[dim - 1]) / (X[dim] - X[dim - 1]) * (x - X[dim])
+                y = Y[dim] + (Y[dim] - Y[dim - 1]) / (X[dim] - X[dim - 1]) * (
+                    x - X[dim]
+                )
                 return y
             else:
                 y = np.interp(x, X, Y)
@@ -374,7 +422,9 @@ class SusquehannaModel:
         pp = []
         c_hour = len(r) * hour0
         for i in range(0, len(r)):
-            deltaH = h[i] - interpolate_tailwater_level(tailwater[0], tailwater[1], r[i])
+            deltaH = h[i] - interpolate_tailwater_level(
+                tailwater[0], tailwater[1], r[i]
+            )
             q_split = r[i]
             for j in range(0, Nturb):
                 if q_split < turbines[1][j]:
@@ -395,7 +445,9 @@ class SusquehannaModel:
                 )  # assuming lower efficiency as in Exelon docs
                 pp.append(p)
             g_hyd.append(np.sum(np.asarray(pp)))
-            g_rev.append(np.sum(np.asarray(pp)) / 1000 * energy_prices[c_hour][day_of_year])
+            g_rev.append(
+                np.sum(np.asarray(pp)) / 1000 * energy_prices[c_hour][day_of_year]
+            )
             pp.clear()
             c_hour = c_hour + 1
         Gp = np.sum(np.asarray(g_hyd))
@@ -404,7 +456,18 @@ class SusquehannaModel:
 
     @staticmethod
     @njit
-    def g_hydRevMR(qp, qr, hCo, hMR, day_of_year, hour0, GG, gammaH20, turbines_Muddy, energy_prices):
+    def g_hydRevMR(
+        qp,
+        qr,
+        hCo,
+        hMR,
+        day_of_year,
+        hour0,
+        GG,
+        gammaH20,
+        turbines_Muddy,
+        energy_prices,
+    ):
         n_turb = 8
         cubic_feet_to_cubic_meters = 0.0283  # 1 cf = 0.0283 m3
         feet_to_meters = 0.3048  # 1 ft = 0.3048 m
@@ -469,7 +532,20 @@ class SusquehannaModel:
             c_hour = c_hour + 1
         return g_pump, g_hyd, g_revP, g_rev
 
-    def res_transition_h(self, s0, uu, n_sim, n_lat, ev, s0_mr, n_sim_mr, ev_mr, day_of_year, day_of_week, hour0):
+    def res_transition_h(
+        self,
+        s0,
+        uu,
+        n_sim,
+        n_lat,
+        ev,
+        s0_mr,
+        n_sim_mr,
+        ev_mr,
+        day_of_year,
+        day_of_week,
+        hour0,
+    ):
         HH = self.hours_between_decisions  # 4 hour horizon
         sim_step = 3600  # s/hour
         leak = 800  # cfs
@@ -501,7 +577,9 @@ class SusquehannaModel:
             level_Co[i] = self.storage_to_level(storage_Co[i], 1)
             level_mr[i] = self.storage_to_level(storage_mr[i], 0)
             # Muddy Run operation
-            q_pump[i], q_rel[i] = self.muddyrun_pumpturb(day_of_week, int(c_hour), level_Co[i], level_mr[i])
+            q_pump[i], q_rel[i] = self.muddyrun_pumpturb(
+                day_of_week, int(c_hour), level_Co[i], level_mr[i]
+            )
 
             # Compute actual release
             rr = self.actual_release(uu, level_Co[i], day_of_year)
@@ -519,12 +597,23 @@ class SusquehannaModel:
             surface_Co = self.level_to_surface(level_Co[i], 1)
             evaporation_losses_Co = utils.inchesToFeet(ev) * surface_Co / 86400  # cfs
             surface_MR = self.level_to_surface(level_mr[i], 0)
-            evaporation_losses_MR = utils.inchesToFeet(ev_mr) * surface_MR / 86400  # cfs
+            evaporation_losses_MR = (
+                utils.inchesToFeet(ev_mr) * surface_MR / 86400
+            )  # cfs
 
             # System Transition
-            storage_mr[i + 1] = storage_mr[i] + sim_step * (q_pump[i] - q_rel[i] + n_sim_mr - evaporation_losses_MR)
+            storage_mr[i + 1] = storage_mr[i] + sim_step * (
+                q_pump[i] - q_rel[i] + n_sim_mr - evaporation_losses_MR
+            )
             storage_Co[i + 1] = storage_Co[i] + sim_step * (
-                n_sim + n_lat - release_D[i] - WS - evaporation_losses_Co - q_pump[i] + q_rel[i] - leak
+                n_sim
+                + n_lat
+                - release_D[i]
+                - WS
+                - evaporation_losses_Co
+                - q_pump[i]
+                + q_rel[i]
+                - leak
             )
             c_hour = c_hour + 1
 
@@ -572,7 +661,20 @@ class SusquehannaModel:
         )
         # Revenue s_rr.extend([hp[1], hp_mr[2], hp_mr[3]])
         # Production s_rr.extend([hp[0], hp_mr[0], hp_mr[1]])
-        return sto_co, sto_mr, rel_a, rel_b, rel_c, rel_d, hp[1], hp_mr[2], hp_mr[3], hp[0], hp_mr[0], hp_mr[1]
+        return (
+            sto_co,
+            sto_mr,
+            rel_a,
+            rel_b,
+            rel_c,
+            rel_d,
+            hp[1],
+            hp_mr[2],
+            hp_mr[3],
+            hp[0],
+            hp_mr[0],
+            hp_mr[1],
+        )
 
     def g_storagereliability(self, h, h_target):
         c = 0
@@ -713,8 +815,12 @@ class SusquehannaModel:
 
                 daily_storage_co[j + 1] = ss_rr_hp[0]
                 daily_storage_mr[j + 1] = ss_rr_hp[1]
-                daily_level_co[j + 1] = self.storage_to_level(daily_storage_co[j + 1], 1)
-                daily_level_mr[j + 1] = self.storage_to_level(daily_storage_mr[j + 1], 0)
+                daily_level_co[j + 1] = self.storage_to_level(
+                    daily_storage_co[j + 1], 1
+                )
+                daily_level_mr[j + 1] = self.storage_to_level(
+                    daily_storage_mr[j + 1], 0
+                )
 
                 daily_release_a[j] = ss_rr_hp[2]
                 daily_release_b[j] = ss_rr_hp[3]
@@ -722,12 +828,24 @@ class SusquehannaModel:
                 daily_release_d[j] = ss_rr_hp[5]
 
                 # Hydropower revenue production
-                hydropowerRevenue_Co.append(ss_rr_hp[6])  # 6-hours energy revenue ($/6h)
-                hydropowerPumpRevenue_MR.append(ss_rr_hp[7])  # 6-hours energy revenue ($/6h) at MR
-                hydropowerRevenue_MR.append(ss_rr_hp[8])  # 6-hours energy revenue ($/6h) at MR
-                hydropowerProduction_Co.append(ss_rr_hp[9])  # 6-hours energy production (kWh/6h)
-                hydroPump_MR.append(ss_rr_hp[10])  # 6-hours energy production (kWh/6h) at MR
-                hydropowerProduction_MR.append(ss_rr_hp[11])  # 6-hours energy production (kWh/6h) at MR
+                hydropowerRevenue_Co.append(
+                    ss_rr_hp[6]
+                )  # 6-hours energy revenue ($/6h)
+                hydropowerPumpRevenue_MR.append(
+                    ss_rr_hp[7]
+                )  # 6-hours energy revenue ($/6h) at MR
+                hydropowerRevenue_MR.append(
+                    ss_rr_hp[8]
+                )  # 6-hours energy revenue ($/6h) at MR
+                hydropowerProduction_Co.append(
+                    ss_rr_hp[9]
+                )  # 6-hours energy production (kWh/6h)
+                hydroPump_MR.append(
+                    ss_rr_hp[10]
+                )  # 6-hours energy production (kWh/6h) at MR
+                hydropowerProduction_MR.append(
+                    ss_rr_hp[11]
+                )  # 6-hours energy production (kWh/6h) at MR
 
             # daily values
             level_co[day_of_year + 1] = daily_level_co[self.decisions_per_day]
@@ -750,7 +868,9 @@ class SusquehannaModel:
 
         # compute objectives
         # level_co.pop(0)
-        j_hyd = sum(hydropowerRevenue_Co) / self.n_years / pow(10, 6)  # GWh/year (M$/year)
+        j_hyd = (
+            sum(hydropowerRevenue_Co) / self.n_years / pow(10, 6)
+        )  # GWh/year (M$/year)
         j_atom = self.g_vol_rel(release_a, self.w_atomic)
         j_balt = self.g_vol_rel(release_b, self.w_baltimore)
         j_ches = self.g_vol_rel(release_c, self.w_chester)

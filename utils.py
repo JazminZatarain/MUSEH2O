@@ -13,7 +13,14 @@ from numba import njit
 
 # TODO: Set default values to take all rows and all columns
 def loadMatrix(file_name, row, column):
-    output = pd.read_csv(file_name, header=None, sep="   ", nrows=row, usecols=range(0, column), engine="python")
+    output = pd.read_csv(
+        file_name,
+        header=None,
+        sep="   ",
+        nrows=row,
+        usecols=range(0, column),
+        engine="python",
+    )
     output = output.to_numpy()
     return output
 
@@ -55,6 +62,7 @@ def filterDictionaryPercentile(dictionary, percentile):  # Sahiti
     dictionary = dict(filter(lambda x: x[1] >= percentile, dictionary.items()))
     return dictionary
 
+
 @njit
 def interpolate_linear(X, Y, x):
     dim = len(X) - 1
@@ -65,7 +73,9 @@ def interpolate_linear(X, Y, x):
         return y
     elif x >= X[dim]:
         # if x is larger than the largest value, interpolate between the the last two values
-        y = Y[dim] + (Y[dim] - Y[dim - 1]) / (X[dim] - X[dim - 1]) * (x - X[dim])  # y = Y[dim]
+        y = Y[dim] + (Y[dim] - Y[dim - 1]) / (X[dim] - X[dim - 1]) * (
+            x - X[dim]
+        )  # y = Y[dim]
         return y
     else:
         y = np.interp(x, X, Y)

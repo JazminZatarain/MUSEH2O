@@ -356,7 +356,9 @@ rbfs = [
 
 
 class RBF:
-    def __init__(self, n_rbfs, n_inputs, n_outputs, rbf_function=squared_exponential_rbf):
+    def __init__(
+        self, n_rbfs, n_inputs, n_outputs, rbf_function=squared_exponential_rbf
+    ):
         self.n_rbfs = n_rbfs
         self.n_inputs = n_inputs
         self.n_outputs = n_outputs

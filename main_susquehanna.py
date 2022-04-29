@@ -32,7 +32,9 @@ class TrackProgress:
         self.objectives[algorithm.nfe] = pd.DataFrame.from_dict(temp, orient="index")
 
     def to_dataframe(self):
-        df_imp = pd.DataFrame.from_dict(dict(nfe=self.nfe, improvements=self.improvements))
+        df_imp = pd.DataFrame.from_dict(
+            dict(nfe=self.nfe, improvements=self.improvements)
+        )
         df_hv = pd.concat(self.objectives, axis=0)
         return df_imp, df_hv
 
@@ -45,14 +47,31 @@ def store_results(algorithm, track_progress, output_dir, rbf_name, seed_id):
         except OSError:
             print("Creation of the directory failed")
 
-    header = ["hydropower", "atomicpowerplant", "baltimore", "chester", "environment", "recreation"]
-    with open(f"{output_dir}/{rbf_name}/{seed_id}_solution.csv", "w", encoding="UTF8", newline="") as f:
+    header = [
+        "hydropower",
+        "atomicpowerplant",
+        "baltimore",
+        "chester",
+        "environment",
+        "recreation",
+    ]
+    with open(
+        f"{output_dir}/{rbf_name}/{seed_id}_solution.csv",
+        "w",
+        encoding="UTF8",
+        newline="",
+    ) as f:
         writer = csv.writer(f)
         writer.writerow(header)
         for solution in algorithm.result:
             writer.writerow(solution.objectives)
 
-    with open(f"{output_dir}/{rbf_name}/{seed_id}_variables.csv", "w", encoding="UTF8", newline="") as f:
+    with open(
+        f"{output_dir}/{rbf_name}/{seed_id}_variables.csv",
+        "w",
+        encoding="UTF8",
+        newline="",
+    ) as f:
         writer = csv.writer(f)
         for solution in algorithm.result:
             writer.writerow(solution.variables)
@@ -113,7 +132,9 @@ def main():
                 algorithm = EpsNSGAII(problem, epsilons=epsilons, evaluator=evaluator)
                 algorithm.run(100000, track_progress)
 
-            store_results(algorithm, track_progress, "output", f"{entry.__name__}", seed)
+            store_results(
+                algorithm, track_progress, "output", f"{entry.__name__}", seed
+            )
 
 
 if __name__ == "__main__":
