@@ -13,7 +13,7 @@ import random
 
 from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
 
-import rbf_functions
+from rbf import rbf_functions
 from susquehanna_model import SusquehannaModel
 
 
