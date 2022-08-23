@@ -14,8 +14,13 @@ import random
 from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
 
 from rbf import rbf_functions
-from dps_lake_model import lake_model
+# from dps_lake_model import lake_model
 
+from dps import lake_model
+
+
+def cython_wrapper(args):
+    return lake_model(args)
 
 class TrackProgress:
     def __init__(self):
@@ -98,6 +103,7 @@ def main():
             n_inputs = 1  # polution at t-1
             n_outputs = 1 # release at t
             n_rbfs = 2
+            n_objectives = 4
             rbf = rbf_functions.RBF(n_rbfs, n_inputs, n_outputs, rbf_function=entry)
 
             # Initialize model
@@ -109,7 +115,7 @@ def main():
 
             problem = Problem(n_decision_vars, n_objectives)
             problem.types[:] = rbf.platypus_types
-            problem.function = lake_model
+            problem.function = cython_wrapper
 
             problem.directions[0] = Problem.MINIMIZE  # MAX_P
             problem.directions[1] = Problem.MAXIMIZE  # utility

@@ -1,3 +1,3 @@
 
 
-import rbf_functions
+from . import rbf_functions

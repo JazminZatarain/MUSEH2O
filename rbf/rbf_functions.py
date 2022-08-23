@@ -2,7 +2,7 @@ import itertools
 from platypus import Real
 
 import numpy as np
-import numba
+# import numba
 from scipy.spatial.distance import cdist
 
 

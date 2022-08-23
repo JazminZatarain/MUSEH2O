@@ -4,7 +4,7 @@ import numpy as np
 from scipy.optimize import brentq
 
 
-def get_antropogenic_release(xt, c1, c2, r1, r2, w1):
+def get_antropogenic_release(xt, c1, c2, r1, r2, w1, w2):
     """
 
     Parameters
@@ -30,14 +30,14 @@ def get_antropogenic_release(xt, c1, c2, r1, r2, w1):
 
     """
 
-    rule = w1 * (abs(xt - c1) / r1) ** 3 + (1 - w1) * (abs(xt - c2) / r2) ** 3
+    rule = w1 * (abs(xt - c1) / r1) ** 3 + w2 * (abs(xt - c2) / r2) ** 3
     at1 = max(rule, 0.01)
     at = min(at1, 0.1)
 
     return at
 
 
-def lake_model(
+def lake_model(decision_vars,
     b=0.42,
     q=2.0,
     mean=0.02,
@@ -46,11 +46,6 @@ def lake_model(
     alpha=0.4,
     nsamples=100,
     myears=100,
-    c1=0.25,
-    c2=0.25,
-    r1=0.5,
-    r2=0.5,
-    w1=0.5,
     seed=None,
 ):
     """runs the lake model for nsamples stochastic realisation using
@@ -72,11 +67,6 @@ def lake_model(
             utility from pollution
     nsamples : int, optional
     myears : int, optional
-    c1 : float
-    c2 : float
-    r1 : float
-    r2 : float
-    w1 : float
     seed : int, optional
            seed for the random number generator
 
@@ -85,14 +75,19 @@ def lake_model(
     tuple
 
     """
-    np.random.seed(seed)
-    Pcrit = brentq(lambda x: x ** q / (1 + x ** q) - b * x, 0.01, 1.5)
+    c1, c2, r1, r2, w1, w2 = decision_vars
+    sum_weights = w1+w2
+    w1 = w1/sum_weights
+    w2 = w2/sum_weights
 
-    X = np.zeros((myears,))
-    average_daily_P = np.zeros((myears,))
+    np.random.seed(seed)
+    Pcrit = brentq(lambda x: x ** q / (1.0 + x ** q) - b * x, 0.01, 1.5)
+
+    X = np.zeros((myears,), dtype=float)
+    average_daily_P = np.zeros((myears,), dtype=float)
     reliability = 0.0
-    inertia = 0
-    utility = 0
+    inertia = 0.0
+    utility = 0.0
 
     for _ in range(nsamples):
         X[0] = 0.0
@@ -110,7 +105,7 @@ def lake_model(
         for t in range(1, myears):
 
             # here we use the decision rule
-            decision = get_antropogenic_release(X[t - 1], c1, c2, r1, r2, w1)
+            decision = get_antropogenic_release(X[t - 1], c1, c2, r1, r2, w1, w2)
             decisions[t] = decision
 
             X[t] = (

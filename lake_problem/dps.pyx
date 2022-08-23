@@ -1,4 +1,5 @@
-
+#!python
+#cython: language_level=3
 import numpy as np
 from scipy.optimize import brentq
 
@@ -13,8 +14,9 @@ ctypedef cnp.float_t DTYPE_t
 
 @cython.cdivision(True)
 cpdef float cython_get_anthropogenic_release(float xt, float c1, float c2,
-                                             float r1, float r2, float w1):
-    '''
+                                             float r1, float r2, float w1,
+                                             float w2):
+    """
     Parameters
     ----------
     xt : float      polution in lake at time t (current)
@@ -25,7 +27,7 @@ cpdef float cython_get_anthropogenic_release(float xt, float c1, float c2,
     w1 : float      weight of rbf 1
 
     note:: w2 = 1 - w1
-    '''
+    """
     cdef float rule, at, var1, var2
 
     var1 = (xt-c1)/r1
@@ -33,22 +35,18 @@ cpdef float cython_get_anthropogenic_release(float xt, float c1, float c2,
     var2 = (xt-c2)/r2
     var2 = abs(var2)
 
-    rule = w1*(var1**3)+(1-w1)*(var2**3)
+    rule = w1*(var1**3)+w2*(var2**3)
     at = float_min(float_max(rule, 0.01), 0.1)
     return at
 
 @cython.cdivision(True)
 @cython.boundscheck(False)
-def lake_model(float b=0.41, float q=2.0,
-                      float mean=0.02, float stdev=0.001,
-                      float alpha=0.4, float delta=0.98,
-                      #Policy Variables
-                      float c1=0.25, float c2=0.25,
-                      float r1=0.5, float r2=0.5,
-                      float w1=0.5,
-                      #End Policy Variables
-                      int reps=100, int steps=100):
-    '''
+def lake_model(decision_vars,
+               float b=0.41, float q=2.0,
+               float mean=0.02, float stdev=0.001,
+               float alpha=0.4, float delta=0.98,
+               int reps=100, int steps=100):
+    """
     runs the lake model for 1 stochastic realisation using specified
     random seed.
 
@@ -67,15 +65,16 @@ def lake_model(float b=0.41, float q=2.0,
     r2    : float
     w1    : float
     steps : int     the number of time steps (e.g., days)
-    '''
+    """
     cdef float Pcrit, transformed_mean, transformed_sigma
     cdef float utility, inertia, max_p, mean_reliability
     cdef Py_ssize_t t, r
-    cdef cnp.ndarray[DTYPE_t, ndim=2] X = np.zeros([reps, steps], dtype=np.float)
-    cdef cnp.ndarray[DTYPE_t, ndim=2] decisions = np.zeros([reps, steps], dtype=np.float)
-    cdef cnp.ndarray[DTYPE_t, ndim=1] reliability = np.zeros([reps,], dtype=np.float)
+    cdef cnp.ndarray[DTYPE_t, ndim=2] X = np.zeros([reps, steps], dtype=float)
+    cdef cnp.ndarray[DTYPE_t, ndim=2] decisions = np.zeros([reps, steps], dtype=float)
+    cdef cnp.ndarray[DTYPE_t, ndim=1] reliability = np.zeros([reps,], dtype=float)
     cdef cnp.ndarray[DTYPE_t, ndim=1] natural_inflows
-
+    cdef float c1, c2, r1, r2, w1, w2
+    c1, c2, r1, r2, w1, w2 = decision_vars
     Pcrit = brentq(lambda x: x**q/(1+x**q) - b*x, 0.01, 1.5)
 
     transformed_mean = log(mean**2 / sqrt(stdev**2 + mean**2))
@@ -86,7 +85,7 @@ def lake_model(float b=0.41, float q=2.0,
         natural_inflows = np.random.lognormal(transformed_mean, transformed_sigma, size=steps)
 
         for t in range(1, steps):
-            decisions[r, t-1] = cython_get_anthropogenic_release(X[r, t-1], c1, c2, r1, r2, w1)
+            decisions[r, t-1] = cython_get_anthropogenic_release(X[r, t-1], c1, c2, r1, r2, w1, w2)
             X[r, t] = (1-b)*X[r, t-1] + X[r, t-1]**q/(1+X[r, t-1]**q) + decisions[r, t-1] + natural_inflows[t-1]
 
         reliability[r] = np.sum(X[r, :] < Pcrit)/steps
