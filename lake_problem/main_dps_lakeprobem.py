@@ -128,8 +128,10 @@ def main():
             track_progress = TrackProgress()
             with ProcessPoolEvaluator() as evaluator:
                 algorithm = EpsNSGAII(problem, epsilons=epsilons, evaluator=evaluator)
-                algorithm.run(100000, track_progress)
+                algorithm.run(1000, track_progress)
 
+
+            logging.info("storing results")
             store_results(
                 algorithm, track_progress, "output", f"{entry.__name__}", seed
             )

@@ -1,9 +1,10 @@
-from distutils.core import setup
+from setuptools import Extension, setup
 from Cython.Build import cythonize
 import numpy
 
+extensions = [Extension("lakemodel", ["dps.pyx"])]
+
 setup(
-    name="LakeProblem",
-    ext_modules=cythonize("dps.pyx"),
-    include_dirs=[numpy.get_include()],
+    ext_modules=cythonize(extensions),
+    include_dirs=[numpy.get_include()]
 )
