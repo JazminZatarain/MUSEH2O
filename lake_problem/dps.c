@@ -4,12 +4,12 @@
 {
     "distutils": {
         "depends": [],
-        "name": "MUSEH2O.lake_problem.dps",
+        "name": "lakemodel",
         "sources": [
             "dps.pyx"
         ]
     },
-    "module_name": "MUSEH2O.lake_problem.dps"
+    "module_name": "lakemodel"
 }
 END: Cython Metadata */
 
@@ -692,8 +692,8 @@ static CYTHON_INLINE float __PYX_NAN() {
   #endif
 #endif
 
-#define __PYX_HAVE__MUSEH2O__lake_problem__dps
-#define __PYX_HAVE_API__MUSEH2O__lake_problem__dps
+#define __PYX_HAVE__lakemodel
+#define __PYX_HAVE_API__lakemodel
 /* Early includes */
 #include <string.h>
 #include <stdio.h>
@@ -978,7 +978,7 @@ typedef struct {
 } __Pyx_BufFmt_Context;
 
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":690
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":690
  * # in Cython to enable them only on the right systems.
  * 
  * ctypedef npy_int8       int8_t             # <<<<<<<<<<<<<<
@@ -987,7 +987,7 @@ typedef struct {
  */
 typedef npy_int8 __pyx_t_5numpy_int8_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":691
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":691
  * 
  * ctypedef npy_int8       int8_t
  * ctypedef npy_int16      int16_t             # <<<<<<<<<<<<<<
@@ -996,7 +996,7 @@ typedef npy_int8 __pyx_t_5numpy_int8_t;
  */
 typedef npy_int16 __pyx_t_5numpy_int16_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":692
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":692
  * ctypedef npy_int8       int8_t
  * ctypedef npy_int16      int16_t
  * ctypedef npy_int32      int32_t             # <<<<<<<<<<<<<<
@@ -1005,7 +1005,7 @@ typedef npy_int16 __pyx_t_5numpy_int16_t;
  */
 typedef npy_int32 __pyx_t_5numpy_int32_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":693
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":693
  * ctypedef npy_int16      int16_t
  * ctypedef npy_int32      int32_t
  * ctypedef npy_int64      int64_t             # <<<<<<<<<<<<<<
@@ -1014,7 +1014,7 @@ typedef npy_int32 __pyx_t_5numpy_int32_t;
  */
 typedef npy_int64 __pyx_t_5numpy_int64_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":697
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":697
  * #ctypedef npy_int128     int128_t
  * 
  * ctypedef npy_uint8      uint8_t             # <<<<<<<<<<<<<<
@@ -1023,7 +1023,7 @@ typedef npy_int64 __pyx_t_5numpy_int64_t;
  */
 typedef npy_uint8 __pyx_t_5numpy_uint8_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":698
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":698
  * 
  * ctypedef npy_uint8      uint8_t
  * ctypedef npy_uint16     uint16_t             # <<<<<<<<<<<<<<
@@ -1032,7 +1032,7 @@ typedef npy_uint8 __pyx_t_5numpy_uint8_t;
  */
 typedef npy_uint16 __pyx_t_5numpy_uint16_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":699
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":699
  * ctypedef npy_uint8      uint8_t
  * ctypedef npy_uint16     uint16_t
  * ctypedef npy_uint32     uint32_t             # <<<<<<<<<<<<<<
@@ -1041,7 +1041,7 @@ typedef npy_uint16 __pyx_t_5numpy_uint16_t;
  */
 typedef npy_uint32 __pyx_t_5numpy_uint32_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":700
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":700
  * ctypedef npy_uint16     uint16_t
  * ctypedef npy_uint32     uint32_t
  * ctypedef npy_uint64     uint64_t             # <<<<<<<<<<<<<<
@@ -1050,7 +1050,7 @@ typedef npy_uint32 __pyx_t_5numpy_uint32_t;
  */
 typedef npy_uint64 __pyx_t_5numpy_uint64_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":704
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":704
  * #ctypedef npy_uint128    uint128_t
  * 
  * ctypedef npy_float32    float32_t             # <<<<<<<<<<<<<<
@@ -1059,7 +1059,7 @@ typedef npy_uint64 __pyx_t_5numpy_uint64_t;
  */
 typedef npy_float32 __pyx_t_5numpy_float32_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":705
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":705
  * 
  * ctypedef npy_float32    float32_t
  * ctypedef npy_float64    float64_t             # <<<<<<<<<<<<<<
@@ -1068,7 +1068,7 @@ typedef npy_float32 __pyx_t_5numpy_float32_t;
  */
 typedef npy_float64 __pyx_t_5numpy_float64_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":714
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":714
  * # The int types are mapped a bit surprising --
  * # numpy.int corresponds to 'l' and numpy.long to 'q'
  * ctypedef npy_long       int_t             # <<<<<<<<<<<<<<
@@ -1077,7 +1077,7 @@ typedef npy_float64 __pyx_t_5numpy_float64_t;
  */
 typedef npy_long __pyx_t_5numpy_int_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":715
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":715
  * # numpy.int corresponds to 'l' and numpy.long to 'q'
  * ctypedef npy_long       int_t
  * ctypedef npy_longlong   long_t             # <<<<<<<<<<<<<<
@@ -1086,7 +1086,7 @@ typedef npy_long __pyx_t_5numpy_int_t;
  */
 typedef npy_longlong __pyx_t_5numpy_long_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":716
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":716
  * ctypedef npy_long       int_t
  * ctypedef npy_longlong   long_t
  * ctypedef npy_longlong   longlong_t             # <<<<<<<<<<<<<<
@@ -1095,7 +1095,7 @@ typedef npy_longlong __pyx_t_5numpy_long_t;
  */
 typedef npy_longlong __pyx_t_5numpy_longlong_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":718
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":718
  * ctypedef npy_longlong   longlong_t
  * 
  * ctypedef npy_ulong      uint_t             # <<<<<<<<<<<<<<
@@ -1104,7 +1104,7 @@ typedef npy_longlong __pyx_t_5numpy_longlong_t;
  */
 typedef npy_ulong __pyx_t_5numpy_uint_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":719
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":719
  * 
  * ctypedef npy_ulong      uint_t
  * ctypedef npy_ulonglong  ulong_t             # <<<<<<<<<<<<<<
@@ -1113,7 +1113,7 @@ typedef npy_ulong __pyx_t_5numpy_uint_t;
  */
 typedef npy_ulonglong __pyx_t_5numpy_ulong_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":720
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":720
  * ctypedef npy_ulong      uint_t
  * ctypedef npy_ulonglong  ulong_t
  * ctypedef npy_ulonglong  ulonglong_t             # <<<<<<<<<<<<<<
@@ -1122,7 +1122,7 @@ typedef npy_ulonglong __pyx_t_5numpy_ulong_t;
  */
 typedef npy_ulonglong __pyx_t_5numpy_ulonglong_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":722
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":722
  * ctypedef npy_ulonglong  ulonglong_t
  * 
  * ctypedef npy_intp       intp_t             # <<<<<<<<<<<<<<
@@ -1131,7 +1131,7 @@ typedef npy_ulonglong __pyx_t_5numpy_ulonglong_t;
  */
 typedef npy_intp __pyx_t_5numpy_intp_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":723
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":723
  * 
  * ctypedef npy_intp       intp_t
  * ctypedef npy_uintp      uintp_t             # <<<<<<<<<<<<<<
@@ -1140,7 +1140,7 @@ typedef npy_intp __pyx_t_5numpy_intp_t;
  */
 typedef npy_uintp __pyx_t_5numpy_uintp_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":725
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":725
  * ctypedef npy_uintp      uintp_t
  * 
  * ctypedef npy_double     float_t             # <<<<<<<<<<<<<<
@@ -1149,7 +1149,7 @@ typedef npy_uintp __pyx_t_5numpy_uintp_t;
  */
 typedef npy_double __pyx_t_5numpy_float_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":726
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":726
  * 
  * ctypedef npy_double     float_t
  * ctypedef npy_double     double_t             # <<<<<<<<<<<<<<
@@ -1158,7 +1158,7 @@ typedef npy_double __pyx_t_5numpy_float_t;
  */
 typedef npy_double __pyx_t_5numpy_double_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":727
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":727
  * ctypedef npy_double     float_t
  * ctypedef npy_double     double_t
  * ctypedef npy_longdouble longdouble_t             # <<<<<<<<<<<<<<
@@ -1167,14 +1167,14 @@ typedef npy_double __pyx_t_5numpy_double_t;
  */
 typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
 
-/* "MUSEH2O/lake_problem/dps.pyx":13
+/* "dps.pyx":13
  * cdef inline float float_min(float a, float b): return a if a <= b else b
  * 
  * ctypedef cnp.float_t DTYPE_t             # <<<<<<<<<<<<<<
  * 
  * @cython.cdivision(True)
  */
-typedef __pyx_t_5numpy_float_t __pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t;
+typedef __pyx_t_5numpy_float_t __pyx_t_9lakemodel_DTYPE_t;
 /* Declarations.proto */
 #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
@@ -1201,9 +1201,9 @@ static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(do
 
 
 /*--- Type declarations ---*/
-struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model;
+struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":729
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":729
  * ctypedef npy_longdouble longdouble_t
  * 
  * ctypedef npy_cfloat      cfloat_t             # <<<<<<<<<<<<<<
@@ -1212,7 +1212,7 @@ struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model;
  */
 typedef npy_cfloat __pyx_t_5numpy_cfloat_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":730
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":730
  * 
  * ctypedef npy_cfloat      cfloat_t
  * ctypedef npy_cdouble     cdouble_t             # <<<<<<<<<<<<<<
@@ -1221,7 +1221,7 @@ typedef npy_cfloat __pyx_t_5numpy_cfloat_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_cdouble_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":731
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":731
  * ctypedef npy_cfloat      cfloat_t
  * ctypedef npy_cdouble     cdouble_t
  * ctypedef npy_clongdouble clongdouble_t             # <<<<<<<<<<<<<<
@@ -1230,7 +1230,7 @@ typedef npy_cdouble __pyx_t_5numpy_cdouble_t;
  */
 typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":733
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":733
  * ctypedef npy_clongdouble clongdouble_t
  * 
  * ctypedef npy_cdouble     complex_t             # <<<<<<<<<<<<<<
@@ -1239,14 +1239,14 @@ typedef npy_clongdouble __pyx_t_5numpy_clongdouble_t;
  */
 typedef npy_cdouble __pyx_t_5numpy_complex_t;
 
-/* "MUSEH2O/lake_problem/dps.pyx":44
+/* "dps.pyx":44
  * @cython.cdivision(True)
  * @cython.boundscheck(False)
  * def lake_model(decision_vars,             # <<<<<<<<<<<<<<
  *                float b=0.41, float q=2.0,
  *                float mean=0.02, float stdev=0.001,
  */
-struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model {
+struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model {
   PyObject_HEAD
   float __pyx_v_b;
   float __pyx_v_q;
@@ -1901,17 +1901,17 @@ static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 
 /* Module declarations from 'libc.math' */
 
-/* Module declarations from 'MUSEH2O.lake_problem.dps' */
-static PyTypeObject *__pyx_ptype_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model = 0;
-static CYTHON_INLINE float __pyx_f_7MUSEH2O_12lake_problem_3dps_float_max(float, float); /*proto*/
-static CYTHON_INLINE float __pyx_f_7MUSEH2O_12lake_problem_3dps_float_min(float, float); /*proto*/
-static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_release(float, float, float, float, float, float, float, int __pyx_skip_dispatch); /*proto*/
-static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t = { "DTYPE_t", NULL, sizeof(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t), { 0 }, 0, 'R', 0, 0 };
-#define __Pyx_MODULE_NAME "MUSEH2O.lake_problem.dps"
-extern int __pyx_module_is_main_MUSEH2O__lake_problem__dps;
-int __pyx_module_is_main_MUSEH2O__lake_problem__dps = 0;
+/* Module declarations from 'lakemodel' */
+static PyTypeObject *__pyx_ptype_9lakemodel___pyx_scope_struct__lake_model = 0;
+static CYTHON_INLINE float __pyx_f_9lakemodel_float_max(float, float); /*proto*/
+static CYTHON_INLINE float __pyx_f_9lakemodel_float_min(float, float); /*proto*/
+static float __pyx_f_9lakemodel_cython_get_anthropogenic_release(float, float, float, float, float, float, float, int __pyx_skip_dispatch); /*proto*/
+static __Pyx_TypeInfo __Pyx_TypeInfo_nn___pyx_t_9lakemodel_DTYPE_t = { "DTYPE_t", NULL, sizeof(__pyx_t_9lakemodel_DTYPE_t), { 0 }, 0, 'R', 0, 0 };
+#define __Pyx_MODULE_NAME "lakemodel"
+extern int __pyx_module_is_main_lakemodel;
+int __pyx_module_is_main_lakemodel = 0;
 
-/* Implementation of 'MUSEH2O.lake_problem.dps' */
+/* Implementation of 'lakemodel' */
 static PyObject *__pyx_builtin_range;
 static PyObject *__pyx_builtin_ImportError;
 static const char __pyx_k_X[] = "X";
@@ -1957,6 +1957,7 @@ static const char __pyx_k_dps_pyx[] = "dps.pyx";
 static const char __pyx_k_inertia[] = "inertia";
 static const char __pyx_k_utility[] = "utility";
 static const char __pyx_k_decisions[] = "decisions";
+static const char __pyx_k_lakemodel[] = "lakemodel";
 static const char __pyx_k_lognormal[] = "lognormal";
 static const char __pyx_k_lake_model[] = "lake_model";
 static const char __pyx_k_ImportError[] = "ImportError";
@@ -1968,12 +1969,10 @@ static const char __pyx_k_mean_reliability[] = "mean_reliability";
 static const char __pyx_k_transformed_mean[] = "transformed_mean";
 static const char __pyx_k_transformed_sigma[] = "transformed_sigma";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
-static const char __pyx_k_MUSEH2O_lake_problem_dps[] = "MUSEH2O.lake_problem.dps";
 static const char __pyx_k_lake_model_locals_lambda[] = "lake_model.<locals>.<lambda>";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
 static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath failed to import";
 static PyObject *__pyx_n_s_ImportError;
-static PyObject *__pyx_n_s_MUSEH2O_lake_problem_dps;
 static PyObject *__pyx_n_s_Pcrit;
 static PyObject *__pyx_n_s_X;
 static PyObject *__pyx_n_s_abs;
@@ -1995,6 +1994,7 @@ static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_inertia;
 static PyObject *__pyx_n_s_lake_model;
 static PyObject *__pyx_n_s_lake_model_locals_lambda;
+static PyObject *__pyx_n_s_lakemodel;
 static PyObject *__pyx_n_s_lognormal;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_max;
@@ -2030,10 +2030,10 @@ static PyObject *__pyx_n_s_w1;
 static PyObject *__pyx_n_s_w2;
 static PyObject *__pyx_n_s_xt;
 static PyObject *__pyx_n_s_zeros;
-static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_release(CYTHON_UNUSED PyObject *__pyx_self, float __pyx_v_xt, float __pyx_v_c1, float __pyx_v_c2, float __pyx_v_r1, float __pyx_v_r2, float __pyx_v_w1, float __pyx_v_w2); /* proto */
+static PyObject *__pyx_pf_9lakemodel_cython_get_anthropogenic_release(CYTHON_UNUSED PyObject *__pyx_self, float __pyx_v_xt, float __pyx_v_c1, float __pyx_v_c2, float __pyx_v_r1, float __pyx_v_r2, float __pyx_v_w1, float __pyx_v_w2); /* proto */
 static PyObject *__pyx_lambda_funcdef_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x); /* proto */
-static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_decision_vars, float __pyx_v_b, float __pyx_v_q, float __pyx_v_mean, float __pyx_v_stdev, float __pyx_v_alpha, float __pyx_v_delta, int __pyx_v_reps, int __pyx_v_steps); /* proto */
-static PyObject *__pyx_tp_new_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
+static PyObject *__pyx_pf_9lakemodel_2lake_model(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_decision_vars, float __pyx_v_b, float __pyx_v_q, float __pyx_v_mean, float __pyx_v_stdev, float __pyx_v_alpha, float __pyx_v_delta, int __pyx_v_reps, int __pyx_v_steps); /* proto */
+static PyObject *__pyx_tp_new_9lakemodel___pyx_scope_struct__lake_model(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_float_1_5;
 static PyObject *__pyx_float_0_01;
 static PyObject *__pyx_int_1;
@@ -2044,7 +2044,7 @@ static PyObject *__pyx_tuple__4;
 static PyObject *__pyx_codeobj__5;
 /* Late includes */
 
-/* "MUSEH2O/lake_problem/dps.pyx":10
+/* "dps.pyx":10
  * from libc.math cimport log, sqrt
  * 
  * cdef inline float float_max(float a, float b): return a if a >= b else b             # <<<<<<<<<<<<<<
@@ -2052,7 +2052,7 @@ static PyObject *__pyx_codeobj__5;
  * 
  */
 
-static CYTHON_INLINE float __pyx_f_7MUSEH2O_12lake_problem_3dps_float_max(float __pyx_v_a, float __pyx_v_b) {
+static CYTHON_INLINE float __pyx_f_9lakemodel_float_max(float __pyx_v_a, float __pyx_v_b) {
   float __pyx_r;
   __Pyx_RefNannyDeclarations
   float __pyx_t_1;
@@ -2071,7 +2071,7 @@ static CYTHON_INLINE float __pyx_f_7MUSEH2O_12lake_problem_3dps_float_max(float 
   return __pyx_r;
 }
 
-/* "MUSEH2O/lake_problem/dps.pyx":11
+/* "dps.pyx":11
  * 
  * cdef inline float float_max(float a, float b): return a if a >= b else b
  * cdef inline float float_min(float a, float b): return a if a <= b else b             # <<<<<<<<<<<<<<
@@ -2079,7 +2079,7 @@ static CYTHON_INLINE float __pyx_f_7MUSEH2O_12lake_problem_3dps_float_max(float 
  * ctypedef cnp.float_t DTYPE_t
  */
 
-static CYTHON_INLINE float __pyx_f_7MUSEH2O_12lake_problem_3dps_float_min(float __pyx_v_a, float __pyx_v_b) {
+static CYTHON_INLINE float __pyx_f_9lakemodel_float_min(float __pyx_v_a, float __pyx_v_b) {
   float __pyx_r;
   __Pyx_RefNannyDeclarations
   float __pyx_t_1;
@@ -2098,7 +2098,7 @@ static CYTHON_INLINE float __pyx_f_7MUSEH2O_12lake_problem_3dps_float_min(float 
   return __pyx_r;
 }
 
-/* "MUSEH2O/lake_problem/dps.pyx":16
+/* "dps.pyx":16
  * 
  * @cython.cdivision(True)
  * cpdef float cython_get_anthropogenic_release(float xt, float c1, float c2,             # <<<<<<<<<<<<<<
@@ -2106,8 +2106,8 @@ static CYTHON_INLINE float __pyx_f_7MUSEH2O_12lake_problem_3dps_float_min(float 
  *                                              float w2):
  */
 
-static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_1cython_get_anthropogenic_release(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_release(float __pyx_v_xt, float __pyx_v_c1, float __pyx_v_c2, float __pyx_v_r1, float __pyx_v_r2, float __pyx_v_w1, float __pyx_v_w2, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_9lakemodel_1cython_get_anthropogenic_release(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static float __pyx_f_9lakemodel_cython_get_anthropogenic_release(float __pyx_v_xt, float __pyx_v_c1, float __pyx_v_c2, float __pyx_v_r1, float __pyx_v_r2, float __pyx_v_w1, float __pyx_v_w2, CYTHON_UNUSED int __pyx_skip_dispatch) {
   float __pyx_v_rule;
   float __pyx_v_at;
   float __pyx_v_var1;
@@ -2116,7 +2116,7 @@ static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_relea
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("cython_get_anthropogenic_release", 0);
 
-  /* "MUSEH2O/lake_problem/dps.pyx":33
+  /* "dps.pyx":33
  *     cdef float rule, at, var1, var2
  * 
  *     var1 = (xt-c1)/r1             # <<<<<<<<<<<<<<
@@ -2125,7 +2125,7 @@ static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_relea
  */
   __pyx_v_var1 = ((__pyx_v_xt - __pyx_v_c1) / __pyx_v_r1);
 
-  /* "MUSEH2O/lake_problem/dps.pyx":34
+  /* "dps.pyx":34
  * 
  *     var1 = (xt-c1)/r1
  *     var1 = abs(var1)             # <<<<<<<<<<<<<<
@@ -2134,7 +2134,7 @@ static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_relea
  */
   __pyx_v_var1 = fabsf(__pyx_v_var1);
 
-  /* "MUSEH2O/lake_problem/dps.pyx":35
+  /* "dps.pyx":35
  *     var1 = (xt-c1)/r1
  *     var1 = abs(var1)
  *     var2 = (xt-c2)/r2             # <<<<<<<<<<<<<<
@@ -2143,7 +2143,7 @@ static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_relea
  */
   __pyx_v_var2 = ((__pyx_v_xt - __pyx_v_c2) / __pyx_v_r2);
 
-  /* "MUSEH2O/lake_problem/dps.pyx":36
+  /* "dps.pyx":36
  *     var1 = abs(var1)
  *     var2 = (xt-c2)/r2
  *     var2 = abs(var2)             # <<<<<<<<<<<<<<
@@ -2152,7 +2152,7 @@ static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_relea
  */
   __pyx_v_var2 = fabsf(__pyx_v_var2);
 
-  /* "MUSEH2O/lake_problem/dps.pyx":38
+  /* "dps.pyx":38
  *     var2 = abs(var2)
  * 
  *     rule = w1*(var1**3)+w2*(var2**3)             # <<<<<<<<<<<<<<
@@ -2161,16 +2161,16 @@ static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_relea
  */
   __pyx_v_rule = ((__pyx_v_w1 * powf(__pyx_v_var1, 3.0)) + (__pyx_v_w2 * powf(__pyx_v_var2, 3.0)));
 
-  /* "MUSEH2O/lake_problem/dps.pyx":39
+  /* "dps.pyx":39
  * 
  *     rule = w1*(var1**3)+w2*(var2**3)
  *     at = float_min(float_max(rule, 0.01), 0.1)             # <<<<<<<<<<<<<<
  *     return at
  * 
  */
-  __pyx_v_at = __pyx_f_7MUSEH2O_12lake_problem_3dps_float_min(__pyx_f_7MUSEH2O_12lake_problem_3dps_float_max(__pyx_v_rule, 0.01), 0.1);
+  __pyx_v_at = __pyx_f_9lakemodel_float_min(__pyx_f_9lakemodel_float_max(__pyx_v_rule, 0.01), 0.1);
 
-  /* "MUSEH2O/lake_problem/dps.pyx":40
+  /* "dps.pyx":40
  *     rule = w1*(var1**3)+w2*(var2**3)
  *     at = float_min(float_max(rule, 0.01), 0.1)
  *     return at             # <<<<<<<<<<<<<<
@@ -2180,7 +2180,7 @@ static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_relea
   __pyx_r = __pyx_v_at;
   goto __pyx_L0;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":16
+  /* "dps.pyx":16
  * 
  * @cython.cdivision(True)
  * cpdef float cython_get_anthropogenic_release(float xt, float c1, float c2,             # <<<<<<<<<<<<<<
@@ -2195,9 +2195,9 @@ static float __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_relea
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_1cython_get_anthropogenic_release(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_release[] = "\n    Parameters\n    ----------\n    xt : float      polution in lake at time t (current)\n    c1 : float      center rbf 1\n    c2 : float      center rbf 2\n    r1 : float      radius rbf 1\n    r2 : float      radius rbf 2\n    w1 : float      weight of rbf 1\n\n    note:: w2 = 1 - w1\n    ";
-static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_1cython_get_anthropogenic_release(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9lakemodel_1cython_get_anthropogenic_release(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_9lakemodel_cython_get_anthropogenic_release[] = "\n    Parameters\n    ----------\n    xt : float      polution in lake at time t (current)\n    c1 : float      center rbf 1\n    c2 : float      center rbf 2\n    r1 : float      radius rbf 1\n    r2 : float      radius rbf 2\n    w1 : float      weight of rbf 1\n\n    note:: w2 = 1 - w1\n    ";
+static PyObject *__pyx_pw_9lakemodel_1cython_get_anthropogenic_release(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   float __pyx_v_xt;
   float __pyx_v_c1;
   float __pyx_v_c2;
@@ -2303,18 +2303,18 @@ static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_1cython_get_anthropogenic
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("cython_get_anthropogenic_release", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 16, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("MUSEH2O.lake_problem.dps.cython_get_anthropogenic_release", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("lakemodel.cython_get_anthropogenic_release", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_release(__pyx_self, __pyx_v_xt, __pyx_v_c1, __pyx_v_c2, __pyx_v_r1, __pyx_v_r2, __pyx_v_w1, __pyx_v_w2);
+  __pyx_r = __pyx_pf_9lakemodel_cython_get_anthropogenic_release(__pyx_self, __pyx_v_xt, __pyx_v_c1, __pyx_v_c2, __pyx_v_r1, __pyx_v_r2, __pyx_v_w1, __pyx_v_w2);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_release(CYTHON_UNUSED PyObject *__pyx_self, float __pyx_v_xt, float __pyx_v_c1, float __pyx_v_c2, float __pyx_v_r1, float __pyx_v_r2, float __pyx_v_w1, float __pyx_v_w2) {
+static PyObject *__pyx_pf_9lakemodel_cython_get_anthropogenic_release(CYTHON_UNUSED PyObject *__pyx_self, float __pyx_v_xt, float __pyx_v_c1, float __pyx_v_c2, float __pyx_v_r1, float __pyx_v_r2, float __pyx_v_w1, float __pyx_v_w2) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2323,7 +2323,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("cython_get_anthropogenic_release", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_release(__pyx_v_xt, __pyx_v_c1, __pyx_v_c2, __pyx_v_r1, __pyx_v_r2, __pyx_v_w1, __pyx_v_w2, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 16, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_9lakemodel_cython_get_anthropogenic_release(__pyx_v_xt, __pyx_v_c1, __pyx_v_c2, __pyx_v_r1, __pyx_v_r2, __pyx_v_w1, __pyx_v_w2, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 16, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2332,7 +2332,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("MUSEH2O.lake_problem.dps.cython_get_anthropogenic_release", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("lakemodel.cython_get_anthropogenic_release", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2340,7 +2340,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_
   return __pyx_r;
 }
 
-/* "MUSEH2O/lake_problem/dps.pyx":44
+/* "dps.pyx":44
  * @cython.cdivision(True)
  * @cython.boundscheck(False)
  * def lake_model(decision_vars,             # <<<<<<<<<<<<<<
@@ -2349,10 +2349,10 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_3lake_model(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static char __pyx_doc_7MUSEH2O_12lake_problem_3dps_2lake_model[] = "\n    runs the lake model for 1 stochastic realisation using specified\n    random seed.\n\n    Parameters\n    ----------\n    b     : float   decay rate for P in lake (0.42 = irreversible)\n    q     : float   recycling exponent\n    mean  : float   mean of natural inflowsa\n    stdev : float   standard deviation of natural inflows\n    alpha : float   utility from pollution\n    delta : float   future utility discount rate\n    reps  : int\n    c1    : float\n    c2    : float\n    r1    : float\n    r2    : float\n    w1    : float\n    steps : int     the number of time steps (e.g., days)\n    ";
-static PyMethodDef __pyx_mdef_7MUSEH2O_12lake_problem_3dps_3lake_model = {"lake_model", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_7MUSEH2O_12lake_problem_3dps_3lake_model, METH_VARARGS|METH_KEYWORDS, __pyx_doc_7MUSEH2O_12lake_problem_3dps_2lake_model};
-static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_3lake_model(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_9lakemodel_3lake_model(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static char __pyx_doc_9lakemodel_2lake_model[] = "\n    runs the lake model for 1 stochastic realisation using specified\n    random seed.\n\n    Parameters\n    ----------\n    b     : float   decay rate for P in lake (0.42 = irreversible)\n    q     : float   recycling exponent\n    mean  : float   mean of natural inflowsa\n    stdev : float   standard deviation of natural inflows\n    alpha : float   utility from pollution\n    delta : float   future utility discount rate\n    reps  : int\n    c1    : float\n    c2    : float\n    r1    : float\n    r2    : float\n    w1    : float\n    steps : int     the number of time steps (e.g., days)\n    ";
+static PyMethodDef __pyx_mdef_9lakemodel_3lake_model = {"lake_model", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9lakemodel_3lake_model, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9lakemodel_2lake_model};
+static PyObject *__pyx_pw_9lakemodel_3lake_model(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_decision_vars = 0;
   float __pyx_v_b;
   float __pyx_v_q;
@@ -2522,18 +2522,18 @@ static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_3lake_model(PyObject *__p
   __pyx_L5_argtuple_error:;
   __Pyx_RaiseArgtupleInvalid("lake_model", 0, 1, 9, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 44, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("MUSEH2O.lake_problem.dps.lake_model", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("lakemodel.lake_model", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(__pyx_self, __pyx_v_decision_vars, __pyx_v_b, __pyx_v_q, __pyx_v_mean, __pyx_v_stdev, __pyx_v_alpha, __pyx_v_delta, __pyx_v_reps, __pyx_v_steps);
+  __pyx_r = __pyx_pf_9lakemodel_2lake_model(__pyx_self, __pyx_v_decision_vars, __pyx_v_b, __pyx_v_q, __pyx_v_mean, __pyx_v_stdev, __pyx_v_alpha, __pyx_v_delta, __pyx_v_reps, __pyx_v_steps);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-/* "MUSEH2O/lake_problem/dps.pyx":78
+/* "dps.pyx":78
  *     cdef float c1, c2, r1, r2, w1, w2
  *     c1, c2, r1, r2, w1, w2 = decision_vars
  *     Pcrit = brentq(lambda x: x**q/(1+x**q) - b*x, 0.01, 1.5)             # <<<<<<<<<<<<<<
@@ -2542,9 +2542,9 @@ static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_3lake_model(PyObject *__p
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_10lake_model_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
-static PyMethodDef __pyx_mdef_7MUSEH2O_12lake_problem_3dps_10lake_model_lambda = {"lambda", (PyCFunction)__pyx_pw_7MUSEH2O_12lake_problem_3dps_10lake_model_lambda, METH_O, 0};
-static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_10lake_model_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x) {
+static PyObject *__pyx_pw_9lakemodel_10lake_model_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x); /*proto*/
+static PyMethodDef __pyx_mdef_9lakemodel_10lake_model_lambda = {"lambda", (PyCFunction)__pyx_pw_9lakemodel_10lake_model_lambda, METH_O, 0};
+static PyObject *__pyx_pw_9lakemodel_10lake_model_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("lambda (wrapper)", 0);
@@ -2556,8 +2556,8 @@ static PyObject *__pyx_pw_7MUSEH2O_12lake_problem_3dps_10lake_model_lambda(PyObj
 }
 
 static PyObject *__pyx_lambda_funcdef_lambda(PyObject *__pyx_self, PyObject *__pyx_v_x) {
-  struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model *__pyx_cur_scope;
-  struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model *__pyx_outer_scope;
+  struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model *__pyx_cur_scope;
+  struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model *__pyx_outer_scope;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -2567,7 +2567,7 @@ static PyObject *__pyx_lambda_funcdef_lambda(PyObject *__pyx_self, PyObject *__p
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("lambda", 0);
-  __pyx_outer_scope = (struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model *) __Pyx_CyFunction_GetClosure(__pyx_self);
+  __pyx_outer_scope = (struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_1 = PyFloat_FromDouble(__pyx_cur_scope->__pyx_v_q); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 78, __pyx_L1_error)
@@ -2605,7 +2605,7 @@ static PyObject *__pyx_lambda_funcdef_lambda(PyObject *__pyx_self, PyObject *__p
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("MUSEH2O.lake_problem.dps.lake_model.lambda", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("lakemodel.lake_model.lambda", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2613,7 +2613,7 @@ static PyObject *__pyx_lambda_funcdef_lambda(PyObject *__pyx_self, PyObject *__p
   return __pyx_r;
 }
 
-/* "MUSEH2O/lake_problem/dps.pyx":44
+/* "dps.pyx":44
  * @cython.cdivision(True)
  * @cython.boundscheck(False)
  * def lake_model(decision_vars,             # <<<<<<<<<<<<<<
@@ -2621,8 +2621,8 @@ static PyObject *__pyx_lambda_funcdef_lambda(PyObject *__pyx_self, PyObject *__p
  *                float mean=0.02, float stdev=0.001,
  */
 
-static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_decision_vars, float __pyx_v_b, float __pyx_v_q, float __pyx_v_mean, float __pyx_v_stdev, float __pyx_v_alpha, float __pyx_v_delta, int __pyx_v_reps, int __pyx_v_steps) {
-  struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model *__pyx_cur_scope;
+static PyObject *__pyx_pf_9lakemodel_2lake_model(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_decision_vars, float __pyx_v_b, float __pyx_v_q, float __pyx_v_mean, float __pyx_v_stdev, float __pyx_v_alpha, float __pyx_v_delta, int __pyx_v_reps, int __pyx_v_steps) {
+  struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model *__pyx_cur_scope;
   float __pyx_v_Pcrit;
   float __pyx_v_transformed_mean;
   float __pyx_v_transformed_sigma;
@@ -2690,7 +2690,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   Py_ssize_t __pyx_t_36;
   Py_ssize_t __pyx_t_37;
   Py_ssize_t __pyx_t_38;
-  __pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t __pyx_t_39;
+  __pyx_t_9lakemodel_DTYPE_t __pyx_t_39;
   PyObject *__pyx_t_40 = NULL;
   PyObject *__pyx_t_41 = NULL;
   PyObject *__pyx_t_42 = NULL;
@@ -2699,9 +2699,9 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("lake_model", 0);
-  __pyx_cur_scope = (struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model *)__pyx_tp_new_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model(__pyx_ptype_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model, __pyx_empty_tuple, NULL);
+  __pyx_cur_scope = (struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model *)__pyx_tp_new_9lakemodel___pyx_scope_struct__lake_model(__pyx_ptype_9lakemodel___pyx_scope_struct__lake_model, __pyx_empty_tuple, NULL);
   if (unlikely(!__pyx_cur_scope)) {
-    __pyx_cur_scope = ((struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model *)Py_None);
+    __pyx_cur_scope = ((struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model *)Py_None);
     __Pyx_INCREF(Py_None);
     __PYX_ERR(0, 44, __pyx_L1_error)
   } else {
@@ -2726,7 +2726,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_pybuffernd_natural_inflows.data = NULL;
   __pyx_pybuffernd_natural_inflows.rcbuffer = &__pyx_pybuffer_natural_inflows;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":72
+  /* "dps.pyx":72
  *     cdef float utility, inertia, max_p, mean_reliability
  *     cdef Py_ssize_t t, r
  *     cdef cnp.ndarray[DTYPE_t, ndim=2] X = np.zeros([reps, steps], dtype=float)             # <<<<<<<<<<<<<<
@@ -2767,7 +2767,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_t_5 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_X.rcbuffer->pybuffer, (PyObject*)__pyx_t_5, &__Pyx_TypeInfo_nn___pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_X.rcbuffer->pybuffer, (PyObject*)__pyx_t_5, &__Pyx_TypeInfo_nn___pyx_t_9lakemodel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) {
       __pyx_v_X = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_X.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 72, __pyx_L1_error)
     } else {__pyx_pybuffernd_X.diminfo[0].strides = __pyx_pybuffernd_X.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_X.diminfo[0].shape = __pyx_pybuffernd_X.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_X.diminfo[1].strides = __pyx_pybuffernd_X.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_X.diminfo[1].shape = __pyx_pybuffernd_X.rcbuffer->pybuffer.shape[1];
@@ -2777,7 +2777,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_v_X = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":73
+  /* "dps.pyx":73
  *     cdef Py_ssize_t t, r
  *     cdef cnp.ndarray[DTYPE_t, ndim=2] X = np.zeros([reps, steps], dtype=float)
  *     cdef cnp.ndarray[DTYPE_t, ndim=2] decisions = np.zeros([reps, steps], dtype=float)             # <<<<<<<<<<<<<<
@@ -2818,7 +2818,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_decisions.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_decisions.rcbuffer->pybuffer, (PyObject*)__pyx_t_6, &__Pyx_TypeInfo_nn___pyx_t_9lakemodel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 2, 0, __pyx_stack) == -1)) {
       __pyx_v_decisions = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_decisions.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 73, __pyx_L1_error)
     } else {__pyx_pybuffernd_decisions.diminfo[0].strides = __pyx_pybuffernd_decisions.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_decisions.diminfo[0].shape = __pyx_pybuffernd_decisions.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_decisions.diminfo[1].strides = __pyx_pybuffernd_decisions.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_decisions.diminfo[1].shape = __pyx_pybuffernd_decisions.rcbuffer->pybuffer.shape[1];
@@ -2828,7 +2828,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_v_decisions = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":74
+  /* "dps.pyx":74
  *     cdef cnp.ndarray[DTYPE_t, ndim=2] X = np.zeros([reps, steps], dtype=float)
  *     cdef cnp.ndarray[DTYPE_t, ndim=2] decisions = np.zeros([reps, steps], dtype=float)
  *     cdef cnp.ndarray[DTYPE_t, ndim=1] reliability = np.zeros([reps,], dtype=float)             # <<<<<<<<<<<<<<
@@ -2864,7 +2864,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_t_7 = ((PyArrayObject *)__pyx_t_4);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_reliability.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 1, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_reliability.rcbuffer->pybuffer, (PyObject*)__pyx_t_7, &__Pyx_TypeInfo_nn___pyx_t_9lakemodel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES| PyBUF_WRITABLE, 1, 0, __pyx_stack) == -1)) {
       __pyx_v_reliability = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_reliability.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 74, __pyx_L1_error)
     } else {__pyx_pybuffernd_reliability.diminfo[0].strides = __pyx_pybuffernd_reliability.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_reliability.diminfo[0].shape = __pyx_pybuffernd_reliability.rcbuffer->pybuffer.shape[0];
@@ -2874,7 +2874,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_v_reliability = ((PyArrayObject *)__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":77
+  /* "dps.pyx":77
  *     cdef cnp.ndarray[DTYPE_t, ndim=1] natural_inflows
  *     cdef float c1, c2, r1, r2, w1, w2
  *     c1, c2, r1, r2, w1, w2 = decision_vars             # <<<<<<<<<<<<<<
@@ -2963,7 +2963,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_v_w1 = __pyx_t_16;
   __pyx_v_w2 = __pyx_t_17;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":78
+  /* "dps.pyx":78
  *     cdef float c1, c2, r1, r2, w1, w2
  *     c1, c2, r1, r2, w1, w2 = decision_vars
  *     Pcrit = brentq(lambda x: x**q/(1+x**q) - b*x, 0.01, 1.5)             # <<<<<<<<<<<<<<
@@ -2972,7 +2972,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
  */
   __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_brentq); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_7MUSEH2O_12lake_problem_3dps_10lake_model_lambda, 0, __pyx_n_s_lake_model_locals_lambda, ((PyObject*)__pyx_cur_scope), __pyx_n_s_MUSEH2O_lake_problem_dps, __pyx_d, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_9lakemodel_10lake_model_lambda, 0, __pyx_n_s_lake_model_locals_lambda, ((PyObject*)__pyx_cur_scope), __pyx_n_s_lakemodel, __pyx_d, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 78, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_1 = NULL;
   __pyx_t_18 = 0;
@@ -3028,7 +3028,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_Pcrit = __pyx_t_17;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":80
+  /* "dps.pyx":80
  *     Pcrit = brentq(lambda x: x**q/(1+x**q) - b*x, 0.01, 1.5)
  * 
  *     transformed_mean = log(mean**2 / sqrt(stdev**2 + mean**2))             # <<<<<<<<<<<<<<
@@ -3037,7 +3037,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
  */
   __pyx_v_transformed_mean = log((((double)powf(__pyx_v_mean, 2.0)) / sqrt((powf(__pyx_v_stdev, 2.0) + powf(__pyx_v_mean, 2.0)))));
 
-  /* "MUSEH2O/lake_problem/dps.pyx":81
+  /* "dps.pyx":81
  * 
  *     transformed_mean = log(mean**2 / sqrt(stdev**2 + mean**2))
  *     transformed_sigma = sqrt(log(1.0 + stdev**2 / mean**2))             # <<<<<<<<<<<<<<
@@ -3046,7 +3046,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
  */
   __pyx_v_transformed_sigma = sqrt(log((1.0 + (powf(__pyx_v_stdev, 2.0) / powf(__pyx_v_mean, 2.0)))));
 
-  /* "MUSEH2O/lake_problem/dps.pyx":82
+  /* "dps.pyx":82
  *     transformed_mean = log(mean**2 / sqrt(stdev**2 + mean**2))
  *     transformed_sigma = sqrt(log(1.0 + stdev**2 / mean**2))
  *     natural_inflows = np.random.lognormal(transformed_mean, transformed_sigma, size=steps)             # <<<<<<<<<<<<<<
@@ -3089,10 +3089,10 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer);
-    __pyx_t_18 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer, (PyObject*)__pyx_t_19, &__Pyx_TypeInfo_nn___pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack);
+    __pyx_t_18 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer, (PyObject*)__pyx_t_19, &__Pyx_TypeInfo_nn___pyx_t_9lakemodel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack);
     if (unlikely(__pyx_t_18 < 0)) {
       PyErr_Fetch(&__pyx_t_20, &__pyx_t_21, &__pyx_t_22);
-      if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer, (PyObject*)__pyx_v_natural_inflows, &__Pyx_TypeInfo_nn___pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+      if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer, (PyObject*)__pyx_v_natural_inflows, &__Pyx_TypeInfo_nn___pyx_t_9lakemodel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
         Py_XDECREF(__pyx_t_20); Py_XDECREF(__pyx_t_21); Py_XDECREF(__pyx_t_22);
         __Pyx_RaiseBufferFallbackError();
       } else {
@@ -3107,7 +3107,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_v_natural_inflows = ((PyArrayObject *)__pyx_t_8);
   __pyx_t_8 = 0;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":84
+  /* "dps.pyx":84
  *     natural_inflows = np.random.lognormal(transformed_mean, transformed_sigma, size=steps)
  * 
  *     for r in range(reps):             # <<<<<<<<<<<<<<
@@ -3119,7 +3119,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_23; __pyx_t_24+=1) {
     __pyx_v_r = __pyx_t_24;
 
-    /* "MUSEH2O/lake_problem/dps.pyx":85
+    /* "dps.pyx":85
  * 
  *     for r in range(reps):
  *         natural_inflows = np.random.lognormal(transformed_mean, transformed_sigma, size=steps)             # <<<<<<<<<<<<<<
@@ -3162,10 +3162,10 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
     {
       __Pyx_BufFmt_StackElem __pyx_stack[1];
       __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer);
-      __pyx_t_25 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer, (PyObject*)__pyx_t_19, &__Pyx_TypeInfo_nn___pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack);
+      __pyx_t_25 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer, (PyObject*)__pyx_t_19, &__Pyx_TypeInfo_nn___pyx_t_9lakemodel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack);
       if (unlikely(__pyx_t_25 < 0)) {
         PyErr_Fetch(&__pyx_t_22, &__pyx_t_21, &__pyx_t_20);
-        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer, (PyObject*)__pyx_v_natural_inflows, &__Pyx_TypeInfo_nn___pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
+        if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer, (PyObject*)__pyx_v_natural_inflows, &__Pyx_TypeInfo_nn___pyx_t_9lakemodel_DTYPE_t, PyBUF_FORMAT| PyBUF_STRIDES, 1, 0, __pyx_stack) == -1)) {
           Py_XDECREF(__pyx_t_22); Py_XDECREF(__pyx_t_21); Py_XDECREF(__pyx_t_20);
           __Pyx_RaiseBufferFallbackError();
         } else {
@@ -3180,7 +3180,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
     __Pyx_DECREF_SET(__pyx_v_natural_inflows, ((PyArrayObject *)__pyx_t_3));
     __pyx_t_3 = 0;
 
-    /* "MUSEH2O/lake_problem/dps.pyx":87
+    /* "dps.pyx":87
  *         natural_inflows = np.random.lognormal(transformed_mean, transformed_sigma, size=steps)
  * 
  *         for t in range(1, steps):             # <<<<<<<<<<<<<<
@@ -3192,7 +3192,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
     for (__pyx_t_27 = 1; __pyx_t_27 < __pyx_t_26; __pyx_t_27+=1) {
       __pyx_v_t = __pyx_t_27;
 
-      /* "MUSEH2O/lake_problem/dps.pyx":88
+      /* "dps.pyx":88
  * 
  *         for t in range(1, steps):
  *             decisions[r, t-1] = cython_get_anthropogenic_release(X[r, t-1], c1, c2, r1, r2, w1, w2)             # <<<<<<<<<<<<<<
@@ -3207,9 +3207,9 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
       __pyx_t_31 = (__pyx_v_t - 1);
       if (__pyx_t_30 < 0) __pyx_t_30 += __pyx_pybuffernd_decisions.diminfo[0].shape;
       if (__pyx_t_31 < 0) __pyx_t_31 += __pyx_pybuffernd_decisions.diminfo[1].shape;
-      *__Pyx_BufPtrStrided2d(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t *, __pyx_pybuffernd_decisions.rcbuffer->pybuffer.buf, __pyx_t_30, __pyx_pybuffernd_decisions.diminfo[0].strides, __pyx_t_31, __pyx_pybuffernd_decisions.diminfo[1].strides) = __pyx_f_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_release((*__Pyx_BufPtrStrided2d(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_28, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_29, __pyx_pybuffernd_X.diminfo[1].strides)), __pyx_v_c1, __pyx_v_c2, __pyx_v_r1, __pyx_v_r2, __pyx_v_w1, __pyx_v_w2, 0);
+      *__Pyx_BufPtrStrided2d(__pyx_t_9lakemodel_DTYPE_t *, __pyx_pybuffernd_decisions.rcbuffer->pybuffer.buf, __pyx_t_30, __pyx_pybuffernd_decisions.diminfo[0].strides, __pyx_t_31, __pyx_pybuffernd_decisions.diminfo[1].strides) = __pyx_f_9lakemodel_cython_get_anthropogenic_release((*__Pyx_BufPtrStrided2d(__pyx_t_9lakemodel_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_28, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_29, __pyx_pybuffernd_X.diminfo[1].strides)), __pyx_v_c1, __pyx_v_c2, __pyx_v_r1, __pyx_v_r2, __pyx_v_w1, __pyx_v_w2, 0);
 
-      /* "MUSEH2O/lake_problem/dps.pyx":89
+      /* "dps.pyx":89
  *         for t in range(1, steps):
  *             decisions[r, t-1] = cython_get_anthropogenic_release(X[r, t-1], c1, c2, r1, r2, w1, w2)
  *             X[r, t] = (1-b)*X[r, t-1] + X[r, t-1]**q/(1+X[r, t-1]**q) + decisions[r, t-1] + natural_inflows[t-1]             # <<<<<<<<<<<<<<
@@ -3238,10 +3238,10 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
       __pyx_t_38 = __pyx_v_t;
       if (__pyx_t_37 < 0) __pyx_t_37 += __pyx_pybuffernd_X.diminfo[0].shape;
       if (__pyx_t_38 < 0) __pyx_t_38 += __pyx_pybuffernd_X.diminfo[1].shape;
-      *__Pyx_BufPtrStrided2d(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_37, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_38, __pyx_pybuffernd_X.diminfo[1].strides) = (((((1.0 - __pyx_cur_scope->__pyx_v_b) * (*__Pyx_BufPtrStrided2d(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_29, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_28, __pyx_pybuffernd_X.diminfo[1].strides))) + (pow((*__Pyx_BufPtrStrided2d(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_31, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_30, __pyx_pybuffernd_X.diminfo[1].strides)), ((__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t)__pyx_cur_scope->__pyx_v_q)) / (1.0 + pow((*__Pyx_BufPtrStrided2d(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_32, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_33, __pyx_pybuffernd_X.diminfo[1].strides)), ((__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t)__pyx_cur_scope->__pyx_v_q))))) + (*__Pyx_BufPtrStrided2d(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t *, __pyx_pybuffernd_decisions.rcbuffer->pybuffer.buf, __pyx_t_34, __pyx_pybuffernd_decisions.diminfo[0].strides, __pyx_t_35, __pyx_pybuffernd_decisions.diminfo[1].strides))) + (*__Pyx_BufPtrStrided1d(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t *, __pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer.buf, __pyx_t_36, __pyx_pybuffernd_natural_inflows.diminfo[0].strides)));
+      *__Pyx_BufPtrStrided2d(__pyx_t_9lakemodel_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_37, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_38, __pyx_pybuffernd_X.diminfo[1].strides) = (((((1.0 - __pyx_cur_scope->__pyx_v_b) * (*__Pyx_BufPtrStrided2d(__pyx_t_9lakemodel_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_29, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_28, __pyx_pybuffernd_X.diminfo[1].strides))) + (pow((*__Pyx_BufPtrStrided2d(__pyx_t_9lakemodel_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_31, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_30, __pyx_pybuffernd_X.diminfo[1].strides)), ((__pyx_t_9lakemodel_DTYPE_t)__pyx_cur_scope->__pyx_v_q)) / (1.0 + pow((*__Pyx_BufPtrStrided2d(__pyx_t_9lakemodel_DTYPE_t *, __pyx_pybuffernd_X.rcbuffer->pybuffer.buf, __pyx_t_32, __pyx_pybuffernd_X.diminfo[0].strides, __pyx_t_33, __pyx_pybuffernd_X.diminfo[1].strides)), ((__pyx_t_9lakemodel_DTYPE_t)__pyx_cur_scope->__pyx_v_q))))) + (*__Pyx_BufPtrStrided2d(__pyx_t_9lakemodel_DTYPE_t *, __pyx_pybuffernd_decisions.rcbuffer->pybuffer.buf, __pyx_t_34, __pyx_pybuffernd_decisions.diminfo[0].strides, __pyx_t_35, __pyx_pybuffernd_decisions.diminfo[1].strides))) + (*__Pyx_BufPtrStrided1d(__pyx_t_9lakemodel_DTYPE_t *, __pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer.buf, __pyx_t_36, __pyx_pybuffernd_natural_inflows.diminfo[0].strides)));
     }
 
-    /* "MUSEH2O/lake_problem/dps.pyx":91
+    /* "dps.pyx":91
  *             X[r, t] = (1-b)*X[r, t-1] + X[r, t-1]**q/(1+X[r, t-1]**q) + decisions[r, t-1] + natural_inflows[t-1]
  * 
  *         reliability[r] = np.sum(X[r, :] < Pcrit)/steps             # <<<<<<<<<<<<<<
@@ -3297,10 +3297,10 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __pyx_t_36 = __pyx_v_r;
     if (__pyx_t_36 < 0) __pyx_t_36 += __pyx_pybuffernd_reliability.diminfo[0].shape;
-    *__Pyx_BufPtrStrided1d(__pyx_t_7MUSEH2O_12lake_problem_3dps_DTYPE_t *, __pyx_pybuffernd_reliability.rcbuffer->pybuffer.buf, __pyx_t_36, __pyx_pybuffernd_reliability.diminfo[0].strides) = __pyx_t_39;
+    *__Pyx_BufPtrStrided1d(__pyx_t_9lakemodel_DTYPE_t *, __pyx_pybuffernd_reliability.rcbuffer->pybuffer.buf, __pyx_t_36, __pyx_pybuffernd_reliability.diminfo[0].strides) = __pyx_t_39;
   }
 
-  /* "MUSEH2O/lake_problem/dps.pyx":93
+  /* "dps.pyx":93
  *         reliability[r] = np.sum(X[r, :] < Pcrit)/steps
  * 
  *     mean_reliability = np.mean(reliability)             # <<<<<<<<<<<<<<
@@ -3331,7 +3331,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_mean_reliability = __pyx_t_17;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":94
+  /* "dps.pyx":94
  * 
  *     mean_reliability = np.mean(reliability)
  *     inertia = np.mean(np.sum(np.abs(np.diff(decisions)) < 0.01, axis=1)/(steps-1))             # <<<<<<<<<<<<<<
@@ -3430,7 +3430,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_inertia = __pyx_t_17;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":95
+  /* "dps.pyx":95
  *     mean_reliability = np.mean(reliability)
  *     inertia = np.mean(np.sum(np.abs(np.diff(decisions)) < 0.01, axis=1)/(steps-1))
  *     utility = np.mean(np.sum(alpha*decisions*np.power(delta,np.arange(steps)), axis=1))             # <<<<<<<<<<<<<<
@@ -3568,7 +3568,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_utility = __pyx_t_17;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":96
+  /* "dps.pyx":96
  *     inertia = np.mean(np.sum(np.abs(np.diff(decisions)) < 0.01, axis=1)/(steps-1))
  *     utility = np.mean(np.sum(alpha*decisions*np.power(delta,np.arange(steps)), axis=1))
  *     max_p = np.max(np.mean(X, axis=1))             # <<<<<<<<<<<<<<
@@ -3618,7 +3618,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_max_p = __pyx_t_17;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":98
+  /* "dps.pyx":98
  *     max_p = np.max(np.mean(X, axis=1))
  * 
  *     return max_p, utility, inertia, mean_reliability             # <<<<<<<<<<<<<<
@@ -3650,7 +3650,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":44
+  /* "dps.pyx":44
  * @cython.cdivision(True)
  * @cython.boundscheck(False)
  * def lake_model(decision_vars,             # <<<<<<<<<<<<<<
@@ -3680,7 +3680,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_natural_inflows.rcbuffer->pybuffer);
     __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_reliability.rcbuffer->pybuffer);
   __Pyx_ErrRestore(__pyx_type, __pyx_value, __pyx_tb);}
-  __Pyx_AddTraceback("MUSEH2O.lake_problem.dps.lake_model", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("lakemodel.lake_model", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   goto __pyx_L2;
   __pyx_L0:;
@@ -3699,7 +3699,7 @@ static PyObject *__pyx_pf_7MUSEH2O_12lake_problem_3dps_2lake_model(CYTHON_UNUSED
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":735
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":735
  * ctypedef npy_cdouble     complex_t
  * 
  * cdef inline object PyArray_MultiIterNew1(a):             # <<<<<<<<<<<<<<
@@ -3716,7 +3716,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew1(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew1", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":736
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":736
  * 
  * cdef inline object PyArray_MultiIterNew1(a):
  *     return PyArray_MultiIterNew(1, <void*>a)             # <<<<<<<<<<<<<<
@@ -3730,7 +3730,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew1(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":735
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":735
  * ctypedef npy_cdouble     complex_t
  * 
  * cdef inline object PyArray_MultiIterNew1(a):             # <<<<<<<<<<<<<<
@@ -3749,7 +3749,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew1(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":738
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":738
  *     return PyArray_MultiIterNew(1, <void*>a)
  * 
  * cdef inline object PyArray_MultiIterNew2(a, b):             # <<<<<<<<<<<<<<
@@ -3766,7 +3766,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew2(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew2", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":739
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":739
  * 
  * cdef inline object PyArray_MultiIterNew2(a, b):
  *     return PyArray_MultiIterNew(2, <void*>a, <void*>b)             # <<<<<<<<<<<<<<
@@ -3780,7 +3780,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew2(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":738
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":738
  *     return PyArray_MultiIterNew(1, <void*>a)
  * 
  * cdef inline object PyArray_MultiIterNew2(a, b):             # <<<<<<<<<<<<<<
@@ -3799,7 +3799,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew2(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":741
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":741
  *     return PyArray_MultiIterNew(2, <void*>a, <void*>b)
  * 
  * cdef inline object PyArray_MultiIterNew3(a, b, c):             # <<<<<<<<<<<<<<
@@ -3816,7 +3816,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew3(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew3", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":742
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":742
  * 
  * cdef inline object PyArray_MultiIterNew3(a, b, c):
  *     return PyArray_MultiIterNew(3, <void*>a, <void*>b, <void*> c)             # <<<<<<<<<<<<<<
@@ -3830,7 +3830,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew3(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":741
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":741
  *     return PyArray_MultiIterNew(2, <void*>a, <void*>b)
  * 
  * cdef inline object PyArray_MultiIterNew3(a, b, c):             # <<<<<<<<<<<<<<
@@ -3849,7 +3849,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew3(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":744
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":744
  *     return PyArray_MultiIterNew(3, <void*>a, <void*>b, <void*> c)
  * 
  * cdef inline object PyArray_MultiIterNew4(a, b, c, d):             # <<<<<<<<<<<<<<
@@ -3866,7 +3866,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew4(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew4", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":745
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":745
  * 
  * cdef inline object PyArray_MultiIterNew4(a, b, c, d):
  *     return PyArray_MultiIterNew(4, <void*>a, <void*>b, <void*>c, <void*> d)             # <<<<<<<<<<<<<<
@@ -3880,7 +3880,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew4(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":744
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":744
  *     return PyArray_MultiIterNew(3, <void*>a, <void*>b, <void*> c)
  * 
  * cdef inline object PyArray_MultiIterNew4(a, b, c, d):             # <<<<<<<<<<<<<<
@@ -3899,7 +3899,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew4(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":747
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":747
  *     return PyArray_MultiIterNew(4, <void*>a, <void*>b, <void*>c, <void*> d)
  * 
  * cdef inline object PyArray_MultiIterNew5(a, b, c, d, e):             # <<<<<<<<<<<<<<
@@ -3916,7 +3916,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew5(PyObject *__
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("PyArray_MultiIterNew5", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":748
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":748
  * 
  * cdef inline object PyArray_MultiIterNew5(a, b, c, d, e):
  *     return PyArray_MultiIterNew(5, <void*>a, <void*>b, <void*>c, <void*> d, <void*> e)             # <<<<<<<<<<<<<<
@@ -3930,7 +3930,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew5(PyObject *__
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":747
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":747
  *     return PyArray_MultiIterNew(4, <void*>a, <void*>b, <void*>c, <void*> d)
  * 
  * cdef inline object PyArray_MultiIterNew5(a, b, c, d, e):             # <<<<<<<<<<<<<<
@@ -3949,7 +3949,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyArray_MultiIterNew5(PyObject *__
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":750
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":750
  *     return PyArray_MultiIterNew(5, <void*>a, <void*>b, <void*>c, <void*> d, <void*> e)
  * 
  * cdef inline tuple PyDataType_SHAPE(dtype d):             # <<<<<<<<<<<<<<
@@ -3963,7 +3963,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("PyDataType_SHAPE", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":751
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":751
  * 
  * cdef inline tuple PyDataType_SHAPE(dtype d):
  *     if PyDataType_HASSUBARRAY(d):             # <<<<<<<<<<<<<<
@@ -3973,7 +3973,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
   __pyx_t_1 = (PyDataType_HASSUBARRAY(__pyx_v_d) != 0);
   if (__pyx_t_1) {
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":752
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":752
  * cdef inline tuple PyDataType_SHAPE(dtype d):
  *     if PyDataType_HASSUBARRAY(d):
  *         return <tuple>d.subarray.shape             # <<<<<<<<<<<<<<
@@ -3985,7 +3985,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
     __pyx_r = ((PyObject*)__pyx_v_d->subarray->shape);
     goto __pyx_L0;
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":751
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":751
  * 
  * cdef inline tuple PyDataType_SHAPE(dtype d):
  *     if PyDataType_HASSUBARRAY(d):             # <<<<<<<<<<<<<<
@@ -3994,7 +3994,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
  */
   }
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":754
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":754
  *         return <tuple>d.subarray.shape
  *     else:
  *         return ()             # <<<<<<<<<<<<<<
@@ -4008,7 +4008,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
     goto __pyx_L0;
   }
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":750
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":750
  *     return PyArray_MultiIterNew(5, <void*>a, <void*>b, <void*>c, <void*> d, <void*> e)
  * 
  * cdef inline tuple PyDataType_SHAPE(dtype d):             # <<<<<<<<<<<<<<
@@ -4023,7 +4023,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":929
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":929
  *     int _import_umath() except -1
  * 
  * cdef inline void set_array_base(ndarray arr, object base):             # <<<<<<<<<<<<<<
@@ -4035,7 +4035,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("set_array_base", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":930
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":930
  * 
  * cdef inline void set_array_base(ndarray arr, object base):
  *     Py_INCREF(base) # important to do this before stealing the reference below!             # <<<<<<<<<<<<<<
@@ -4044,7 +4044,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
  */
   Py_INCREF(__pyx_v_base);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":931
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":931
  * cdef inline void set_array_base(ndarray arr, object base):
  *     Py_INCREF(base) # important to do this before stealing the reference below!
  *     PyArray_SetBaseObject(arr, base)             # <<<<<<<<<<<<<<
@@ -4053,7 +4053,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
  */
   (void)(PyArray_SetBaseObject(__pyx_v_arr, __pyx_v_base));
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":929
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":929
  *     int _import_umath() except -1
  * 
  * cdef inline void set_array_base(ndarray arr, object base):             # <<<<<<<<<<<<<<
@@ -4065,7 +4065,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
   __Pyx_RefNannyFinishContext();
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":933
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":933
  *     PyArray_SetBaseObject(arr, base)
  * 
  * cdef inline object get_array_base(ndarray arr):             # <<<<<<<<<<<<<<
@@ -4080,7 +4080,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("get_array_base", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":934
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":934
  * 
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)             # <<<<<<<<<<<<<<
@@ -4089,7 +4089,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
  */
   __pyx_v_base = PyArray_BASE(__pyx_v_arr);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":935
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":935
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)
  *     if base is NULL:             # <<<<<<<<<<<<<<
@@ -4099,7 +4099,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   __pyx_t_1 = ((__pyx_v_base == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":936
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":936
  *     base = PyArray_BASE(arr)
  *     if base is NULL:
  *         return None             # <<<<<<<<<<<<<<
@@ -4110,7 +4110,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":935
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":935
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)
  *     if base is NULL:             # <<<<<<<<<<<<<<
@@ -4119,7 +4119,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
  */
   }
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":937
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":937
  *     if base is NULL:
  *         return None
  *     return <object>base             # <<<<<<<<<<<<<<
@@ -4131,7 +4131,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   __pyx_r = ((PyObject *)__pyx_v_base);
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":933
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":933
  *     PyArray_SetBaseObject(arr, base)
  * 
  * cdef inline object get_array_base(ndarray arr):             # <<<<<<<<<<<<<<
@@ -4146,7 +4146,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":941
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":941
  * # Versions of the import_* functions which are more suitable for
  * # Cython code.
  * cdef inline int import_array() except -1:             # <<<<<<<<<<<<<<
@@ -4170,7 +4170,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_array", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":942
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -4186,7 +4186,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":943
+      /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":943
  * cdef inline int import_array() except -1:
  *     try:
  *         __pyx_import_array()             # <<<<<<<<<<<<<<
@@ -4195,7 +4195,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
  */
       __pyx_t_4 = _import_array(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 943, __pyx_L3_error)
 
-      /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":942
+      /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -4209,7 +4209,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":944
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":944
  *     try:
  *         __pyx_import_array()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -4224,7 +4224,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":945
+      /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":945
  *         __pyx_import_array()
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")             # <<<<<<<<<<<<<<
@@ -4240,7 +4240,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":942
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -4255,7 +4255,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":941
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":941
  * # Versions of the import_* functions which are more suitable for
  * # Cython code.
  * cdef inline int import_array() except -1:             # <<<<<<<<<<<<<<
@@ -4278,7 +4278,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":947
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":947
  *         raise ImportError("numpy.core.multiarray failed to import")
  * 
  * cdef inline int import_umath() except -1:             # <<<<<<<<<<<<<<
@@ -4302,7 +4302,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_umath", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":948
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -4318,7 +4318,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":949
+      /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":949
  * cdef inline int import_umath() except -1:
  *     try:
  *         _import_umath()             # <<<<<<<<<<<<<<
@@ -4327,7 +4327,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
  */
       __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 949, __pyx_L3_error)
 
-      /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":948
+      /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -4341,7 +4341,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":950
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":950
  *     try:
  *         _import_umath()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -4356,7 +4356,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":951
+      /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":951
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
@@ -4372,7 +4372,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":948
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -4387,7 +4387,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":947
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":947
  *         raise ImportError("numpy.core.multiarray failed to import")
  * 
  * cdef inline int import_umath() except -1:             # <<<<<<<<<<<<<<
@@ -4410,7 +4410,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":953
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":953
  *         raise ImportError("numpy.core.umath failed to import")
  * 
  * cdef inline int import_ufunc() except -1:             # <<<<<<<<<<<<<<
@@ -4434,7 +4434,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_ufunc", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":954
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -4450,7 +4450,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":955
+      /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":955
  * cdef inline int import_ufunc() except -1:
  *     try:
  *         _import_umath()             # <<<<<<<<<<<<<<
@@ -4459,7 +4459,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
  */
       __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 955, __pyx_L3_error)
 
-      /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":954
+      /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -4473,7 +4473,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":956
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":956
  *     try:
  *         _import_umath()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -4488,7 +4488,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":957
+      /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":957
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
@@ -4504,7 +4504,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":954
+    /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -4519,7 +4519,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":953
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":953
  *         raise ImportError("numpy.core.umath failed to import")
  * 
  * cdef inline int import_ufunc() except -1:             # <<<<<<<<<<<<<<
@@ -4542,7 +4542,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":967
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":967
  * 
  * 
  * cdef inline bint is_timedelta64_object(object obj):             # <<<<<<<<<<<<<<
@@ -4555,7 +4555,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("is_timedelta64_object", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":979
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":979
  *     bool
  *     """
  *     return PyObject_TypeCheck(obj, &PyTimedeltaArrType_Type)             # <<<<<<<<<<<<<<
@@ -4565,7 +4565,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   __pyx_r = PyObject_TypeCheck(__pyx_v_obj, (&PyTimedeltaArrType_Type));
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":967
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":967
  * 
  * 
  * cdef inline bint is_timedelta64_object(object obj):             # <<<<<<<<<<<<<<
@@ -4579,7 +4579,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":982
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":982
  * 
  * 
  * cdef inline bint is_datetime64_object(object obj):             # <<<<<<<<<<<<<<
@@ -4592,7 +4592,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("is_datetime64_object", 0);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":994
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":994
  *     bool
  *     """
  *     return PyObject_TypeCheck(obj, &PyDatetimeArrType_Type)             # <<<<<<<<<<<<<<
@@ -4602,7 +4602,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   __pyx_r = PyObject_TypeCheck(__pyx_v_obj, (&PyDatetimeArrType_Type));
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":982
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":982
  * 
  * 
  * cdef inline bint is_datetime64_object(object obj):             # <<<<<<<<<<<<<<
@@ -4616,7 +4616,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":997
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":997
  * 
  * 
  * cdef inline npy_datetime get_datetime64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -4627,7 +4627,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
 static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *__pyx_v_obj) {
   npy_datetime __pyx_r;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":1004
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":1004
  *     also needed.  That can be found using `get_datetime64_unit`.
  *     """
  *     return (<PyDatetimeScalarObject*>obj).obval             # <<<<<<<<<<<<<<
@@ -4637,7 +4637,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
   __pyx_r = ((PyDatetimeScalarObject *)__pyx_v_obj)->obval;
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":997
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":997
  * 
  * 
  * cdef inline npy_datetime get_datetime64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -4650,7 +4650,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":1007
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":1007
  * 
  * 
  * cdef inline npy_timedelta get_timedelta64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -4661,7 +4661,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
 static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject *__pyx_v_obj) {
   npy_timedelta __pyx_r;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":1011
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":1011
  *     returns the int64 value underlying scalar numpy timedelta64 object
  *     """
  *     return (<PyTimedeltaScalarObject*>obj).obval             # <<<<<<<<<<<<<<
@@ -4671,7 +4671,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
   __pyx_r = ((PyTimedeltaScalarObject *)__pyx_v_obj)->obval;
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":1007
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":1007
  * 
  * 
  * cdef inline npy_timedelta get_timedelta64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -4684,7 +4684,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
   return __pyx_r;
 }
 
-/* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":1014
+/* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -4695,7 +4695,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
 static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObject *__pyx_v_obj) {
   NPY_DATETIMEUNIT __pyx_r;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":1018
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":1018
  *     returns the unit part of the dtype for a numpy datetime64 object.
  *     """
  *     return <NPY_DATETIMEUNIT>(<PyDatetimeScalarObject*>obj).obmeta.base             # <<<<<<<<<<<<<<
@@ -4703,7 +4703,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   __pyx_r = ((NPY_DATETIMEUNIT)((PyDatetimeScalarObject *)__pyx_v_obj)->obmeta.base);
   goto __pyx_L0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":1014
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -4716,14 +4716,14 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-static struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model *__pyx_freelist_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model[8];
-static int __pyx_freecount_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model = 0;
+static struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model *__pyx_freelist_9lakemodel___pyx_scope_struct__lake_model[8];
+static int __pyx_freecount_9lakemodel___pyx_scope_struct__lake_model = 0;
 
-static PyObject *__pyx_tp_new_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
+static PyObject *__pyx_tp_new_9lakemodel___pyx_scope_struct__lake_model(PyTypeObject *t, CYTHON_UNUSED PyObject *a, CYTHON_UNUSED PyObject *k) {
   PyObject *o;
-  if (CYTHON_COMPILING_IN_CPYTHON && likely((__pyx_freecount_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model > 0) & (t->tp_basicsize == sizeof(struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model)))) {
-    o = (PyObject*)__pyx_freelist_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model[--__pyx_freecount_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model];
-    memset(o, 0, sizeof(struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model));
+  if (CYTHON_COMPILING_IN_CPYTHON && likely((__pyx_freecount_9lakemodel___pyx_scope_struct__lake_model > 0) & (t->tp_basicsize == sizeof(struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model)))) {
+    o = (PyObject*)__pyx_freelist_9lakemodel___pyx_scope_struct__lake_model[--__pyx_freecount_9lakemodel___pyx_scope_struct__lake_model];
+    memset(o, 0, sizeof(struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model));
     (void) PyObject_INIT(o, t);
   } else {
     o = (*t->tp_alloc)(t, 0);
@@ -4732,20 +4732,20 @@ static PyObject *__pyx_tp_new_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__l
   return o;
 }
 
-static void __pyx_tp_dealloc_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model(PyObject *o) {
-  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model < 8) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model)))) {
-    __pyx_freelist_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model[__pyx_freecount_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model++] = ((struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model *)o);
+static void __pyx_tp_dealloc_9lakemodel___pyx_scope_struct__lake_model(PyObject *o) {
+  if (CYTHON_COMPILING_IN_CPYTHON && ((__pyx_freecount_9lakemodel___pyx_scope_struct__lake_model < 8) & (Py_TYPE(o)->tp_basicsize == sizeof(struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model)))) {
+    __pyx_freelist_9lakemodel___pyx_scope_struct__lake_model[__pyx_freecount_9lakemodel___pyx_scope_struct__lake_model++] = ((struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model *)o);
   } else {
     (*Py_TYPE(o)->tp_free)(o);
   }
 }
 
-static PyTypeObject __pyx_type_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model = {
+static PyTypeObject __pyx_type_9lakemodel___pyx_scope_struct__lake_model = {
   PyVarObject_HEAD_INIT(0, 0)
-  "MUSEH2O.lake_problem.dps.__pyx_scope_struct__lake_model", /*tp_name*/
-  sizeof(struct __pyx_obj_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model), /*tp_basicsize*/
+  "lakemodel.__pyx_scope_struct__lake_model", /*tp_name*/
+  sizeof(struct __pyx_obj_9lakemodel___pyx_scope_struct__lake_model), /*tp_basicsize*/
   0, /*tp_itemsize*/
-  __pyx_tp_dealloc_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model, /*tp_dealloc*/
+  __pyx_tp_dealloc_9lakemodel___pyx_scope_struct__lake_model, /*tp_dealloc*/
   #if PY_VERSION_HEX < 0x030800b4
   0, /*tp_print*/
   #endif
@@ -4788,7 +4788,7 @@ static PyTypeObject __pyx_type_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__
   0, /*tp_dictoffset*/
   0, /*tp_init*/
   0, /*tp_alloc*/
-  __pyx_tp_new_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model, /*tp_new*/
+  __pyx_tp_new_9lakemodel___pyx_scope_struct__lake_model, /*tp_new*/
   0, /*tp_free*/
   0, /*tp_is_gc*/
   0, /*tp_bases*/
@@ -4813,24 +4813,24 @@ static PyTypeObject __pyx_type_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__
 };
 
 static PyMethodDef __pyx_methods[] = {
-  {"cython_get_anthropogenic_release", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_7MUSEH2O_12lake_problem_3dps_1cython_get_anthropogenic_release, METH_VARARGS|METH_KEYWORDS, __pyx_doc_7MUSEH2O_12lake_problem_3dps_cython_get_anthropogenic_release},
+  {"cython_get_anthropogenic_release", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_9lakemodel_1cython_get_anthropogenic_release, METH_VARARGS|METH_KEYWORDS, __pyx_doc_9lakemodel_cython_get_anthropogenic_release},
   {0, 0, 0, 0}
 };
 
 #if PY_MAJOR_VERSION >= 3
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 static PyObject* __pyx_pymod_create(PyObject *spec, PyModuleDef *def); /*proto*/
-static int __pyx_pymod_exec_dps(PyObject* module); /*proto*/
+static int __pyx_pymod_exec_lakemodel(PyObject* module); /*proto*/
 static PyModuleDef_Slot __pyx_moduledef_slots[] = {
   {Py_mod_create, (void*)__pyx_pymod_create},
-  {Py_mod_exec, (void*)__pyx_pymod_exec_dps},
+  {Py_mod_exec, (void*)__pyx_pymod_exec_lakemodel},
   {0, NULL}
 };
 #endif
 
 static struct PyModuleDef __pyx_moduledef = {
     PyModuleDef_HEAD_INIT,
-    "dps",
+    "lakemodel",
     0, /* m_doc */
   #if CYTHON_PEP489_MULTI_PHASE_INIT
     0, /* m_size */
@@ -4860,7 +4860,6 @@ static struct PyModuleDef __pyx_moduledef = {
 
 static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
-  {&__pyx_n_s_MUSEH2O_lake_problem_dps, __pyx_k_MUSEH2O_lake_problem_dps, sizeof(__pyx_k_MUSEH2O_lake_problem_dps), 0, 0, 1, 1},
   {&__pyx_n_s_Pcrit, __pyx_k_Pcrit, sizeof(__pyx_k_Pcrit), 0, 0, 1, 1},
   {&__pyx_n_s_X, __pyx_k_X, sizeof(__pyx_k_X), 0, 0, 1, 1},
   {&__pyx_n_s_abs, __pyx_k_abs, sizeof(__pyx_k_abs), 0, 0, 1, 1},
@@ -4882,6 +4881,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_inertia, __pyx_k_inertia, sizeof(__pyx_k_inertia), 0, 0, 1, 1},
   {&__pyx_n_s_lake_model, __pyx_k_lake_model, sizeof(__pyx_k_lake_model), 0, 0, 1, 1},
   {&__pyx_n_s_lake_model_locals_lambda, __pyx_k_lake_model_locals_lambda, sizeof(__pyx_k_lake_model_locals_lambda), 0, 0, 1, 1},
+  {&__pyx_n_s_lakemodel, __pyx_k_lakemodel, sizeof(__pyx_k_lakemodel), 0, 0, 1, 1},
   {&__pyx_n_s_lognormal, __pyx_k_lognormal, sizeof(__pyx_k_lognormal), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_max, __pyx_k_max, sizeof(__pyx_k_max), 0, 0, 1, 1},
@@ -4931,7 +4931,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "MUSEH2O/lake_problem/dps.pyx":91
+  /* "dps.pyx":91
  *             X[r, t] = (1-b)*X[r, t-1] + X[r, t-1]**q/(1+X[r, t-1]**q) + decisions[r, t-1] + natural_inflows[t-1]
  * 
  *         reliability[r] = np.sum(X[r, :] < Pcrit)/steps             # <<<<<<<<<<<<<<
@@ -4942,7 +4942,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice_);
   __Pyx_GIVEREF(__pyx_slice_);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":945
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":945
  *         __pyx_import_array()
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")             # <<<<<<<<<<<<<<
@@ -4953,7 +4953,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":951
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":951
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
@@ -4964,7 +4964,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "MUSEH2O/lake_problem/dps.pyx":44
+  /* "dps.pyx":44
  * @cython.cdivision(True)
  * @cython.boundscheck(False)
  * def lake_model(decision_vars,             # <<<<<<<<<<<<<<
@@ -5031,14 +5031,14 @@ static int __Pyx_modinit_type_init_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_type_init_code", 0);
   /*--- Type init code ---*/
-  if (PyType_Ready(&__pyx_type_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_9lakemodel___pyx_scope_struct__lake_model) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
-  __pyx_type_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model.tp_print = 0;
+  __pyx_type_9lakemodel___pyx_scope_struct__lake_model.tp_print = 0;
   #endif
-  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model.tp_dictoffset && __pyx_type_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model.tp_getattro == PyObject_GenericGetAttr)) {
-    __pyx_type_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
+  if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_type_9lakemodel___pyx_scope_struct__lake_model.tp_dictoffset && __pyx_type_9lakemodel___pyx_scope_struct__lake_model.tp_getattro == PyObject_GenericGetAttr)) {
+    __pyx_type_9lakemodel___pyx_scope_struct__lake_model.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
-  __pyx_ptype_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model = &__pyx_type_7MUSEH2O_12lake_problem_3dps___pyx_scope_struct__lake_model;
+  __pyx_ptype_9lakemodel___pyx_scope_struct__lake_model = &__pyx_type_9lakemodel___pyx_scope_struct__lake_model;
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -5141,11 +5141,11 @@ static int __Pyx_modinit_function_import_code(void) {
 
 
 #if PY_MAJOR_VERSION < 3
-__Pyx_PyMODINIT_FUNC initdps(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC initdps(void)
+__Pyx_PyMODINIT_FUNC initlakemodel(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC initlakemodel(void)
 #else
-__Pyx_PyMODINIT_FUNC PyInit_dps(void) CYTHON_SMALL_CODE; /*proto*/
-__Pyx_PyMODINIT_FUNC PyInit_dps(void)
+__Pyx_PyMODINIT_FUNC PyInit_lakemodel(void) CYTHON_SMALL_CODE; /*proto*/
+__Pyx_PyMODINIT_FUNC PyInit_lakemodel(void)
 #if CYTHON_PEP489_MULTI_PHASE_INIT
 {
   return PyModuleDef_Init(&__pyx_moduledef);
@@ -5212,7 +5212,7 @@ bad:
 }
 
 
-static CYTHON_SMALL_CODE int __pyx_pymod_exec_dps(PyObject *__pyx_pyinit_module)
+static CYTHON_SMALL_CODE int __pyx_pymod_exec_lakemodel(PyObject *__pyx_pyinit_module)
 #endif
 #endif
 {
@@ -5225,7 +5225,7 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_dps(PyObject *__pyx_pyinit_module)
   #if CYTHON_PEP489_MULTI_PHASE_INIT
   if (__pyx_m) {
     if (__pyx_m == __pyx_pyinit_module) return 0;
-    PyErr_SetString(PyExc_RuntimeError, "Module 'dps' has already been imported. Re-initialisation is not supported.");
+    PyErr_SetString(PyExc_RuntimeError, "Module 'lakemodel' has already been imported. Re-initialisation is not supported.");
     return -1;
   }
   #elif PY_MAJOR_VERSION >= 3
@@ -5240,7 +5240,7 @@ if (!__Pyx_RefNanny) {
       Py_FatalError("failed to import 'refnanny' module");
 }
 #endif
-  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_dps(void)", 0);
+  __Pyx_RefNannySetupContext("__Pyx_PyMODINIT_FUNC PyInit_lakemodel(void)", 0);
   if (__Pyx_check_binary_version() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #ifdef __Pxy_PyFrame_Initialize_Offsets
   __Pxy_PyFrame_Initialize_Offsets();
@@ -5277,7 +5277,7 @@ if (!__Pyx_RefNanny) {
   Py_INCREF(__pyx_m);
   #else
   #if PY_MAJOR_VERSION < 3
-  __pyx_m = Py_InitModule4("dps", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
+  __pyx_m = Py_InitModule4("lakemodel", __pyx_methods, 0, 0, PYTHON_API_VERSION); Py_XINCREF(__pyx_m);
   #else
   __pyx_m = PyModule_Create(&__pyx_moduledef);
   #endif
@@ -5295,14 +5295,14 @@ if (!__Pyx_RefNanny) {
   #if PY_MAJOR_VERSION < 3 && (__PYX_DEFAULT_STRING_ENCODING_IS_ASCII || __PYX_DEFAULT_STRING_ENCODING_IS_DEFAULT)
   if (__Pyx_init_sys_getdefaultencoding_params() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
-  if (__pyx_module_is_main_MUSEH2O__lake_problem__dps) {
+  if (__pyx_module_is_main_lakemodel) {
     if (PyObject_SetAttr(__pyx_m, __pyx_n_s_name, __pyx_n_s_main) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   }
   #if PY_MAJOR_VERSION >= 3
   {
     PyObject *modules = PyImport_GetModuleDict(); if (unlikely(!modules)) __PYX_ERR(0, 1, __pyx_L1_error)
-    if (!PyDict_GetItemString(modules, "MUSEH2O.lake_problem.dps")) {
-      if (unlikely(PyDict_SetItemString(modules, "MUSEH2O.lake_problem.dps", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+    if (!PyDict_GetItemString(modules, "lakemodel")) {
+      if (unlikely(PyDict_SetItemString(modules, "lakemodel", __pyx_m) < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
     }
   }
   #endif
@@ -5323,7 +5323,7 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "MUSEH2O/lake_problem/dps.pyx":3
+  /* "dps.pyx":3
  * #!python
  * #cython: language_level=3
  * import numpy as np             # <<<<<<<<<<<<<<
@@ -5335,7 +5335,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":4
+  /* "dps.pyx":4
  * #cython: language_level=3
  * import numpy as np
  * from scipy.optimize import brentq             # <<<<<<<<<<<<<<
@@ -5356,19 +5356,19 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":44
+  /* "dps.pyx":44
  * @cython.cdivision(True)
  * @cython.boundscheck(False)
  * def lake_model(decision_vars,             # <<<<<<<<<<<<<<
  *                float b=0.41, float q=2.0,
  *                float mean=0.02, float stdev=0.001,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_7MUSEH2O_12lake_problem_3dps_3lake_model, NULL, __pyx_n_s_MUSEH2O_lake_problem_dps); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_9lakemodel_3lake_model, NULL, __pyx_n_s_lakemodel); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_lake_model, __pyx_t_2) < 0) __PYX_ERR(0, 44, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "MUSEH2O/lake_problem/dps.pyx":1
+  /* "dps.pyx":1
  * #!python             # <<<<<<<<<<<<<<
  * #cython: language_level=3
  * import numpy as np
@@ -5378,7 +5378,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "../../../../opt/anaconda3/lib/python3.9/site-packages/numpy/__init__.pxd":1014
+  /* "../../../../../../ProgramData/Anaconda3/lib/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -5394,11 +5394,11 @@ if (!__Pyx_RefNanny) {
   __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
-      __Pyx_AddTraceback("init MUSEH2O.lake_problem.dps", __pyx_clineno, __pyx_lineno, __pyx_filename);
+      __Pyx_AddTraceback("init lakemodel", __pyx_clineno, __pyx_lineno, __pyx_filename);
     }
     Py_CLEAR(__pyx_m);
   } else if (!PyErr_Occurred()) {
-    PyErr_SetString(PyExc_ImportError, "init MUSEH2O.lake_problem.dps");
+    PyErr_SetString(PyExc_ImportError, "init lakemodel");
   }
   __pyx_L0:;
   __Pyx_RefNannyFinishContext();

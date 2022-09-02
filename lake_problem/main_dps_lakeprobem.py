@@ -14,9 +14,8 @@ import random
 from platypus import Problem, EpsNSGAII, Real, ProcessPoolEvaluator
 
 from rbf import rbf_functions
-# from dps_lake_model import lake_model
+from dps_lake_model import lake_model
 
-from dps import lake_model
 
 
 def cython_wrapper(args):
@@ -128,8 +127,7 @@ def main():
             track_progress = TrackProgress()
             with ProcessPoolEvaluator() as evaluator:
                 algorithm = EpsNSGAII(problem, epsilons=epsilons, evaluator=evaluator)
-                algorithm.run(1000, track_progress)
-
+                algorithm.run(100000, track_progress)
 
             logging.info("storing results")
             store_results(
