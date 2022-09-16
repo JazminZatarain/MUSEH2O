@@ -109,7 +109,7 @@ def main():
 
 
             # Lower and Upper Bound for problem.types
-            epsilons = [0.1, 0.1, 0.1, 0.1]
+            epsilons = [0.1, 0.05, 0.05, 0.05]
             n_decision_vars = len(rbf.platypus_types)
 
             problem = Problem(n_decision_vars, n_objectives)
@@ -131,7 +131,7 @@ def main():
 
             logging.info("storing results")
             store_results(
-                algorithm, track_progress, "output", f"{entry.__name__}", seed
+                algorithm, track_progress, "output_smaller_eps", f"{entry.__name__}", seed
             )
 
 
