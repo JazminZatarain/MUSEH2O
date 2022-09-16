@@ -109,7 +109,7 @@ def main():
 
 
             # Lower and Upper Bound for problem.types
-            epsilons = [0.1, 0.05, 0.05, 0.05]
+            epsilons = [0.05, 0.05, 0.05, 0.05]
             n_decision_vars = len(rbf.platypus_types)
 
             problem = Problem(n_decision_vars, n_objectives)
