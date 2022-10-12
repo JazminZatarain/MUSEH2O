@@ -6,10 +6,10 @@ from numba import njit
 # # TODO: Set default values to take all rows and all columns
 # def loadMatrix(file_name, row, col):
 #     try:
-#         output = np.loadtxt(file_name, dtype=float, max_rows=row)
+#         output_100k = np.loadtxt(file_name, dtype=float, max_rows=row)
 #     except IOError:
 #         raise Exception("Unable to open file")
-#     return output
+#     return output_100k
 
 # TODO: Set default values to take all rows and all columns
 def loadMatrix(file_name, row, column):

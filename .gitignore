@@ -95,7 +95,7 @@ ipch/
 # ReSharper is a .NET coding add-in
 _ReSharper*
 
-# Installshield output folder
+# Installshield output_100k folder
 [Ee]xpress
 
 # DocProject is a documentation generator add-in

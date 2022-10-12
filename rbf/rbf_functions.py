@@ -308,7 +308,7 @@ def matern32_rbf(rbf_input, centers, radii, weights):
     # rbf_scores = (1 + sqrt) * (np.exp(-sqrt))
     #
     # weighted_rbfs = weights * rbf_scores[:, np.newaxis]
-    # output = weighted_rbfs.sum(axis=0)
+    # output_100k = weighted_rbfs.sum(axis=0)
     return output
 
 
@@ -431,9 +431,9 @@ class RBF:
 #     rbf_scores = np.sqrt(1 + d)
 
 #     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
-#     output = weighted_rbfs.sum(axis=0)
+#     output_100k = weighted_rbfs.sum(axis=0)
 
-#     return output
+#     return output_100k
 
 
 # def multi_quadric2_rbf(rbf_input, centers, radii, weights):
@@ -456,13 +456,13 @@ class RBF:
 
 #     rbf_scores = np.sqrt(np.sum((radii ** 2) + ((rbf_input - centers) ** 2), axis=1))
 #     weighted_rbfs = weights * rbf_scores[:, np.newaxis]
-#     output = weighted_rbfs.sum(axis=0)
-#     return output
+#     output_100k = weighted_rbfs.sum(axis=0)
+#     return output_100k
 
 
 # # @numba.jit
-# def format_output(output, weights):
-#     a = weights * output[:, np.newaxis]  # n_rbf x n_output, n_rbf
+# def format_output(output_100k, weights):
+#     a = weights * output_100k[:, np.newaxis]  # n_rbf x n_output, n_rbf
 #     b = a.sum(axis=1)
 #
 #     return b
