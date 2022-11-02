@@ -57,51 +57,94 @@ import sys
 import math
 import argparse
 
+
 def get_args(argv):
     """ Get command line arguments """
     prog = argv.pop(0)
-    parser = argparse.ArgumentParser(prog=prog,
-        description='Nondomination Sort for Multiple Files')
-    parser.add_argument('inputs', type=argparse.FileType('r'), nargs='+',
-                        help='input filenames, use - for standard input')
-    parser.add_argument('-o', '--objectives', type=intrange, nargs='+',
-                        help='objective columns (zero-indexed)')
-    parser.add_argument('-e', '--epsilons', type=float, nargs='+',
-                        help='epsilons, one per objective')
-    parser.add_argument('-m', '--maximize', type=intrange, nargs='+',
-                        help='objective columns to maximize')
-    parser.add_argument('-M', '--maximize-all', action="store_true",
-                        help='maximize all objectives')
-    parser.add_argument('--output', type=argparse.FileType('w'),
-                        default=sys.stdout,
-                        help='output filename, default to standard output')
+    parser = argparse.ArgumentParser(
+        prog=prog, description="Nondomination Sort for Multiple Files"
+    )
+    parser.add_argument(
+        "inputs",
+        type=argparse.FileType("r"),
+        nargs="+",
+        help="input filenames, use - for standard input",
+    )
+    parser.add_argument(
+        "-o",
+        "--objectives",
+        type=intrange,
+        nargs="+",
+        help="objective columns (zero-indexed)",
+    )
+    parser.add_argument(
+        "-e", "--epsilons", type=float, nargs="+", help="epsilons, one per objective"
+    )
+    parser.add_argument(
+        "-m",
+        "--maximize",
+        type=intrange,
+        nargs="+",
+        help="objective columns to maximize",
+    )
+    parser.add_argument(
+        "-M", "--maximize-all", action="store_true", help="maximize all objectives"
+    )
+    parser.add_argument(
+        "--output",
+        type=argparse.FileType("w"),
+        default=sys.stdout,
+        help="output filename, default to standard output",
+    )
 
     delimiters = parser.add_mutually_exclusive_group()
-    delimiters.add_argument('-d', '--delimiter', type=str, default=' ',
-                        help='input column delimiter, default to space (" ")')
-    delimiters.add_argument('--tabs', action="store_true",
-                        help="use tabs as delimiter")
+    delimiters.add_argument(
+        "-d",
+        "--delimiter",
+        type=str,
+        default=" ",
+        help='input column delimiter, default to space (" ")',
+    )
+    delimiters.add_argument("--tabs", action="store_true", help="use tabs as delimiter")
 
-    parser.add_argument('--print-only-objectives', action='store_true',
-                        default=False, help='print only objectives in output')
-    parser.add_argument("--blank", action="store_true",
-                        help="skip blank lines")
-    parser.add_argument("-c", "--comment", type=str, nargs="+", default=[],
-                        help="skip lines starting with this character")
-    parser.add_argument("--header", type=int, default=0,
-                        help="number of header lines to skip")
-    parser.add_argument("--contribution", action="store_true",
-                        help="append filename where solution originated")
-    parser.add_argument("--line-number", action="store_true",
-                        help="also append line number to solution if "\
-                             "--contribution is used.")
-    parser.add_argument("--reverse-column-indices", action='store_true',
-                        default=False, help='Reverse the order of column '\
-                        'indices.  May be useful if your objectives are '\
-                        'at the end of a row of unknown length.  Make sure '\
-                        '-e and -m are consistent with the order you '\
-                        'specify.')
-
+    parser.add_argument(
+        "--print-only-objectives",
+        action="store_true",
+        default=False,
+        help="print only objectives in output",
+    )
+    parser.add_argument("--blank", action="store_true", help="skip blank lines")
+    parser.add_argument(
+        "-c",
+        "--comment",
+        type=str,
+        nargs="+",
+        default=[],
+        help="skip lines starting with this character",
+    )
+    parser.add_argument(
+        "--header", type=int, default=0, help="number of header lines to skip"
+    )
+    parser.add_argument(
+        "--contribution",
+        action="store_true",
+        help="append filename where solution originated",
+    )
+    parser.add_argument(
+        "--line-number",
+        action="store_true",
+        help="also append line number to solution if " "--contribution is used.",
+    )
+    parser.add_argument(
+        "--reverse-column-indices",
+        action="store_true",
+        default=False,
+        help="Reverse the order of column "
+        "indices.  May be useful if your objectives are "
+        "at the end of a row of unknown length.  Make sure "
+        "-e and -m are consistent with the order you "
+        "specify.",
+    )
 
     args = parser.parse_args(argv)
 
@@ -112,12 +155,13 @@ def get_args(argv):
         if args.objectives is not None:
             args.objectives = [-1 - ob for ob in args.objectives]
         if args.maximize is not None:
-            args.maximize = [-1 -ob for ob in args.maximize]
+            args.maximize = [-1 - ob for ob in args.maximize]
 
     if args.tabs:
         args.delimiter = "\t"
 
     return args
+
 
 def rerange(intranges):
     """ convert a set of intranges into a list of integers """
@@ -127,6 +171,7 @@ def rerange(intranges):
     for therange in intranges:
         thelist.extend(therange)
     return thelist
+
 
 def intrange(arg):
     """ convert a command-line argument to a list of integers """
@@ -148,7 +193,7 @@ def intrange(arg):
             elif first is None:
                 first = int("".join(partial))
                 partial = []
-            else: # this means there's a second -, which is not ok
+            else:  # this means there's a second -, which is not ok
                 raise err
         else:
             partial.append(char)
@@ -164,11 +209,14 @@ def intrange(arg):
     if second is None:
         return [first]
     elif second - first >= 0:
-        return range(first, second+1)
+        return range(first, second + 1)
     else:
-        return range(first, second-1, -1)
+        return range(first, second - 1, -1)
 
-class SortParameterError(Exception): pass
+
+class SortParameterError(Exception):
+    pass
+
 
 class Archive(object):
     """
@@ -179,16 +227,17 @@ class Archive(object):
     The eps_sort function provides a much more convenient interface than
     the Archive class.
     """
+
     def __init__(self, epsilons):
         """
         epsilons: sizes of epsilon boxes to use in the sort.  Number
                   of objectives is inferred by the number of epsilons.
         """
-        self.archive = []       # objectives
-        self.tagalongs = []     # tag-along data
-        self.boxes = []         # remember for efficiency
+        self.archive = []  # objectives
+        self.tagalongs = []  # tag-along data
+        self.boxes = []  # remember for efficiency
         self.epsilons = epsilons
-        self.itobj = range(len(epsilons)) # infer number of objectives
+        self.itobj = range(len(epsilons))  # infer number of objectives
 
     def add(self, objectives, tagalong, ebox):
         """ add a solution to the archive, plus auxiliary information """
@@ -223,72 +272,74 @@ class Archive(object):
         # return:   The candidate solution is dominated, stop comparing it to
         #           the archive, don't add it, immediately exit the method.
 
-        ebox = [math.floor(objectives[ii] / self.epsilons[ii])
-                for ii in self.itobj]
+        ebox = [math.floor(objectives[ii] / self.epsilons[ii]) for ii in self.itobj]
 
         asize = len(self.archive)
 
-        ai = -1 # ai: archive index
+        ai = -1  # ai: archive index
         while ai < asize - 1:
             ai += 1
-            adominate = False # archive dominates
-            sdominate = False # solution dominates
-            nondominate = False # neither dominates
+            adominate = False  # archive dominates
+            sdominate = False  # solution dominates
+            nondominate = False  # neither dominates
 
             abox = self.boxes[ai]
 
             for oo in self.itobj:
                 if abox[oo] < ebox[oo]:
                     adominate = True
-                    if sdominate: # nondomination
+                    if sdominate:  # nondomination
                         nondominate = True
-                        break # for
+                        break  # for
                 elif abox[oo] > ebox[oo]:
                     sdominate = True
-                    if adominate: # nondomination
+                    if adominate:  # nondomination
                         nondominate = True
-                        break # for
+                        break  # for
 
             if nondominate:
-                continue # while
-            if adominate: # candidate solution was dominated
+                continue  # while
+            if adominate:  # candidate solution was dominated
                 return
-            if sdominate: # candidate solution dominated archive solution
+            if sdominate:  # candidate solution dominated archive solution
                 self.remove(ai)
                 ai -= 1
                 asize -= 1
-                continue # while
+                continue  # while
 
             # solutions are in the same box
             aobj = self.archive[ai]
             corner = [ebox[ii] * self.epsilons[ii] for ii in self.itobj]
-            sdist = sum([(objectives[ii] - corner[ii]) **2
-                         for ii in self.itobj])
-            adist = sum([(aobj[ii] - corner[ii]) **2 for ii in self.itobj])
-            if adist < sdist: # archive dominates
+            sdist = sum([(objectives[ii] - corner[ii]) ** 2 for ii in self.itobj])
+            adist = sum([(aobj[ii] - corner[ii]) ** 2 for ii in self.itobj])
+            if adist < sdist:  # archive dominates
                 return
-            else: # solution dominates
+            else:  # solution dominates
                 self.remove(ai)
                 ai -= 1
                 asize -= 1
                 # Need a continue here if we ever reorder the while loop.
-                continue # while
+                continue  # while
 
         # if you get here, then no archive solution has dominated this one
         self.add(objectives, tagalong, ebox)
 
+
 class SortInputError(Exception):
     """ Information about a defective input """
+
     def __init__(self, msg, row, table):
         super(SortInputError, self).__init__(msg)
         self.row = row
         self.table = table
+
 
 def noannotation(table):
     """ produce solutions with no annotation from a table """
     empty = []
     for row in table:
         yield (row, empty)
+
 
 def numbering(table, tag):
     """
@@ -302,6 +353,7 @@ def numbering(table, tag):
         yield (row, [tag, linenumber])
         linenumber += 1
 
+
 def numbers():
     """
     generator function yielding the numbers 0, 1, 2...
@@ -312,33 +364,34 @@ def numbers():
         yield ii
         ii += 1
 
+
 def as_table(table):
     """
     try to convert a single table to something row-iterable
     if it's a generator, assume it's ok
     table: something tabular
     """
-    try: # is it a Pandas DataFrame?
+    try:  # is it a Pandas DataFrame?
         mat = table.as_matrix()
     except AttributeError:
         mat = table
 
-    try: # is it a double-subscriptable NumPy ndarray?
+    try:  # is it a double-subscriptable NumPy ndarray?
         mat.tolist
         mat[0].tolist
         mat[0][0]
         rowit = (x.tolist() for x in mat)
-    except (AttributeError, IndexError): 
+    except (AttributeError, IndexError):
         rowit = table
 
-    try: # is it a generator?
+    try:  # is it a generator?
         rowit.send
         rowit.close
         return rowit
     except AttributeError:
         pass
 
-    try: # is it double-subscriptable and not strings?
+    try:  # is it double-subscriptable and not strings?
         rowit[0][0]
         try:
             rowit[0].capitalize
@@ -350,6 +403,7 @@ def as_table(table):
         raise TypeError()
 
     raise TypeError()
+
 
 def as_tables(tables):
     """
@@ -364,9 +418,10 @@ def as_tables(tables):
             tab = as_table(table)
         except TypeError:
             raise TypeError(msg.format(ii))
-        
+
         yield tab
         ii += 1
+
 
 def flag_nondominated(tables, objectives=None, epsilons=None, **kwargs):
     """
@@ -423,6 +478,7 @@ def flag_nondominated(tables, objectives=None, epsilons=None, **kwargs):
 
     return masks
 
+
 def eps_sort(tables, objectives=None, epsilons=None, **kwargs):
     """
     return epsilon-nondominated solutions
@@ -453,8 +509,7 @@ def eps_sort(tables, objectives=None, epsilons=None, **kwargs):
     else:
         tables = [noannotation(table) for table in tables]
 
-    tables = [withobjectives(annotatedrows, objectives)
-              for annotatedrows in tables]
+    tables = [withobjectives(annotatedrows, objectives) for annotatedrows in tables]
 
     tomaximize = kwargs.get("maximize", None)
     maximize_all = kwargs.get("maximize_all", False)
@@ -472,6 +527,7 @@ def eps_sort(tables, objectives=None, epsilons=None, **kwargs):
     tagalongs = eps_sort_solutions(tables, epsilons)
 
     return tagalongs
+
 
 def eps_sort_solutions(tables, epsilons=None):
     """
@@ -499,6 +555,7 @@ def eps_sort_solutions(tables, epsilons=None):
 
     return archive.tagalongs
 
+
 def attribution(stream, tag, number=False):
     """
     extract lines from stream and augment with tag
@@ -514,6 +571,7 @@ def attribution(stream, tag, number=False):
             line = line.strip()
             yield (line, [tag])
 
+
 def noattribution(stream):
     """
     extract lines from stream and augment with null attribution
@@ -522,6 +580,7 @@ def noattribution(stream):
     for line in stream:
         line = line.strip()
         yield (line, empty)
+
 
 def filter_lines(annotatedlines, **kwargs):
     """
@@ -551,10 +610,12 @@ def filter_lines(annotatedlines, **kwargs):
 
         yield (line, annot)
 
+
 def rowsof(annotatedlines, delimiter):
     """ split lines using delimiter, yielding annotated rows """
     for line, annot in annotatedlines:
         yield (line.split(delimiter), annot)
+
 
 def withobjectives(annotatedrows, oindices):
     """ extract objectives and convert to float """
@@ -570,6 +631,7 @@ def withobjectives(annotatedrows, oindices):
             objectives = [float(x) for x in row]
             row.extend(annot)
             yield objectives, row
+
 
 def maximize(solutions, mindices=None):
     """
@@ -591,24 +653,30 @@ def maximize(solutions, mindices=None):
                 objectives[ii] = 0 - objectives[ii]
             yield objectives, row
 
+
 def cli(args):
     """ command-line interface, execute the comparison """
     if args.contribution:
-        tables = [attribution(fp, fp.name, args.line_number)
-                  for fp in args.inputs]
+        tables = [attribution(fp, fp.name, args.line_number) for fp in args.inputs]
     else:
         tables = [noattribution(fp) for fp in args.inputs]
 
     if args.header > 0 or len(args.comment) > 0 or args.blank:
-        tables = [filter_lines(annotatedlines, comment=args.comment,
-                              header=args.header, blank=args.blank)
-                  for annotatedlines in tables]
+        tables = [
+            filter_lines(
+                annotatedlines,
+                comment=args.comment,
+                header=args.header,
+                blank=args.blank,
+            )
+            for annotatedlines in tables
+        ]
 
-    tables = [rowsof(annotatedlines, args.delimiter)
-              for annotatedlines in tables]
+    tables = [rowsof(annotatedlines, args.delimiter) for annotatedlines in tables]
 
-    tables = [withobjectives(annotatedrows, args.objectives)
-              for annotatedrows in tables]
+    tables = [
+        withobjectives(annotatedrows, args.objectives) for annotatedrows in tables
+    ]
 
     if args.maximize is not None or args.maximize_all:
         if args.objectives is None:
@@ -632,6 +700,7 @@ def cli(args):
             args.output.write("\n")
 
     args.output.close()
+
 
 if __name__ == "__main__":
     cli(get_args(sys.argv))

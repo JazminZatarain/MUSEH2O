@@ -1,6 +1,7 @@
 import multiprocessing
 from platypus import Hypervolume, Solution, EpsilonBoxArchive
 
+
 class MetricWrapper:
     f"""wrapper class for wrapping platypus indicators
 
@@ -29,6 +30,7 @@ class MetricWrapper:
         solutions = rebuild_platypus_population(archive, self.problem)
         return super().calculate(solutions)
 
+
 #
 def rebuild_platypus_population(archive, problem):
     """rebuild a population of platypus Solution instances
@@ -45,11 +47,11 @@ def rebuild_platypus_population(archive, problem):
     """
     solutions = []
     for row in archive.itertuples():
-        decision_variables = [getattr(row, attr) for attr in problem.parameter_names]
+        # decision_variables = [getattr(row, attr) for attr in problem.parameter_names]
         objectives = [getattr(row, attr) for attr in problem.outcome_names]
 
         solution = Solution(problem)
-        solution.variables = decision_variables
+        # solution.variables = decision_variables
         solution.objectives = objectives
         solutions.append(solution)
     return solutions
@@ -104,19 +106,20 @@ class HypervolumeMetric(MetricWrapper, Hypervolume):
 
 
 def calculate_hv(archive, platypus_problem, reference_set):
-	reference_set = rebuild_platypus_population(reference_set, platypus_problem)
-	hv = Hypervolume(reference_set=reference_set)
-	archive = rebuild_platypus_population(archive, platypus_problem)
-	return hv.calcuate(archive)
+    reference_set = rebuild_platypus_population(reference_set, platypus_problem)
+    hv = Hypervolume(reference_set=reference_set)
+    archive = rebuild_platypus_population(archive, platypus_problem)
+    return hv.calcuate(archive)
 
 
 if __name__ == "main":
-	list_of_archives = []
-	reference_set = archive[-1]
+    list_of_archives = []
+    reference_set = archive[-1]
 
-	problem = ema_workbench.em_framework.optimization.to_problem(model, searchover='levers')
-	hv = HypervolumeMetric(reference_set, problem)
+    problem = ema_workbench.em_framework.optimization.to_problem(
+        model, searchover="levers"
+    )
+    hv = HypervolumeMetric(reference_set, problem)
 
-
-	with multiprocessing.Pool(4) as pool:
-		pool.map(hv.calculate, list_of_archives)
+    with multiprocessing.Pool(4) as pool:
+        pool.map(hv.calculate, list_of_archives)
