@@ -1,17 +1,13 @@
-import sys
-import pandas as pd
-import numpy as np
+from collections import defaultdict
+import multiprocessing
 import os
 
-# import datetime as DT
-import multiprocessing  # is this already imported with Platypus?
-
-from collections import defaultdict
+import numpy as np
+import pandas as pd
 
 from platypus import Problem
 
-sys.path.append("")
-import rbf_functions
+from rbf import rbf_functions
 from hypervolume_jk import HypervolumeMetric
 
 
@@ -104,8 +100,6 @@ def get_platypus_problem():
     ]
 
     return problem
-
-
 
 
 def get_reference_sets():
