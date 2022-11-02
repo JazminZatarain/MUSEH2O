@@ -121,13 +121,6 @@ if __name__ == "__main__":
     problem = get_platypus_problem()
     ref_sets, global_refset = get_reference_sets()
 
-    # tempnfe = {}
-    # temphv = {}
-    # nfe_sets = {}
-    # hv_sets = {}
-    # nfe_sets[rbf] = {}
-    # hv_sets[rbf] = {}
-
     overall_results = defaultdict(dict)
 
     with multiprocessing.Pool(4) as pool:
