@@ -42,14 +42,18 @@ def load_archives():
         for i in os.listdir(output_dir):
             if i.endswith("_hypervolume.csv"):  # hypervolume.csv contains
                 archives_by_nfe = pd.read_csv(output_dir + i)
+
+                # TODO
+                # what is the purpose of selecting based on nfe?
+                # is there some downsampling going on here? If so why?
                 nfes = archives_by_nfe["Unnamed: 0"].values
                 u_nfes = np.unique(nfes)
                 selected_nfe = u_nfes[0::10]
                 selected_nfe = np.append(selected_nfe, u_nfes[-1::])
-
                 a = archives_by_nfe.loc[
                     archives_by_nfe["Unnamed: 0"].isin(selected_nfe)
                 ]
+
                 generations = []
                 for nfe, generation in a.groupby("Unnamed: 0"):
                     generation = generation.rename(
