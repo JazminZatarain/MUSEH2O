@@ -1,4 +1,5 @@
 from collections import defaultdict
+import datetime
 from enum import Enum
 import multiprocessing
 import os
@@ -133,8 +134,11 @@ if __name__ == "__main__":
 
     overall_results = {}
 
+    overall_starttime = datetime.datetime.now()
+
     with multiprocessing.Pool() as pool:
         for rbf in rbfs:
+            rbf_starttime = datetime.datetime.now()
             rbf = rbf.__name__
 
             if refset == RefSet.GLOBAL:
@@ -147,7 +151,7 @@ if __name__ == "__main__":
             archive = archives[rbf]
             scores = []
             for seed_id, seed_archives in archive.items():
-                nfes, seed_archives = zip(*seed_archives)
+                nfes, seed_archives = zip(*seed_archives[0:5])
 
                 # calculate hypervolume and epsilon indicator using the pool
                 hv_results = pool.map(hv.calculate, seed_archives)
@@ -160,3 +164,9 @@ if __name__ == "__main__":
             # concat into single dataframe per rbf
             scores = pd.concat(scores, axis=0, ignore_index=True)
             scores.to_csv(f"./calculated_metrics/{rbf}_{refset.value}.csv")
+
+            delta = datetime.datetime.now() - rbf_starttime
+            print(f"{rbf}: {delta}")
+
+    delta = datetime.datetime.now() - overall_starttime
+    print(f"overall: {delta}")
