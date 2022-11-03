@@ -1,15 +1,14 @@
 from collections import defaultdict
+from enum import Enum
 import multiprocessing
 import os
 
-import numpy as np
 import pandas as pd
 
 from platypus import Problem
 
 from rbf import rbf_functions
-from hypervolume_jk import HypervolumeMetric
-
+from hypervolume_jk import HypervolumeMetric, EpsilonIndicatorMetric
 
 rbfs = [
     rbf_functions.original_rbf,
@@ -46,29 +45,29 @@ def load_archives():
                 # TODO
                 # what is the purpose of selecting based on nfe?
                 # is there some downsampling going on here? If so why?
-                nfes = archives_by_nfe["Unnamed: 0"].values
-                u_nfes = np.unique(nfes)
-                selected_nfe = u_nfes[0::10]
-                selected_nfe = np.append(selected_nfe, u_nfes[-1::])
-                a = archives_by_nfe.loc[
-                    archives_by_nfe["Unnamed: 0"].isin(selected_nfe)
-                ]
+                # nfes = archives_by_nfe["Unnamed: 0"].values
+                # u_nfes = np.unique(nfes)
+                # selected_nfe = u_nfes[0::10]
+                # selected_nfe = np.append(selected_nfe, u_nfes[-1::])
+                # a = archives_by_nfe.loc[
+                #     archives_by_nfe["Unnamed: 0"].isin(selected_nfe)
+                # ]
 
                 generations = []
-                for nfe, generation in a.groupby("Unnamed: 0"):
+                for nfe, generation in archives_by_nfe.groupby("Unnamed: 0"):
                     generation = generation.rename(
                         {
                             str(i): name
                             for i, name in enumerate(
-                                [
-                                    "hydropower",
-                                    "atomicpowerplant",
-                                    "baltimore",
-                                    "chester",
-                                    "environment",
-                                    "recreation",
-                                ]
-                            )
+                            [
+                                "hydropower",
+                                "atomicpowerplant",
+                                "baltimore",
+                                "chester",
+                                "environment",
+                                "recreation",
+                            ]
+                        )
                         },
                         axis=1,
                     )
@@ -120,27 +119,44 @@ def get_reference_sets():
     return ref_sets, global_refset
 
 
+class RefSet(Enum):
+    GLOBAL = "global"
+    LOCAL = "local"
+
+
 if __name__ == "__main__":
     archives = load_archives()
     problem = get_platypus_problem()
     ref_sets, global_refset = get_reference_sets()
 
-    overall_results = defaultdict(dict)
+    refset = RefSet.GLOBAL
 
-    with multiprocessing.Pool(4) as pool:
-        for rbf in rbfs[0:1]:
+    overall_results = {}
+
+    with multiprocessing.Pool() as pool:
+        for rbf in rbfs:
             rbf = rbf.__name__
-            reference_set = ref_sets[rbf]
+
+            if refset == RefSet.GLOBAL:
+                reference_set = global_refset
+            else:
+                reference_set = ref_sets[rbf]
             hv = HypervolumeMetric(reference_set, problem)
+            ei = EpsilonIndicatorMetric(reference_set, problem)
+
             archive = archives[rbf]
-
+            scores = []
             for seed_id, seed_archives in archive.items():
-                nfes, seed_archives = zip(*seed_archives[0:10])
-                results = pool.map(hv.calculate, seed_archives)
+                nfes, seed_archives = zip(*seed_archives)
 
-                # you could also just save this directly to csv probably
-                overall_results[rbf][seed_id] = pd.DataFrame.from_dict(
-                    dict(nfe=nfes, hypervolume=results)
-                )
+                # calculate hypervolume and epsilon indicator using the pool
+                hv_results = pool.map(hv.calculate, seed_archives)
+                ei_results = pool.map(ei.calculate, seed_archives)
 
-    print(overall_results)
+                scores.append(pd.DataFrame.from_dict(
+                    dict(nfe=nfes, hypervolume=hv_results, epsilon_indicator=ei_results, seed=int(seed_id))
+                ))
+
+            # concat into single dataframe per rbf
+            scores = pd.concat(scores, axis=0, ignore_index=True)
+            scores.to_csv(f"./calculated_metrics/{rbf}_{refset.value}.csv")

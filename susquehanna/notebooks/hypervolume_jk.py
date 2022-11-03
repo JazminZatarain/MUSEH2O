@@ -1,5 +1,5 @@
 import multiprocessing
-from platypus import Hypervolume, Solution, EpsilonBoxArchive
+from platypus import Hypervolume, Solution, EpsilonBoxArchive, EpsilonIndicator
 
 
 class MetricWrapper:
@@ -31,7 +31,7 @@ class MetricWrapper:
         return super().calculate(solutions)
 
 
-#
+
 def rebuild_platypus_population(archive, problem):
     """rebuild a population of platypus Solution instances
 
@@ -104,6 +104,23 @@ class HypervolumeMetric(MetricWrapper, Hypervolume):
 
     pass
 
+
+class EpsilonIndicatorMetric(MetricWrapper, EpsilonIndicator):
+    """EpsilonIndicator metric
+
+    Parameters
+    ----------
+    reference_set : DataFrame
+    problem : PlatypusProblem instance
+
+
+    this is a thin wrapper around EpsilonIndicator as provided
+    by platypus to make it easier to use in conjunction with the
+    workbench.
+
+    """
+
+    pass
 
 def calculate_hv(archive, platypus_problem, reference_set):
     reference_set = rebuild_platypus_population(reference_set, platypus_problem)
