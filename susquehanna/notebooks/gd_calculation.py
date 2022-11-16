@@ -1,15 +1,19 @@
 from collections import defaultdict
 import datetime
 from enum import Enum
+from functools import partial
 import multiprocessing
 import os
 
+import numpy as np
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
 from platypus import Problem
 
 from rbf import rbf_functions
-from hypervolume_jk import HypervolumeMetric, EpsilonIndicatorMetric
+import scipy.spatial.distance as distance
+import math
 
 rbfs = [
     rbf_functions.original_rbf,
@@ -35,6 +39,7 @@ def load_archives():
     """
 
     archives = defaultdict(dict)
+    list_of_archives = []
 
     for entry in rbfs:
         name = entry.__name__
@@ -42,17 +47,6 @@ def load_archives():
         for i in os.listdir(output_dir):
             if i.endswith("_hypervolume.csv"):  # hypervolume.csv contains
                 archives_by_nfe = pd.read_csv(output_dir + i)
-
-                # TODO
-                # what is the purpose of selecting based on nfe?
-                # is there some downsampling going on here? If so why?
-                # nfes = archives_by_nfe["Unnamed: 0"].values
-                # u_nfes = np.unique(nfes)
-                # selected_nfe = u_nfes[0::10]
-                # selected_nfe = np.append(selected_nfe, u_nfes[-1::])
-                # a = archives_by_nfe.loc[
-                #     archives_by_nfe["Unnamed: 0"].isin(selected_nfe)
-                # ]
 
                 generations = []
                 for nfe, generation in archives_by_nfe.groupby("Unnamed: 0"):
@@ -72,10 +66,13 @@ def load_archives():
                         },
                         axis=1,
                     )
+                    # we can drop the first 2 columns. They are not the objectives
+                    generation = generation.iloc[:, 2::]
                     generations.append((nfe, generation))
+                    list_of_archives.append(generation)
 
                 archives[name][int(i.split("_")[0])] = generations
-    return archives
+    return archives, list_of_archives
 
 
 def get_platypus_problem():
@@ -125,12 +122,35 @@ class RefSet(Enum):
     LOCAL = "local"
 
 
+def transform_data(data, scaler):
+    data = data.copy()
+    # setup a scaler
+
+    # scale data
+    transformed_data = scaler.transform(data)
+
+    return transformed_data
+
+
+def calculate_gd(normalized_generation, normalized_refset, d=2):
+    distances = distance.cdist(normalized_generation, normalized_refset)
+    minima = np.min(distances, axis=1)
+    summed_squares = np.sum(minima ** 2)
+    gd = math.pow(summed_squares, 1 / d) / normalized_generation.shape[0]
+
+    return gd
+
 if __name__ == "__main__":
-    archives = load_archives()
+    archives, list_of_archives = load_archives()
+
     problem = get_platypus_problem()
     ref_sets, global_refset = get_reference_sets()
 
     refset = RefSet.GLOBAL
+
+    # we use a global scaler
+    scaler = MinMaxScaler()
+    scaler.fit(pd.concat(list_of_archives + [global_refset]).values)
 
     overall_results = {}
 
@@ -145,25 +165,23 @@ if __name__ == "__main__":
                 reference_set = global_refset
             else:
                 reference_set = ref_sets[rbf]
-            hv = HypervolumeMetric(reference_set, problem)
-            ei = EpsilonIndicatorMetric(reference_set, problem)
+
+            reference_set = transform_data(reference_set.values, scaler)
 
             archive = archives[rbf]
             scores = []
             for seed_id, seed_archives in archive.items():
-                nfes, seed_archives = zip(*seed_archives[0:5])
-
-                # calculate hypervolume and epsilon indicator using the pool
-                hv_results = pool.map(hv.calculate, seed_archives)
-                ei_results = pool.map(ei.calculate, seed_archives)
+                nfes, seed_archives = zip(*seed_archives)
+                seed_archives = [transform_data(entry.values, scaler) for entry in seed_archives]
+                ei_results = pool.map(partial(calculate_gd, reference_set), seed_archives)
 
                 scores.append(pd.DataFrame.from_dict(
-                    dict(nfe=nfes, hypervolume=hv_results, epsilon_indicator=ei_results, seed=int(seed_id))
+                    dict(nfe=nfes, gd=ei_results, seed=int(seed_id))
                 ))
 
             # concat into single dataframe per rbf
             scores = pd.concat(scores, axis=0, ignore_index=True)
-            scores.to_csv(f"./calculated_metrics/{rbf}_{refset.value}.csv")
+            scores.to_csv(f"./calculated_metrics/g_{rbf}_{refset.value}.csv")
 
             delta = datetime.datetime.now() - rbf_starttime
             print(f"{rbf}: {delta}")
