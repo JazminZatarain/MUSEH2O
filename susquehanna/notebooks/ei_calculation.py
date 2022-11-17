@@ -132,13 +132,14 @@ def transform_data(data, scaler):
     return transformed_data
 
 
-def calculate_ei(generation, refset):
+def calculate_ei(refset, generation):
     differences = []
     for ref_solution in refset:
         # vectorizes over inner loop
         differences.append(min(np.max(generation - ref_solution, axis=1)))
 
     return max(differences)
+
 
 if __name__ == "__main__":
     archives, list_of_archives = load_archives()
@@ -150,7 +151,7 @@ if __name__ == "__main__":
 
     # we use a global scaler
     scaler = MinMaxScaler()
-    scaler.fit(pd.concat(list_of_archives + [global_refset]).values)
+    scaler.fit(global_refset.values)
 
     overall_results = {}
 

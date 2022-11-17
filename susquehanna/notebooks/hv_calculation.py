@@ -145,7 +145,7 @@ def transform_data(data, scaler, problem):
     return transformed_data
 
 
-def calculate_hypervolume(generation, maxima):
+def calculate_hypervolume(maxima, generation):
     return _hypervolume.hv.hypervolume(generation, maxima)
 
 
@@ -183,7 +183,7 @@ if __name__ == "__main__":
             for seed_id, seed_archives in archive.items():
                 nfes, seed_archives = zip(*seed_archives)
                 seed_archives = [transform_data(entry.values, scaler, problem) for entry in seed_archives]
-                hv_results = pool.map(partial(calculate_hypervolume, maxima=maxima), seed_archives)
+                hv_results = pool.map(partial(calculate_hypervolume, maxima), seed_archives)
                 # ei_results = pool.map(ei.calculate, seed_archives)
 
                 scores.append(pd.DataFrame.from_dict(

@@ -124,18 +124,16 @@ class RefSet(Enum):
 
 def transform_data(data, scaler):
     data = data.copy()
-    # setup a scaler
-
     # scale data
     transformed_data = scaler.transform(data)
 
     return transformed_data
 
 
-def calculate_gd(normalized_generation, normalized_refset, d=2):
+def calculate_gd(normalized_refset, normalized_generation, d=2):
     distances = distance.cdist(normalized_generation, normalized_refset)
     minima = np.min(distances, axis=1)
-    summed_squares = np.sum(minima ** 2)
+    summed_squares = np.sum(np.power(minima, d))
     gd = math.pow(summed_squares, 1 / d) / normalized_generation.shape[0]
 
     return gd
@@ -150,9 +148,7 @@ if __name__ == "__main__":
 
     # we use a global scaler
     scaler = MinMaxScaler()
-    scaler.fit(pd.concat(list_of_archives + [global_refset]).values)
-
-    overall_results = {}
+    scaler.fit(global_refset.values)
 
     overall_starttime = datetime.datetime.now()
 
@@ -166,6 +162,8 @@ if __name__ == "__main__":
             else:
                 reference_set = ref_sets[rbf]
 
+            scaler = MinMaxScaler()
+            scaler.fit(global_refset.values)
             reference_set = transform_data(reference_set.values, scaler)
 
             archive = archives[rbf]
@@ -173,15 +171,15 @@ if __name__ == "__main__":
             for seed_id, seed_archives in archive.items():
                 nfes, seed_archives = zip(*seed_archives)
                 seed_archives = [transform_data(entry.values, scaler) for entry in seed_archives]
-                ei_results = pool.map(partial(calculate_gd, reference_set), seed_archives)
+                gd_results = pool.map(partial(calculate_gd, reference_set), seed_archives)
 
                 scores.append(pd.DataFrame.from_dict(
-                    dict(nfe=nfes, gd=ei_results, seed=int(seed_id))
+                    dict(nfe=nfes, gd=gd_results, seed=int(seed_id))
                 ))
 
             # concat into single dataframe per rbf
             scores = pd.concat(scores, axis=0, ignore_index=True)
-            scores.to_csv(f"./calculated_metrics/g_{rbf}_{refset.value}.csv")
+            scores.to_csv(f"./calculated_metrics/gd_{rbf}_{refset.value}.csv")
 
             delta = datetime.datetime.now() - rbf_starttime
             print(f"{rbf}: {delta}")
