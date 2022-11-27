@@ -184,7 +184,6 @@ if __name__ == "__main__":
                 nfes, seed_archives = zip(*seed_archives)
                 seed_archives = [transform_data(entry.values, scaler, problem) for entry in seed_archives]
                 hv_results = pool.map(partial(calculate_hypervolume, maxima), seed_archives)
-                # ei_results = pool.map(ei.calculate, seed_archives)
 
                 scores.append(pd.DataFrame.from_dict(
                     dict(nfe=nfes, hypervolume=hv_results, seed=int(seed_id))
