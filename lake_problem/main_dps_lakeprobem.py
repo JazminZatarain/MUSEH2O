@@ -18,8 +18,14 @@ from dps_lake_model import lake_model
 
 
 
-def cython_wrapper(args):
-    return lake_model(args)
+class Wrapper():
+    # yes I no this can be done also through functools
+
+    def __init__(self, rbf):
+        self.rbf = rbf
+
+    def __call__(self, args):
+        return lake_model(self.rbf, np.asarray(args))
 
 class TrackProgress:
     def __init__(self):
@@ -101,12 +107,12 @@ def main():
             # RBF parameters
             n_inputs = 1  # polution at t-1
             n_outputs = 1 # release at t
-            n_rbfs = 2
+            n_rbfs = n_inputs+2
             n_objectives = 4
             rbf = rbf_functions.RBF(n_rbfs, n_inputs, n_outputs, rbf_function=entry)
 
             # Initialize model
-
+            wrapper = Wrapper(rbf)
 
             # Lower and Upper Bound for problem.types
             epsilons = [0.05, 0.05, 0.05, 0.05]
@@ -114,24 +120,24 @@ def main():
 
             problem = Problem(n_decision_vars, n_objectives)
             problem.types[:] = rbf.platypus_types
-            problem.function = cython_wrapper
+            problem.function = wrapper
 
             problem.directions[0] = Problem.MINIMIZE  # MAX_P
             problem.directions[1] = Problem.MAXIMIZE  # utility
             problem.directions[2] = Problem.MAXIMIZE  # inertia
             problem.directions[3] = Problem.MAXIMIZE  # reliability
 
-            # algorithm = EpsNSGAII(problem, epsilons=epsilons)
-            # algorithm.run(1000)
-
             track_progress = TrackProgress()
+            # algorithm = EpsNSGAII(problem, epsilons=epsilons)
+            # algorithm.run(100000, track_progress)
+
             with ProcessPoolEvaluator() as evaluator:
                 algorithm = EpsNSGAII(problem, epsilons=epsilons, evaluator=evaluator)
                 algorithm.run(100000, track_progress)
 
             logging.info("storing results")
             store_results(
-                algorithm, track_progress, "output_smaller_eps", f"{entry.__name__}", seed
+                algorithm, track_progress, "output", f"{entry.__name__}", seed
             )
 
 

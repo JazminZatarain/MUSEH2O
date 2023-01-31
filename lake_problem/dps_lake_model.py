@@ -3,41 +3,7 @@ import numpy as np
 
 from scipy.optimize import brentq
 
-
-def get_antropogenic_release(xt, c1, c2, r1, r2, w1, w2):
-    """
-
-    Parameters
-    ----------
-    xt : float
-         polution in lake at time t
-    c1 : float
-         center rbf 1
-    c2 : float
-         center rbf 2
-    r1 : float
-         ratius rbf 1
-    r2 : float
-         ratius rbf 2
-    w1 : float
-         weight of rbf 1
-
-    Returns
-    -------
-    float
-
-    note:: w2 = 1 - w1
-
-    """
-
-    rule = w1 * (abs(xt - c1) / r1) ** 3 + w2 * (abs(xt - c2) / r2) ** 3
-    at1 = max(rule, 0.01)
-    at = min(at1, 0.1)
-
-    return at
-
-
-def lake_model(decision_vars,
+def lake_model(rbf, decision_vars,
     b=0.42,
     q=2.0,
     mean=0.02,
@@ -75,10 +41,7 @@ def lake_model(decision_vars,
     tuple
 
     """
-    c1, c2, r1, r2, w1, w2 = decision_vars
-    sum_weights = w1+w2
-    w1 = w1/sum_weights
-    w2 = w2/sum_weights
+    rbf.set_decision_vars(decision_vars)
 
     np.random.seed(seed)
     Pcrit = brentq(lambda x: x ** q / (1.0 + x ** q) - b * x, 0.01, 1.5)
@@ -105,7 +68,7 @@ def lake_model(decision_vars,
         for t in range(1, myears):
 
             # here we use the decision rule
-            decision = get_antropogenic_release(X[t - 1], c1, c2, r1, r2, w1, w2)
+            decision = rbf.apply_rbfs(np.asarray([X[t - 1]]))[0]
             decisions[t] = decision
 
             X[t] = (
