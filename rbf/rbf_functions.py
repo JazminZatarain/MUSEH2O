@@ -382,9 +382,9 @@ class RBF:
                 w_i.append(next(count))  # weight
 
         self.platypus_types = types
-        self.c_i = np.asarray(c_i, dtype=np.int16)
-        self.r_i = np.asarray(r_i, dtype=np.int16)
-        self.w_i = np.asarray(w_i, dtype=np.int16)
+        self.c_i = np.asarray(c_i, dtype=int)
+        self.r_i = np.asarray(r_i, dtype=int)
+        self.w_i = np.asarray(w_i, dtype=int)
 
         self.centers = None
         self.radii = None
