@@ -1,9 +1,3 @@
-# ===========================================================================
-# Name        : main_susquehanna.py
-# Author      : MarkW, adapted from JazminZ & MatteoG
-# Version     : 0.05
-# Copyright   : Your copyright notice
-# ===========================================================================
 import csv
 import logging
 import numpy as np
@@ -56,6 +50,7 @@ def store_results(algorithm, track_progress, output_dir, rbf_name, seed_id):
             os.mkdir(path_name)
         except OSError:
             print("Creation of the directory failed")
+            raise
 
     header = [
         "max_p",
