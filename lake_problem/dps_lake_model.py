@@ -68,7 +68,8 @@ def lake_model(rbf, decision_vars,
         for t in range(1, myears):
 
             # here we use the decision rule
-            decision = rbf.apply_rbfs(np.asarray([X[t - 1]]))[0]
+            rule = rbf.apply_rbfs(np.asarray([X[t - 1]]))[0]
+            decision = min(max(rule, 0.01), 0.1)    # constrain release between 0.01 and 0.1
             decisions[t] = decision
 
             X[t] = (
