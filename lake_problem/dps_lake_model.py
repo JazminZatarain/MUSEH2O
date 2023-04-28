@@ -3,7 +3,10 @@ import numpy as np
 
 from scipy.optimize import brentq
 
-def lake_model(rbf, decision_vars,
+
+def lake_model(
+    rbf,
+    decision_vars,
     b=0.42,
     q=2.0,
     mean=0.02,
@@ -44,7 +47,7 @@ def lake_model(rbf, decision_vars,
     rbf.set_decision_vars(decision_vars)
 
     np.random.seed(seed)
-    Pcrit = brentq(lambda x: x ** q / (1.0 + x ** q) - b * x, 0.01, 1.5)
+    Pcrit = brentq(lambda x: x**q / (1.0 + x**q) - b * x, 0.01, 1.5)
 
     X = np.zeros((myears,), dtype=float)
     average_daily_P = np.zeros((myears,), dtype=float)
@@ -56,12 +59,14 @@ def lake_model(rbf, decision_vars,
         X[0] = 0.0
         decision = 0.1
 
-        decisions = np.zeros(myears,)
+        decisions = np.zeros(
+            myears,
+        )
         decisions[0] = decision
 
         natural_inflows = np.random.lognormal(
-            math.log(mean ** 2 / math.sqrt(stdev ** 2 + mean ** 2)),
-            math.sqrt(math.log(1.0 + stdev ** 2 / mean ** 2)),
+            math.log(mean**2 / math.sqrt(stdev**2 + mean**2)),
+            math.sqrt(math.log(1.0 + stdev**2 / mean**2)),
             size=myears,
         )
 
@@ -69,7 +74,9 @@ def lake_model(rbf, decision_vars,
 
             # here we use the decision rule
             rule = rbf.apply_rbfs(np.asarray([X[t - 1]]))[0]
-            decision = min(max(rule, 0.01), 0.1)    # constrain release between 0.01 and 0.1
+            decision = min(
+                max(rule, 0.01), 0.1
+            )  # constrain release between 0.01 and 0.1
             decisions[t] = decision
 
             X[t] = (

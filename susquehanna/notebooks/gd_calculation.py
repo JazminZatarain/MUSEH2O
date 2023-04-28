@@ -54,15 +54,15 @@ def load_archives():
                         {
                             str(i): name
                             for i, name in enumerate(
-                            [
-                                "hydropower",
-                                "atomicpowerplant",
-                                "baltimore",
-                                "chester",
-                                "environment",
-                                "recreation",
-                            ]
-                        )
+                                [
+                                    "hydropower",
+                                    "atomicpowerplant",
+                                    "baltimore",
+                                    "chester",
+                                    "environment",
+                                    "recreation",
+                                ]
+                            )
                         },
                         axis=1,
                     )
@@ -138,6 +138,7 @@ def calculate_gd(normalized_refset, normalized_generation, d=2):
 
     return gd
 
+
 if __name__ == "__main__":
     archives, list_of_archives = load_archives()
 
@@ -170,12 +171,18 @@ if __name__ == "__main__":
             scores = []
             for seed_id, seed_archives in archive.items():
                 nfes, seed_archives = zip(*seed_archives)
-                seed_archives = [transform_data(entry.values, scaler) for entry in seed_archives]
-                gd_results = pool.map(partial(calculate_gd, reference_set), seed_archives)
+                seed_archives = [
+                    transform_data(entry.values, scaler) for entry in seed_archives
+                ]
+                gd_results = pool.map(
+                    partial(calculate_gd, reference_set), seed_archives
+                )
 
-                scores.append(pd.DataFrame.from_dict(
-                    dict(nfe=nfes, gd=gd_results, seed=int(seed_id))
-                ))
+                scores.append(
+                    pd.DataFrame.from_dict(
+                        dict(nfe=nfes, gd=gd_results, seed=int(seed_id))
+                    )
+                )
 
             # concat into single dataframe per rbf
             scores = pd.concat(scores, axis=0, ignore_index=True)

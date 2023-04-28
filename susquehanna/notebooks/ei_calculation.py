@@ -54,15 +54,15 @@ def load_archives():
                         {
                             str(i): name
                             for i, name in enumerate(
-                            [
-                                "hydropower",
-                                "atomicpowerplant",
-                                "baltimore",
-                                "chester",
-                                "environment",
-                                "recreation",
-                            ]
-                        )
+                                [
+                                    "hydropower",
+                                    "atomicpowerplant",
+                                    "baltimore",
+                                    "chester",
+                                    "environment",
+                                    "recreation",
+                                ]
+                            )
                         },
                         axis=1,
                     )
@@ -173,12 +173,18 @@ if __name__ == "__main__":
             scores = []
             for seed_id, seed_archives in archive.items():
                 nfes, seed_archives = zip(*seed_archives)
-                seed_archives = [transform_data(entry.values, scaler) for entry in seed_archives]
-                ei_results = pool.map(partial(calculate_ei, reference_set), seed_archives)
+                seed_archives = [
+                    transform_data(entry.values, scaler) for entry in seed_archives
+                ]
+                ei_results = pool.map(
+                    partial(calculate_ei, reference_set), seed_archives
+                )
 
-                scores.append(pd.DataFrame.from_dict(
-                    dict(nfe=nfes, ei=ei_results, seed=int(seed_id))
-                ))
+                scores.append(
+                    pd.DataFrame.from_dict(
+                        dict(nfe=nfes, ei=ei_results, seed=int(seed_id))
+                    )
+                )
 
             # concat into single dataframe per rbf
             scores = pd.concat(scores, axis=0, ignore_index=True)

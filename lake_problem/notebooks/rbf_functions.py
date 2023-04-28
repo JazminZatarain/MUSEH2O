@@ -27,8 +27,8 @@ def original_rbf(rbf_input, centers, radii, weights):
 
     # sum over inputs
     a = rbf_input[np.newaxis, :] - centers
-    b = a ** 2
-    c = radii ** 2
+    b = a**2
+    c = radii**2
     rbf_scores = np.exp(-(np.sum(b / c, axis=1)))
 
     # n_rbf x n_output, n_rbf
@@ -60,8 +60,8 @@ def squared_exponential_rbf(rbf_input, centers, radii, weights):
     # sum over inputs
     # a = rbf_input[np.newaxis, :] - centers
     a = cdist(rbf_input[np.newaxis, :], centers)
-    b = a.T ** 2
-    c = 2 * radii ** 2
+    b = a.T**2
+    c = 2 * radii**2
     rbf_scores = np.exp(-(np.sum(b / c, axis=1)))
 
     # n_rbf x n_output, n_rbf
@@ -91,7 +91,7 @@ def gaussian_rbf(rbf_input, centers, radii, weights):
     """
     a = rbf_input[np.newaxis, :] - centers
     n = a / radii
-    p = n ** 2
+    p = n**2
     q = np.sum(p, axis=1)
     rbf_scores = np.exp(-1 * q)
 
@@ -122,7 +122,7 @@ def gaussian_rbf_lit(rbf_input, centers, radii, weights):
     """
     a = cdist(rbf_input[np.newaxis, :], centers)
     n = a.T * radii  # /
-    p = n ** 2
+    p = n**2
     q = np.sum(p, axis=1)
     rbf_scores = np.exp(-1 * q)
 
@@ -154,7 +154,7 @@ def inverse_quadratic_rbf(rbf_input, centers, radii, weights):
     # a = rbf_input[np.newaxis, :] - centers
     a = cdist(rbf_input[np.newaxis, :], centers)
     b = a.T / radii
-    c = b ** 2
+    c = b**2
     d = np.sum(c, axis=1)
     rbf_scores = 1 / (1 + d)
 
@@ -184,7 +184,7 @@ def inverse_quadratic_rbf_lit(rbf_input, centers, radii, weights):
     """
     a = cdist(rbf_input[np.newaxis, :], centers)
     b = a.T * radii
-    c = b ** 2
+    c = b**2
     d = np.sum(c, axis=1)
     rbf_scores = 1 / (1 + d)
 
@@ -356,7 +356,9 @@ rbfs = [
 
 
 class RBF:
-    def __init__(self, n_rbfs, n_inputs, n_outputs, rbf_function=squared_exponential_rbf):
+    def __init__(
+        self, n_rbfs, n_inputs, n_outputs, rbf_function=squared_exponential_rbf
+    ):
         self.n_rbfs = n_rbfs
         self.n_inputs = n_inputs
         self.n_outputs = n_outputs

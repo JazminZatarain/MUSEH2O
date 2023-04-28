@@ -1,7 +1,13 @@
 import multiprocessing
 
 
-from platypus import Hypervolume, Solution, EpsilonBoxArchive, EpsilonIndicator, GenerationalDistance
+from platypus import (
+    Hypervolume,
+    Solution,
+    EpsilonBoxArchive,
+    EpsilonIndicator,
+    GenerationalDistance,
+)
 
 
 class MetricWrapper:
@@ -31,7 +37,6 @@ class MetricWrapper:
     def calculate(self, archive):
         solutions = rebuild_platypus_population(archive, self.problem)
         return super().calculate(solutions)
-
 
 
 def rebuild_platypus_population(archive, problem):

@@ -51,7 +51,7 @@ class RBF:
         self.radius = centerradius[:, 1::2]
 
         ws = self.weights.sum(axis=0)
-        for i in [np.where(ws == i)[0][0] for i in ws if i > 10 ** -6]:
+        for i in [np.where(ws == i)[0][0] for i in ws if i > 10**-6]:
             self.weights[:, i] = self.weights[:, i] / ws[i]
 
     def format_output(self, output):
@@ -85,7 +85,7 @@ class MultiquadricRBF(RBF):
 class Multiquadric2RBF(RBF):
     def rbf_control_law(self, rbf_input):
         output = np.sqrt(
-            np.sum((self.radius ** 2) + ((rbf_input - self.center) ** 2), axis=1)
+            np.sum((self.radius**2) + ((rbf_input - self.center) ** 2), axis=1)
         )
         output = self.format_output(output)
         return output
@@ -123,7 +123,7 @@ class ExponentialRBF(RBF):
 class SquaredexponentialRBF(RBF):
     def rbf_control_law(self, rbf_input):
         output = np.exp(
-            -(np.sum((rbf_input - self.center) ** 2 / (self.radius ** 2), axis=1))
+            -(np.sum((rbf_input - self.center) ** 2 / (self.radius**2), axis=1))
         )
         output = self.format_output(output)
         return output

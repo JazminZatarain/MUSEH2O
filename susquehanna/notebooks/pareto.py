@@ -59,7 +59,7 @@ import argparse
 
 
 def get_args(argv):
-    """ Get command line arguments """
+    """Get command line arguments"""
     prog = argv.pop(0)
     parser = argparse.ArgumentParser(
         prog=prog, description="Nondomination Sort for Multiple Files"
@@ -164,7 +164,7 @@ def get_args(argv):
 
 
 def rerange(intranges):
-    """ convert a set of intranges into a list of integers """
+    """convert a set of intranges into a list of integers"""
     if intranges is None:
         return None
     thelist = []
@@ -174,7 +174,7 @@ def rerange(intranges):
 
 
 def intrange(arg):
-    """ convert a command-line argument to a list of integers """
+    """convert a command-line argument to a list of integers"""
     acceptable_chars = [str(x) for x in range(10)]
     acceptable_chars.append("-")
 
@@ -240,13 +240,13 @@ class Archive(object):
         self.itobj = range(len(epsilons))  # infer number of objectives
 
     def add(self, objectives, tagalong, ebox):
-        """ add a solution to the archive, plus auxiliary information """
+        """add a solution to the archive, plus auxiliary information"""
         self.archive.append(objectives)
         self.tagalongs.append(tagalong)
         self.boxes.append(ebox)
 
     def remove(self, index):
-        """ remove a solution from the archive """
+        """remove a solution from the archive"""
         self.archive.pop(index)
         self.tagalongs.pop(index)
         self.boxes.pop(index)
@@ -326,7 +326,7 @@ class Archive(object):
 
 
 class SortInputError(Exception):
-    """ Information about a defective input """
+    """Information about a defective input"""
 
     def __init__(self, msg, row, table):
         super(SortInputError, self).__init__(msg)
@@ -335,7 +335,7 @@ class SortInputError(Exception):
 
 
 def noannotation(table):
-    """ produce solutions with no annotation from a table """
+    """produce solutions with no annotation from a table"""
     empty = []
     for row in table:
         yield (row, empty)
@@ -343,7 +343,7 @@ def noannotation(table):
 
 def numbering(table, tag):
     """
-    generator function 
+    generator function
     annotate each row in the table with tag and line number
     table: iterable, but probably a list of lists
     tag: anything, but probably a string or an integer
@@ -612,13 +612,13 @@ def filter_lines(annotatedlines, **kwargs):
 
 
 def rowsof(annotatedlines, delimiter):
-    """ split lines using delimiter, yielding annotated rows """
+    """split lines using delimiter, yielding annotated rows"""
     for line, annot in annotatedlines:
         yield (line.split(delimiter), annot)
 
 
 def withobjectives(annotatedrows, oindices):
-    """ extract objectives and convert to float """
+    """extract objectives and convert to float"""
     if oindices is not None:
         for row, annot in annotatedrows:
             objectives = []
@@ -655,7 +655,7 @@ def maximize(solutions, mindices=None):
 
 
 def cli(args):
-    """ command-line interface, execute the comparison """
+    """command-line interface, execute the comparison"""
     if args.contribution:
         tables = [attribution(fp, fp.name, args.line_number) for fp in args.inputs]
     else:

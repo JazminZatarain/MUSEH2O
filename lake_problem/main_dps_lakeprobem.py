@@ -11,8 +11,7 @@ from rbf import rbf_functions
 from dps_lake_model import lake_model
 
 
-
-class Wrapper():
+class Wrapper:
     # yes I no this can be done also through functools
 
     def __init__(self, rbf):
@@ -20,6 +19,7 @@ class Wrapper():
 
     def __call__(self, args):
         return lake_model(self.rbf, np.asarray(args))
+
 
 class TrackProgress:
     def __init__(self):
@@ -101,8 +101,8 @@ def main():
 
             # RBF parameters
             n_inputs = 1  # polution at t-1
-            n_outputs = 1 # release at t
-            n_rbfs = n_inputs+2
+            n_outputs = 1  # release at t
+            n_rbfs = n_inputs + 2
             n_objectives = 4
             rbf = rbf_functions.RBF(n_rbfs, n_inputs, n_outputs, rbf_function=entry)
 
